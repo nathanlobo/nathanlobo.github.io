@@ -195,34 +195,6 @@
         console.error(err);
       });
   </script>
-  <script>
-  const themeBtn = document.getElementById("themeToggle");
-const hljsTheme = document.getElementById("hljs-theme");
-
-function setTheme(mode) {
-  if (mode =
-  == "light") {
-    document.documentElement.classList.add("light");
-    themeBtn.textContent = "Dark";
-    hljsTheme.href =
-      "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css";
-  } else {
-    document.documentElement.classList.remove("light");
-    themeBtn.textContent = "Light";
-    hljsTheme.href =
-      "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css";
-  }
-  localStorage.setItem("theme", mode);
-}
-
-const systemPrefDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-const savedTheme = localStorage.getItem("theme");
-setTheme(savedTheme || (systemPrefDark ? "dark" : "light"));
-
-themeBtn.addEventListener("click", () => {
-  const current = document.documentElement.classList.contains("light") ? "light" : "dark";
-  setTheme(current === "light" ? "dark" : "light");
-});
-  </script>
+  <!-- Removed duplicate theme script to fix redeclaration errors -->
 </body>
 </html>
