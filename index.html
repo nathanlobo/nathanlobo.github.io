@@ -58,107 +58,141 @@ body { background: var(--bg); color: var(--text); }
     <h1 style="margin:0;">mini-projects — Files</h1>
     <button id="themeToggle" class="btn" style="margin-left:auto;">...</button>
   </div>
-  <div id="linkContainer" class="link-container">Loading files...</div>
+  <div id="linkContainer" class="link-container">Loading experiments...</div>
   <script>
+    const experiments = [
+      {
+        name: "Experiment 1",
+        files: ["WD-HTML/Expt-1/expt1a.html", "WD-HTML/Expt-1/expt1b.html", "WD-HTML/Expt-1/expt1c.html"]
+      },
+      {
+        name: "Experiment 2",
+        files: ["WD-HTML/Expt-2/expt2a.html", "WD-HTML/Expt-2/expt2b.html"]
+      }
+    ];
+
     const owner = "nathanlobo";
-    const repo = "mini-projects";
+    const repo = "CodeStore";
     const branch = "main";
-
-    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/`;
-
     const container = document.getElementById('linkContainer');
 
-    // Helper that fetches the raw file and forces a download (works cross-origin)
+    // Helper to download a file from raw GitHub
     async function downloadFile(rawUrl, filename) {
       try {
         const res = await fetch(rawUrl);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const blob = await res.blob();
         const blobUrl = URL.createObjectURL(blob);
-
         const a = document.createElement('a');
         a.href = blobUrl;
         a.download = filename || rawUrl.split('/').pop();
-        // append to DOM to make click work in some browsers
         a.style.display = 'none';
         document.body.appendChild(a);
         a.click();
         a.remove();
-        // Revoke after a short delay so the download has started
         setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
       } catch (err) {
         console.error('Download failed, opening raw URL instead:', err);
-        // fallback: open raw URL in new tab
         window.open(rawUrl, '_blank');
       }
     }
 
-    // Fetch file list from GitHub API (root only). For nested directories extend recursively.
-    fetch(apiUrl)
-      .then(r => r.json())
-      .then(list => {
-        if (!Array.isArray(list)) {
-          container.innerHTML = '<p>Unable to load files.</p>';
-          console.error('Unexpected API response', list);
-          return;
-        }
-        container.innerHTML = '';
-        list.forEach(file => {
-          // only show files (skip directories). You can optionally recurse into directories.
-          if (file.type !== 'file') return;
+    // Render experiment cards
+    function renderExperiments() {
+      if (!Array.isArray(experiments) || experiments.length === 0) {
+        container.innerHTML = '<p>No experiments defined.</p>';
+        return;
+      }
+      container.innerHTML = '';
+      experiments.forEach((exp, idx) => {
+        const block = document.createElement('div');
+        block.className = 'link-block';
 
-          const block = document.createElement('div');
-          block.className = 'link-block';
+        const info = document.createElement('div');
+        info.className = 'link-info';
 
-          const info = document.createElement('div');
-          info.className = 'link-info';
+        const title = document.createElement('div');
+        title.className = 'link-title';
+        title.textContent = exp.name || `Experiment ${idx+1}`;
 
-          const title = document.createElement('div');
-          title.className = 'link-title';
-          title.textContent = file.name;
+        info.appendChild(title);
 
-          // clickable truncated link (opens GitHub file page)
-          const urlA = document.createElement('a');
-          urlA.className = 'link-url';
-          urlA.href = file.html_url;
-          urlA.textContent = file.path;
-          urlA.target = '_blank';
-          urlA.rel = 'noopener noreferrer';
+        // List files for this experiment
+        if (Array.isArray(exp.files) && exp.files.length > 0) {
+          exp.files.forEach(filePath => {
+            const fileDiv = document.createElement('div');
+            fileDiv.style.display = 'flex';
+            fileDiv.style.alignItems = 'center';
+            fileDiv.style.gap = '8px';
 
-          info.appendChild(title);
-          info.appendChild(urlA);
+            // File name (truncated link to GitHub)
+            const urlA = document.createElement('a');
+            urlA.className = 'link-url';
+            urlA.href = `https://github.com/${owner}/${repo}/blob/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
+            urlA.textContent = filePath;
+            urlA.target = '_blank';
+            urlA.rel = 'noopener noreferrer';
 
-          const btns = document.createElement('div');
-          btns.className = 'button-container';
+            fileDiv.appendChild(urlA);
 
-          // View button -> navigate to view.html (store path in localStorage)
-          const viewBtn = document.createElement('button');
-          viewBtn.className = 'btn btn-view';
-          viewBtn.textContent = 'View';
-          viewBtn.addEventListener('click', () => {
-            localStorage.setItem('filePath', file.path);
-            window.location.href = 'view.html';
+
+            // View label
+            const viewLabel = document.createElement('div');
+            viewLabel.textContent = 'View';
+            viewLabel.style.fontWeight = 'bold';
+            viewLabel.style.marginRight = '8px';
+            fileDiv.appendChild(viewLabel);
+
+            // Button container for Code and Output
+            const btnContainer = document.createElement('div');
+            btnContainer.className = 'button-container';
+
+            // Code button
+            const codeBtn = document.createElement('button');
+            codeBtn.className = 'btn btn-view';
+            codeBtn.textContent = 'Code';
+            codeBtn.addEventListener('click', () => {
+              localStorage.setItem('filePath', filePath);
+              localStorage.setItem('experimentName', exp.name || `Experiment ${idx+1}`);
+              window.location.href = 'view.html';
+            });
+
+            // Output button
+            const outputBtn = document.createElement('button');
+            outputBtn.className = 'btn btn-output';
+            outputBtn.textContent = 'Output';
+            outputBtn.addEventListener('click', () => {
+              const outputUrl = `https://nathanlobo.github.io/CodeStore/${filePath}`;
+              window.open(outputUrl, '_blank');
+            });
+
+            btnContainer.appendChild(codeBtn);
+            btnContainer.appendChild(outputBtn);
+            fileDiv.appendChild(btnContainer);
+
+            // Download button
+            const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
+            const downloadBtn = document.createElement('button');
+            downloadBtn.className = 'btn btn-download';
+            downloadBtn.textContent = 'Download';
+            downloadBtn.addEventListener('click', () => downloadFile(rawUrl, filePath.split('/').pop()));
+
+            fileDiv.appendChild(downloadBtn);
+
+            info.appendChild(fileDiv);
           });
+        } else {
+          const noFiles = document.createElement('div');
+          noFiles.textContent = 'No files listed.';
+          info.appendChild(noFiles);
+        }
 
-          // Download button -> use downloadFile helper and raw.githubusercontent URL
-          const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURIComponent(file.path).replace(/%2F/g, '/')}`;
-          const downloadBtn = document.createElement('button');
-          downloadBtn.className = 'btn btn-download';
-          downloadBtn.textContent = 'Download';
-          downloadBtn.addEventListener('click', () => downloadFile(rawUrl, file.name));
-
-          btns.appendChild(viewBtn);
-          btns.appendChild(downloadBtn);
-
-          block.appendChild(info);
-          block.appendChild(btns);
-          container.appendChild(block);
-        });
-      })
-      .catch(err => {
-        console.error(err);
-        container.innerHTML = '<p>Error loading files.</p>';
+        block.appendChild(info);
+        container.appendChild(block);
       });
+    }
+
+    renderExperiments();
   </script>
               <script>
   const themeBtn = document.getElementById("themeToggle");
