@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>View file — mini-projects</title>
+
+  <!-- highlight.js -->
+  <link id="hljs-theme" rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* Default dark theme variables */
+    :root {
+      --bg: #0d1117;
+      --panel: #0d1117;
+      --muted: #8b949e;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --code-bg: #010409;
+      --text: #c9d1d9;
+    }
+
+    /* Light theme variables */
+    :root.light {
+      --bg: #ffffff;
+      --panel: #f6f8fa;
+      --muted: #57606a;
+      --border: #d0d7de;
+      --accent: #0969da;
+      --code-bg: #f6f8fa;
+      --text: #24292f;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--panel);
+    }
+    .btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--muted);
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .btn:hover {
+      color: var(--accent);
+      background: rgba(88,166,255,0.06);
+    }
+    h1 {
+      font-size: 15px;
+      margin: 0;
+      color: var(--text);
+      word-break: break-all;
+    }
+    .viewer { max-width: 1100px; margin: 20px auto; padding: 16px; }
+    .code-wrap {
+      position: relative;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      overflow: auto;
+      background: var(--code-bg);
+      padding-left: 60px;
+    }
+    pre {
+      margin: 0; padding: 16px 20px;
+      white-space: pre;
+      font-family: 'Fira Code', monospace;
+      font-size: 13px; line-height: 1.6; color: var(--text);
+    }
+    .line-numbers {
+      position: absolute; left: 0; top: 0;
+      width: 56px; background: var(--panel);
+      border-right: 1px solid var(--border);
+      color: var(--muted);
+      padding: 14px 8px;
+      text-align: right;
+      user-select: none;
+    }
+    .line-numbers span { display: block; height: calc(1.6em); padding: 0 6px; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+  <button id="downloadBtn" class="btn">⬇ Download</button>
+  <h1 id="fileName">Loading...</h1>
+  <button id="themeToggle" class="btn" style="margin-left:auto;">...</button>
+  </div>
+  <div class="viewer">
+    <div class="code-wrap">
+      <div id="lineNumbers" class="line-numbers" aria-hidden="true"></div>
+      <pre><code id="fileContent" class="hljs"></code></pre>
+    </div>
+  </div>
+  <script>
+    const owner = "nathanlobo";
+    const repo = "mini-projects";
+    const branch = "main";
+
+    let filePath = localStorage.getItem('filePath') ||
+                   new URLSearchParams(window.location.search).get('file');
+    if (!filePath) {
+      document.getElementById('fileContent').textContent = 'No file selected.';
+      document.getElementById('fileName').textContent = 'No file';
+      throw new Error('filePath not set');
+    }
+
+    const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
+    const fileNameEl = document.getElementById('fileName');
+    const contentEl = document.getElementById('fileContent');
+    const lineNumbersEl = document.getElementById('lineNumbers');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const themeBtn = document.getElementById('themeToggle');
+    const hljsTheme = document.getElementById('hljs-theme');
+
+    fileNameEl.textContent = filePath;
+
+    // --- Download Helper ---
+    async function downloadFile(rawUrl, filename) {
+      const res = await fetch(rawUrl);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = filename || rawUrl.split('/').pop();
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
+    }
+    downloadBtn.addEventListener('click', () =>
+      downloadFile(rawUrl, filePath.split('/').pop())
+    );
+
+    // --- Theme Switch ---
+    function setTheme(mode) {
+      if (mode === "light") {
+        document.documentElement.classList.add("light");
+        hljsTheme.href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css";
+      } else {
+        document.documentElement.classList.remove("light");
+        hljsTheme.href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css";
+      }
+      localStorage.setItem("theme", mode);
+    }
+
+    // Detect system preference
+    const systemPrefDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      setTheme(savedTheme);
+    } else {
+      setTheme(systemPrefDark ? "dark" : "light");
+    }
+
+    themeBtn.addEventListener("click", () => {
+      const current = document.documentElement.classList.contains("light") ? "light" : "dark";
+      setTheme(current === "light" ? "dark" : "light");
+    });
+
+    // --- Fetch File ---
+    fetch(rawUrl)
+      .then(r => r.text())
+      .then(text => {
+        contentEl.textContent = text;
+        hljs.highlightElement(contentEl);
+
+        // line numbers
+        const lines = text.split("\n");
+        lineNumbersEl.innerHTML = "";
+        for (let i = 0; i < lines.length; i++) {
+          const span = document.createElement("span");
+          span.textContent = i + 1;
+          lineNumbersEl.appendChild(span);
+        }
+      })
+      .catch(err => {
+        contentEl.textContent = "Error loading file.";
+        console.error(err);
+      });
+  </script>
+  <script>
+  const themeBtn = document.getElementById("themeToggle");
+const hljsTheme = document.getElementById("hljs-theme");
+
+function setTheme(mode) {
+  if (mode =
+  == "light") {
+    document.documentElement.classList.add("light");
+    themeBtn.textContent = "Dark";
+    hljsTheme.href =
+      "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css";
+  } else {
+    document.documentElement.classList.remove("light");
+    themeBtn.textContent = "Light";
+    hljsTheme.href =
+      "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css";
+  }
+  localStorage.setItem("theme", mode);
+}
+
+const systemPrefDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+const savedTheme = localStorage.getItem("theme");
+setTheme(savedTheme || (systemPrefDark ? "dark" : "light"));
+
+themeBtn.addEventListener("click", () => {
+  const current = document.documentElement.classList.contains("light") ? "light" : "dark";
+  setTheme(current === "light" ? "dark" : "light");
+});
+  </script>
+</body>
+</html>
