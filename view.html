@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>View file — mini-projects</title>
+  <title>Code</title>
 
   <!-- highlight.js -->
   <link id="hljs-theme" rel="stylesheet"
@@ -96,9 +96,9 @@
 </head>
 <body>
   <div class="topbar">
-  <button id="downloadBtn" class="btn">⬇ Download</button>
+  <!--<button id="downloadBtn" class="btn">⬇ Download</button>-->
   <h1 id="fileName">Loading...</h1>
-  <button id="themeToggle" class="btn" style="margin-left:auto;">...</button>
+  <button id="themeToggle" class="btn" style="margin-left:auto;">Theme</button>
   </div>
   <div class="viewer">
     <div class="code-wrap">
@@ -128,9 +128,9 @@
     const hljsTheme = document.getElementById('hljs-theme');
 
     fileNameEl.textContent = filePath;
-
+  
     // --- Download Helper ---
-    async function downloadFile(rawUrl, filename) {
+    /*async function downloadFile(rawUrl, filename) {
       const res = await fetch(rawUrl);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const blob = await res.blob();
@@ -146,7 +146,7 @@
     }
     downloadBtn.addEventListener('click', () =>
       downloadFile(rawUrl, filePath.split('/').pop())
-    );
+    );*/
 
     // --- Theme Switch ---
     function setTheme(mode) {
