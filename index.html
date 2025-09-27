@@ -12,6 +12,7 @@
   --border: #30363d;
   --accent: #74b5ff;
   --text: #c9d1d9;
+  --warning:yellow;
 }
 :root.light {
   --bg: #ffffff;
@@ -20,6 +21,7 @@
   --border: #d0d7de;
   --accent: #0969da;
   --text: #24292f;
+  --warning:#ddc400;
 }
 body { background: var(--bg); color: var(--text); }
 .topbar {
@@ -32,9 +34,9 @@ body { background: var(--bg); color: var(--text); }
   color:var(--muted); padding:6px 10px;
   border-radius:6px; cursor:pointer; font-weight:700;
 }
-.btn:hover { color:var(--accent); background:rgba(255, 11, 11, 0.06); }
+.btn:hover {background-color: #0b64ffab;}
               
-  body { font-family: Arial, sans-serif; background: var(--bg); color: var(--text); padding:20px; }
+  body { font-family: Arial, sans-serif; background: var(--bg); color: var(--text); padding:12px; }
   .link-container { display:flex; flex-direction:column; gap:15px; max-width:900px; margin:auto; margin-top:32px; }
     /* MODIFIED: Changed display to block for full-width internal content */
     .link-block { background:#161d80; color:white; padding:12px 16px; border-radius:8px;
@@ -65,9 +67,7 @@ body { background: var(--bg); color: var(--text); }
     /* MODIFIED: Added flex-shrink: 0 to prevent buttons from shrinking */
     .button-container { display:flex; gap:8px; flex-shrink: 0; }
     .btn { padding:8px 12px; border-radius:5px; border:none; cursor:pointer; font-weight:700; }
-    .btn-view { background:#0b66ff; color:white; }
-    .btn-output { background:#0b66ff; color:white; }
-    .btn-download { background:#0b66ff; color:white; }
+    .btn-view, .btn-output, .btn-download { background:#0b66ff; color:white; }
     /* responsive */
     @media (max-width:600px){
       .link-block { flex-direction:column; align-items:flex-start; }
@@ -77,13 +77,21 @@ body { background: var(--bg); color: var(--text); }
   </style>
 </head>
 <body>
+  <h2 style="color:var(--warning)">Website under construction</h2>
   <div class="topbar">
     <div class="tabs-nav">
       <button class="tab-btn active" data-tab="HTML">HTML</button>
       <button class="tab-btn" data-tab="PHP">PHP</button>
       <button class="tab-btn" data-tab="DSC++">DSC++</button>
     </div>
-    <button id="themeToggle" class="btn" style="margin-left:auto;">...</button>
+    <div class="theme-switch-wrapper" style="margin-left:auto;">
+      <span id="mode-text">Dark</span>
+      <label class="theme-switch" for="checkbox">
+        <input type="checkbox" id="checkbox" />
+        <div class="slider round"></div>
+      </label>
+    </div>
+    
   </div>
   <style>
     .tabs-nav {
@@ -108,6 +116,64 @@ body { background: var(--bg); color: var(--text); }
       color: var(--accent);
       background: var(--bg);
       border-bottom: 2px solid var(--accent);
+    }
+    /* Toggle Switch Styles from toggle.html */
+    .theme-switch-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 12px;
+      gap: 2px;
+    }
+    #mode-text {
+      margin-bottom: 2px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    .theme-switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+    }
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #fff;
+      transition: 0.4s;
+    }
+    input:checked + .slider {
+      background-color: #66bb6a;
+    }
+    input:checked + .slider:before {
+      transform: translateX(16px);
+    }
+    .slider.round {
+      border-radius: 20px;
+    }
+    .slider.round:before {
+      border-radius: 50%;
     }
   </style>
   <div id="linkContainer" class="link-container">Loading...</div>
@@ -152,7 +218,6 @@ body { background: var(--bg); color: var(--text); }
                   "Expt 3.7a - Hybrid Inheritance in C++ (University Example)"]
       }
     ];
-
     const htmlExpts = [
       {
         name: "Expt 1",
@@ -169,8 +234,32 @@ body { background: var(--bg); color: var(--text); }
                 "WD-HTML/Expt-2/expt2b.html"],
         filedesc:["Expt 2a - Class Timetable",
                   "Expt 2b - Table with All Table Tags (Own Idea)"]
+      },
+      {
+        name: "Expt 3",
+        files: ["WD-HTML/Expt-3/expt3-login.html",
+                "WD-HTML/Expt-3/expt3-register.html"],
+        filedesc:["Expt 3a - Login Page",
+                  "Expt 3b - Registeration / Form Page"]
+      },
+      {
+        name: "Expt 4",
+        files: ["WD-HTML/Expt-4/all_css.html"],
+        filedesc:["Expt 4 - All Cascading Stylesheet Tags"]
       }
     ];
+
+       // Map file paths to their corresponding direct zip download URLs (GitHub releases)
+    const zipDownloads = {
+      "WD-HTML/Expt-1": "https://github.com/user-attachments/files/22573058/Expt-1.zip",
+      "WD-HTML/Expt-1/expt1a.html": "https://github.com/user-attachments/files/22573164/Expt-1a.zip",
+      "WD-HTML/Expt-2": "https://github.com/user-attachments/files/22573296/Expt-2.zip",
+      "WD-HTML/Expt-2/expt2b.html": "https://github.com/user-attachments/files/22573297/Expt-2b.zip",
+      "WD-HTML/Expt-3": "https://github.com/user-attachments/files/22571845/Expt-3.zip",
+      "WD-HTML/Expt-3/expt3-login.html": "https://github.com/user-attachments/files/22571847/Expt3-login.zip",
+      "WD-HTML/Expt-3/expt3-register.html": "https://github.com/user-attachments/files/22573836/Expt3-register.zip",
+      "WD-HTML/Expt-4/all_css.html": "https://github.com/user-attachments/files/22573312/Expt-4.zip",
+    };
     const owner = "nathanlobo";
     const repo = "CodeStore";
     const branch = "main";
@@ -247,7 +336,6 @@ body { background: var(--bg); color: var(--text); }
               window.location.href = 'view.html';
             });
 
-
             // Output button (disable for DSC++ tab)
             const outputBtn = document.createElement('button');
             outputBtn.className = 'btn btn-output';
@@ -265,12 +353,22 @@ body { background: var(--bg); color: var(--text); }
               });
             }
 
-            // Download button
             const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
             const downloadBtn = document.createElement('button');
             downloadBtn.className = 'btn btn-download';
             downloadBtn.textContent = 'Download';
-            downloadBtn.addEventListener('click', () => downloadFile(rawUrl, filePath.split('/').pop()));
+
+            // Check if this file should trigger a release zip download
+            if (zipDownloads[filePath]) {
+              const zipUrl = zipDownloads[filePath];
+              downloadBtn.addEventListener('click', () => {
+                // Use the last part of the URL as filename
+                const zipFileName = zipUrl.split('/').pop();
+                downloadFile(zipUrl, zipFileName);
+              });
+            } else {
+              downloadBtn.addEventListener('click', () => downloadFile(rawUrl, filePath.split('/').pop()));
+            }
 
             btnContainer.appendChild(codeBtn);
             btnContainer.appendChild(outputBtn);
@@ -320,28 +418,35 @@ body { background: var(--bg); color: var(--text); }
     activateTab(lastTab);
   </script>
               <script>
-  const themeBtn = document.getElementById("themeToggle");
-  let hljsTheme = null; // not used on main page but kept for compatibility
-
-  function setTheme(mode) {
-    if (mode === "light") {
-      document.documentElement.classList.add("light");
-      themeBtn.textContent = "Dark";
-    } else {
-      document.documentElement.classList.remove("light");
-      themeBtn.textContent = "Light";
-    }
-    localStorage.setItem("theme", mode);
-  }
-
-  const systemPrefDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const savedTheme = localStorage.getItem("theme");
-  setTheme(savedTheme || (systemPrefDark ? "dark" : "light"));
-
-  themeBtn.addEventListener("click", () => {
-    const current = document.documentElement.classList.contains("light") ? "light" : "dark";
-    setTheme(current === "light" ? "dark" : "light");
-  });
-</script>
+              // Toggle switch logic from toggle.html, adapted for index.html
+              document.addEventListener('DOMContentLoaded', function() {
+                const checkbox = document.getElementById('checkbox');
+                const modeText = document.getElementById('mode-text');
+                const root = document.documentElement;
+                // 1. Check Local Storage for preference
+                const currentTheme = localStorage.getItem('theme');
+                if (currentTheme === 'dark-mode') {
+                  root.classList.remove('light');
+                  checkbox.checked = true;
+                  modeText.textContent = 'Light';
+                } else {
+                  root.classList.add('light');
+                  checkbox.checked = false;
+                  modeText.textContent = 'Dark';
+                }
+                // 2. Event Listener for the toggle
+                checkbox.addEventListener('change', function() {
+                  if (this.checked) {
+                    root.classList.remove('light');
+                    localStorage.setItem('theme', 'dark-mode');
+                    modeText.textContent = 'Light';
+                  } else {
+                    root.classList.add('light');
+                    localStorage.setItem('theme', 'light-mode');
+                    modeText.textContent = 'Dark';
+                  }
+                });
+              });
+              </script>
 </body>
 </html>
