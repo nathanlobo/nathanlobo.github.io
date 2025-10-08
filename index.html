@@ -271,8 +271,49 @@ body { background: var(--bg); color: var(--text); }
         ]
       }
     ];
-
-       // Map file paths to their corresponding direct zip download URLs (GitHub releases)
+    const phpExpts = [
+      {
+        name: "Expt 1",
+        files: ["WD-PHP/expt1_basic_php/basics.php","WD-PHP/expt1_basic_php/variable.php"],
+        outputLinks: [
+          "http://nathanlobo.byethost4.com/expt1_basic_php/basics.php",
+          "http://nathanlobo.byethost4.com/expt1_basic_php/variable.php"
+        ]
+      },
+      {
+        name: "Expt 2",
+        files: ["WD-PHP/expt2_request_method/get.html",
+                "WD-PHP/expt2_request_method/post.html",
+                "WD-PHP/expt2_request_method/request.html"],
+        outputLinks: [
+          "http://nathanlobo.byethost4.com/expt2_request_method/get.html",
+          "http://nathanlobo.byethost4.com/expt2_request_method/post.html",
+          "http://nathanlobo.byethost4.com/expt2_request_method/request.html",
+        ]
+      },
+      {
+        name: "Expt 3",
+        files: ["WD-PHP/mysql/expt3_mysql_basic.php",
+                "WD-PHP/mysql/expt3_create_database_table.sql",
+                "WD-PHP/mysql/expt3_to_view_table_delete_row.sql",],
+        outputLinks: ["http://nathanlobo.byethost4.com/mysql/expt3_mysql_basic.php"]
+      },
+      {
+        name: "Expt 4",
+        files: ["WD-PHP/mysql/expt4_mysql_form_insert.php"],
+        outputLinks: ["http://nathanlobo.byethost4.com/mysql/expt4_mysql_form_insert.php"]
+      },
+      {
+        name: "Expt 5",
+        files: ["WD-PHP/mysql/expt5_mysql_form_edit.php"],
+        outputLinks: ["http://nathanlobo.byethost4.com/mysql/expt5_mysql_form_edit.php"]
+      },
+      {
+        name: "Expt 6",
+        files: ["WD-PHP/mysql/expt6_mysql_delete.php"],
+        outputLinks: ["http://nathanlobo.byethost4.com/mysql/expt6_mysql_delete.php"]
+      },
+    ];
     const zipDownloads = {
       "WD-HTML/Expt-1": "https://github.com/user-attachments/files/22573058/Expt-1.zip",
       "WD-HTML/Expt-1/expt1a.html": "https://github.com/user-attachments/files/22573164/Expt-1a.zip",
@@ -331,7 +372,7 @@ body { background: var(--bg); color: var(--text); }
         if (Array.isArray(exp.files) && exp.files.length > 0) {
           exp.files.forEach((filePath, fileIdx) => {
             const fileDiv = document.createElement('div');
-            fileDiv.className = 'file-row'; 
+            fileDiv.className = 'file-row';
 
             // Use filedesc if available, else fallback to filePath
             const urlA = document.createElement('a');
@@ -359,22 +400,40 @@ body { background: var(--bg); color: var(--text); }
               window.location.href = 'view.html';
             });
 
-            // Output button (disable for DSC++ tab)
-            const outputBtn = document.createElement('button');
-            outputBtn.className = 'btn btn-output';
-            outputBtn.textContent = 'Output';
-            // Disable output button for DSC++ tab
-            if (localStorage.getItem('selectedTab') === 'DSC++') {
-              outputBtn.disabled = true;
-              outputBtn.style.display = 'none'
-              outputBtn.style.opacity = '0.5';
-              outputBtn.title = 'Output temporarily disabled';
-            } else {
-              outputBtn.addEventListener('click', () => {
-                const outputUrl = `https://nathanlobo.github.io/CodeStore/${filePath}`;
-                window.open(outputUrl, '_blank');
-              });
-            }
+            // Output button logic
+              let showOutputBtn = true;
+              // Hide Output button for 2nd and 3rd files of Expt 3 in PHP experiments
+              if (
+                localStorage.getItem('selectedTab') === 'PHP' &&
+                exp.name === 'Expt 3' &&
+                (fileIdx === 1 || fileIdx === 2)
+              ) {
+                showOutputBtn = false;
+              }
+              if (showOutputBtn) {
+                const outputBtn = document.createElement('button');
+                outputBtn.className = 'btn btn-output';
+                outputBtn.textContent = 'Output';
+                if (localStorage.getItem('selectedTab') === 'DSC++') {
+                  outputBtn.disabled = true;
+                  outputBtn.style.display = 'none';
+                  outputBtn.style.opacity = '0.5';
+                  outputBtn.title = 'Output temporarily disabled';
+                } else if (localStorage.getItem('selectedTab') === 'PHP' && Array.isArray(exp.outputLinks) && exp.outputLinks[fileIdx]) {
+                  outputBtn.addEventListener('click', () => {
+                    window.open(exp.outputLinks[fileIdx], '_blank');
+                  });
+                } else {
+                  outputBtn.addEventListener('click', () => {
+                    const outputUrl = `https://nathanlobo.github.io/CodeStore/${filePath}`;
+                    window.open(outputUrl, '_blank');
+                  });
+                }
+                btnContainer.appendChild(codeBtn);
+                btnContainer.appendChild(outputBtn);
+              } else {
+                btnContainer.appendChild(codeBtn);
+              }
 
             const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
             const downloadBtn = document.createElement('button');
@@ -393,8 +452,6 @@ body { background: var(--bg); color: var(--text); }
               downloadBtn.addEventListener('click', () => downloadFile(rawUrl, filePath.split('/').pop()));
             }
 
-            btnContainer.appendChild(codeBtn);
-            btnContainer.appendChild(outputBtn);
             btnContainer.appendChild(downloadBtn);
             fileDiv.appendChild(btnContainer);
 
@@ -425,8 +482,10 @@ body { background: var(--bg); color: var(--text); }
         renderExperiments(htmlExpts);
       } else if (tabName === 'DSC++') {
         renderExperiments(dscppExpts);
+      } else if (tabName === 'PHP') {
+        renderExperiments(phpExpts);
       } else {
-        container.innerHTML = '<p>No experiments defined for PHP.</p>';
+        container.innerHTML = '<p>No experiments defined for this tab.</p>';
       }
     }
 
