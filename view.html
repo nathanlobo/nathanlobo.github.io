@@ -82,16 +82,21 @@
       font-family: 'Fira Code', monospace;
       font-size: 13px; line-height: 1.6; color: var(--text);
     }
+    /* Align line-numbers to exactly match the pre block's padding and line height */
     .line-numbers {
       position: absolute; left: 0; top: 0;
       width: 56px; background: var(--panel);
       border-right: 1px solid var(--border);
       color: var(--muted);
-      padding: 14px 8px;
+      /* Match the vertical padding of pre (16px) and a little horizontal padding */
+      padding-top: 16px; padding-bottom: 16px; padding-left: 8px; padding-right: 8px;
       text-align: right;
       user-select: none;
+      box-sizing: border-box;
     }
-    .line-numbers span { display: block; height: calc(1.6em); padding: 0 6px; }
+    /* Use the same line-height as the code (1.6) so numbers line up exactly.
+       Setting height and line-height ensures the baseline matches. */
+    .line-numbers span { display: block; height: 1.6em; line-height: 1.6em; padding: 0 6px; }
 
     .theme-switch-wrapper {
       display: flex;
@@ -156,12 +161,15 @@
   <div class="topbar">
   <!--<button id="downloadBtn" class="btn">⬇ Download</button>-->
   <h1 id="fileName">Loading...</h1>
-  <div class="theme-switch-wrapper" style="margin-left:auto;">
+  <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+    <button id="copyBtn" class="btn" title="Copy code to clipboard">Copy</button>
+    <div class="theme-switch-wrapper">
     <span id="mode-text">Dark</span>
     <label class="theme-switch" for="checkbox">
       <input type="checkbox" id="checkbox" />
       <div class="slider round"></div>
     </label>
+  </div>
   </div>
   </div>
   <div class="viewer">
@@ -262,11 +270,115 @@
           span.textContent = i + 1;
           lineNumbersEl.appendChild(span);
         }
+
+        // Align line-numbers precisely with the rendered code by
+        // copying computed padding and line-height (in pixels) from the pre/code.
+        function alignLineNumbers() {
+          const preEl = document.querySelector('pre');
+          if (!preEl) return;
+          const preStyles = window.getComputedStyle(preEl);
+          const codeStyles = window.getComputedStyle(contentEl);
+
+          // Use pixel values to avoid discrepancies across fonts/zoom
+          // fixed top padding set per user request
+          const paddingTopPx = '30px';
+          const paddingBottomPx = preStyles.paddingBottom;
+
+          // Ensure the line-numbers container uses the same font metrics as code
+          lineNumbersEl.style.fontFamily = codeStyles.fontFamily;
+          lineNumbersEl.style.fontSize = codeStyles.fontSize;
+
+          // Compute numeric pixel line-height. getComputedStyle usually returns px;
+          // if it returns 'normal' or unitless, fall back to font-size * 1.2 or use pre's line-height.
+          let lineHeightPx = codeStyles.lineHeight;
+          if (!lineHeightPx || lineHeightPx === 'normal') {
+            const fs = parseFloat(codeStyles.fontSize) || 13;
+            lineHeightPx = (fs * 1.2) + 'px';
+          }
+
+          // If lineHeightPx is unitless (e.g., '1.6'), convert using font-size
+          if (/^[0-9.]+$/.test(lineHeightPx)) {
+            const fs = parseFloat(codeStyles.fontSize) || 13;
+            lineHeightPx = (fs * parseFloat(lineHeightPx)) + 'px';
+          }
+
+          // Apply padding to the line numbers container
+          lineNumbersEl.style.paddingTop = paddingTopPx;
+          lineNumbersEl.style.paddingBottom = paddingBottomPx;
+          lineNumbersEl.style.boxSizing = 'border-box';
+
+          // Apply exact height/line-height to each span so baselines match.
+          // Remove vertical padding on spans to avoid shifting the baseline.
+          const spans = lineNumbersEl.querySelectorAll('span');
+          spans.forEach(s => {
+            s.style.display = 'block';
+            s.style.height = lineHeightPx;
+            s.style.lineHeight = lineHeightPx;
+            s.style.paddingTop = '0';
+            s.style.paddingBottom = '0';
+            s.style.paddingLeft = '6px';
+            s.style.paddingRight = '6px';
+            s.style.margin = '0';
+            s.style.boxSizing = 'border-box';
+          });
+        }
+
+        // Run once now and again on resize (in case zoom or font metrics change)
+        alignLineNumbers();
+        window.addEventListener('resize', alignLineNumbers);
+
+        
       })
       .catch(err => {
         contentEl.textContent = "Error loading file.";
         console.error(err);
       });
+
+  // --- Copy button handler ---
+  (function setupCopyButton(){
+    const copyBtn = document.getElementById('copyBtn');
+    const contentEl = document.getElementById('fileContent');
+    if (!copyBtn) return;
+
+    function setTempText(el, text, ms = 1500) {
+      const orig = el.textContent;
+      el.textContent = text;
+      el.disabled = true;
+      setTimeout(() => { el.textContent = orig; el.disabled = false; }, ms);
+    }
+
+    async function copyText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text);
+      }
+      // Fallback for older browsers
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      // Move off-screen
+      ta.style.position = 'fixed'; ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        return Promise.resolve();
+      } catch (e) {
+        document.body.removeChild(ta);
+        return Promise.reject(e);
+      }
+    }
+
+    copyBtn.addEventListener('click', async () => {
+      const text = contentEl.textContent || '';
+      try {
+        await copyText(text);
+        setTempText(copyBtn, 'Copied!');
+      } catch (e) {
+        console.error('Copy failed', e);
+        setTempText(copyBtn, 'Failed');
+      }
+    });
+  })();
   </script>
   <!-- Removed duplicate theme script to fix redeclaration errors -->
 </body>
