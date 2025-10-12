@@ -92,13 +92,77 @@
       user-select: none;
     }
     .line-numbers span { display: block; height: calc(1.6em); padding: 0 6px; }
+
+    .theme-switch-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 12px;
+      gap: 2px;
+    }
+    #mode-text {
+      margin-bottom: 2px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    .theme-switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+    }
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #fff;
+      transition: 0.4s;
+    }
+    input:checked + .slider {
+      background-color: #66bb6a;
+    }
+    input:checked + .slider:before {
+      transform: translateX(16px);
+    }
+    .slider.round {
+      border-radius: 20px;
+    }
+    .slider.round:before {
+      border-radius: 50%;
+    }
   </style>
 </head>
 <body>
   <div class="topbar">
   <!--<button id="downloadBtn" class="btn">⬇ Download</button>-->
   <h1 id="fileName">Loading...</h1>
-  <button id="themeToggle" class="btn" style="margin-left:auto;">Theme</button>
+  <div class="theme-switch-wrapper" style="margin-left:auto;">
+    <span id="mode-text">Dark</span>
+    <label class="theme-switch" for="checkbox">
+      <input type="checkbox" id="checkbox" />
+      <div class="slider round"></div>
+    </label>
+  </div>
   </div>
   <div class="viewer">
     <div class="code-wrap">
@@ -148,30 +212,39 @@
       downloadFile(rawUrl, filePath.split('/').pop())
     );*/
 
-    // --- Theme Switch ---
-    function setTheme(mode) {
-      if (mode === "light") {
-        document.documentElement.classList.add("light");
-        hljsTheme.href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css";
-      } else {
-        document.documentElement.classList.remove("light");
+    // --- Theme Switch (toggle) ---
+    document.addEventListener('DOMContentLoaded', function() {
+      const checkbox = document.getElementById('checkbox');
+      const modeText = document.getElementById('mode-text');
+      const root = document.documentElement;
+      const hljsTheme = document.getElementById('hljs-theme');
+      // 1. Check Local Storage for preference
+      const currentTheme = localStorage.getItem('theme');
+      if (currentTheme === 'dark-mode') {
+        root.classList.remove('light');
+        checkbox.checked = true;
+        modeText.textContent = 'Dark';
         hljsTheme.href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css";
+      } else {
+        root.classList.add('light');
+        checkbox.checked = false;
+        modeText.textContent = 'Light';
+        hljsTheme.href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css";
       }
-      localStorage.setItem("theme", mode);
-    }
-
-    // Detect system preference
-    const systemPrefDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      setTheme(savedTheme);
-    } else {
-      setTheme(systemPrefDark ? "dark" : "light");
-    }
-
-    themeBtn.addEventListener("click", () => {
-      const current = document.documentElement.classList.contains("light") ? "light" : "dark";
-      setTheme(current === "light" ? "dark" : "light");
+      // 2. Event Listener for the toggle
+      checkbox.addEventListener('change', function() {
+        if (this.checked) {
+          root.classList.remove('light');
+          localStorage.setItem('theme', 'dark-mode');
+          modeText.textContent = 'Dark';
+          hljsTheme.href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css";
+        } else {
+          root.classList.add('light');
+          localStorage.setItem('theme', 'light-mode');
+          modeText.textContent = 'Light';
+          hljsTheme.href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css";
+        }
+      });
     });
 
     // --- Fetch File ---

@@ -184,7 +184,11 @@ body { background: var(--bg); color: var(--text); }
         files: ["DSCpp/expt1/overloading_1a.cpp", 
                 "DSCpp/expt1/overloading_1b.cpp",
                 "DSCpp/expt1/overloading_1c.cpp",
-                "DSCpp/expt1/overloading_1d.cpp"]
+                "DSCpp/expt1/overloading_1d.cpp"],
+        filedesc:["Expt 1a - To store and manage college details.",
+                  "Expt 1b - To represent a bank account with basic operations.",
+                  "Expt 1c - To calculate area of different shapes using function overloading.",
+                  "Expt 1d - To calculate averages using function overloading."]
       },
       {
         name: "Expt 2",
@@ -192,7 +196,12 @@ body { background: var(--bg); color: var(--text); }
                 "DSCpp/expt2/expt2b.cpp",
                 "DSCpp/expt2/expt2c.cpp",
                 "DSCpp/expt2/expt2d.cpp",
-                "DSCpp/expt2/expt2e.cpp"]
+                "DSCpp/expt2/expt2e.cpp"],
+        filedesc:["Expt 2a - To create a class box and use friend function to calculate volume.",
+                  "Expt 2b - To create 2 student classes & use a friend function to access & calculate their total marks.",
+                  "Expt 2c - To create a class account & use a friend function to transfer funds from 1 acc to other, ensuring the source account has sufficient balance.",
+                  "Expt 2d - To create 2 classes A & B, let B be friend of A, so that it can access & display private members of B.",
+                  "Expt 2e - To create classes account & bank, & to be able to access and modify the balance."]
       },
       {
         name: "Expt 3",
@@ -244,8 +253,8 @@ body { background: var(--bg); color: var(--text); }
       },
       {
         name: "Expt 4",
-        files: ["WD-HTML/Expt-4/all_css.html"],
-        filedesc:["Expt 4 - All Cascading Stylesheet Tags"]
+        files: ["WD-HTML/Expt-4/all_css.html","WD-HTML/Expt-4/styles.css"],
+        filedesc:["Expt 4 - All Cascading Stylesheet Tags","External .CSS - All Cascading Stylesheet Tags"]
       },
       {
         name: "Expt 5",
@@ -274,7 +283,8 @@ body { background: var(--bg); color: var(--text); }
     const phpExpts = [
       {
         name: "Expt 1",
-        files: ["WD-PHP/expt1_basic_php/basics.php","WD-PHP/expt1_basic_php/variable.php"],
+        files: ["WD-PHP/expt1_basic_php/basics.php"],
+        filedesc:["Expt 1 - Implementation of basic PHP Programs."],
         outputLinks: [
           "http://nathanlobo.byethost4.com/expt1_basic_php/basics.php",
           "http://nathanlobo.byethost4.com/expt1_basic_php/variable.php"
@@ -285,6 +295,9 @@ body { background: var(--bg); color: var(--text); }
         files: ["WD-PHP/expt2_request_method/get.html",
                 "WD-PHP/expt2_request_method/post.html",
                 "WD-PHP/expt2_request_method/request.html"],
+        filedesc:["Expt 2 - Implementation of PHP GET method.",
+                  "Expt 2 - Implementation of PHP POST method.",
+                  "Expt 2 - Implementation of PHP REQUEST method."],
         outputLinks: [
           "http://nathanlobo.byethost4.com/expt2_request_method/get.html",
           "http://nathanlobo.byethost4.com/expt2_request_method/post.html",
@@ -296,22 +309,40 @@ body { background: var(--bg); color: var(--text); }
         files: ["WD-PHP/mysql/expt3_mysql_basic.php",
                 "WD-PHP/mysql/expt3_create_database_table.sql",
                 "WD-PHP/mysql/expt3_to_view_table_delete_row.sql",],
+        filedesc:["Expt 3 - Implementation of PHP & Connection to MySQL",
+                  "Expt 3 - MySQL Code to Create database & table",
+                  "Expt 3 - MySQL Code to view table, delete row & delete database"],
         outputLinks: ["http://nathanlobo.byethost4.com/mysql/expt3_mysql_basic.php"]
       },
       {
         name: "Expt 4",
         files: ["WD-PHP/mysql/expt4_mysql_form_insert.php"],
+        filedesc:["Expt 4 - Implementation of PHP Insert & View Operation"],
         outputLinks: ["http://nathanlobo.byethost4.com/mysql/expt4_mysql_form_insert.php"]
       },
       {
         name: "Expt 5",
         files: ["WD-PHP/mysql/expt5_mysql_form_edit.php"],
+        filedesc:["Expt 5 - Implementation of PHP Update Operation"],
         outputLinks: ["http://nathanlobo.byethost4.com/mysql/expt5_mysql_form_edit.php"]
       },
       {
         name: "Expt 6",
         files: ["WD-PHP/mysql/expt6_mysql_delete.php"],
+        filedesc:["Expt 6 - Implementation of PHP Delete Operation"],
         outputLinks: ["http://nathanlobo.byethost4.com/mysql/expt6_mysql_delete.php"]
+      },
+      {
+        name: "Not an Expt",
+        files: ["WD-PHP/mysql/mysql_insert_edit_delete.php"],
+        filedesc:["Implementation of PHP Insert, Edit & Delete Operation"],
+        outputLinks: ["http://nathanlobo.byethost4.com/mysql/mysql_insert_edit_delete.php"]
+      },
+      {
+        name: "Expt 7",
+        files: ["WD-PHP/expt7-cookies.php"],
+        filedesc:["Expt 7 - Implementation of Cookies using PHP"],
+        outputLinks: ["http://nathanlobo.byethost4.com/expt7-cookies.php"]
       },
     ];
     const zipDownloads = {
@@ -407,6 +438,13 @@ body { background: var(--bg); color: var(--text); }
                 localStorage.getItem('selectedTab') === 'PHP' &&
                 exp.name === 'Expt 3' &&
                 (fileIdx === 1 || fileIdx === 2)
+              ) {
+                showOutputBtn = false;
+              }
+              if (
+                localStorage.getItem('selectedTab') === 'HTML' &&
+                exp.name === 'Expt 4' &&
+                (fileIdx === 1)
               ) {
                 showOutputBtn = false;
               }
@@ -510,22 +548,22 @@ body { background: var(--bg); color: var(--text); }
                 if (currentTheme === 'dark-mode') {
                   root.classList.remove('light');
                   checkbox.checked = true;
-                  modeText.textContent = 'Light';
+                  modeText.textContent = 'Dark';
                 } else {
                   root.classList.add('light');
                   checkbox.checked = false;
-                  modeText.textContent = 'Dark';
+                  modeText.textContent = 'Light';
                 }
                 // 2. Event Listener for the toggle
                 checkbox.addEventListener('change', function() {
                   if (this.checked) {
                     root.classList.remove('light');
                     localStorage.setItem('theme', 'dark-mode');
-                    modeText.textContent = 'Light';
+                    modeText.textContent = 'Dark';
                   } else {
                     root.classList.add('light');
                     localStorage.setItem('theme', 'light-mode');
-                    modeText.textContent = 'Dark';
+                    modeText.textContent = 'Light';
                   }
                 });
               });
