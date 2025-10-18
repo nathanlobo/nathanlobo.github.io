@@ -26,14 +26,22 @@
 }
 body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 .topbar {
-  display:flex; align-items:center;
-  padding:12px 16px; border-bottom:1px solid var(--border);
+  position: sticky;
+  top: 0;
+  display:flex; 
+  align-items:center;
+  padding:8px 0px;
+  border-bottom:1px solid var(--border);
   background:var(--panel);
+  z-index: 999;
 }
 .btn {
-  background:transparent; border:1px solid transparent;
-  color:var(--muted); padding:6px 10px;
-  border-radius:6px; cursor:pointer; font-weight:700;
+  background:transparent;
+  border:1px solid transparent;
+  color:var(--muted);
+  padding:6px 10px;
+  border-radius:6px;
+  cursor:pointer; font-weight:700;
 }
 .btn:hover {background-color: #0b64ffab;}
 
@@ -45,7 +53,7 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; display: fl
   right: 0;
   background: var(--panel);
   border-top: 1px solid var(--border);
-  padding: 16px;
+  padding: 8px;
   z-index: 1000;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
@@ -132,26 +140,8 @@ body::after {
       .button-container { width:100%; justify-content:flex-end; }
       .link-info { max-width:100%; }
     }
-  </style>
-</head>
-<body>
-  <h2 style="color:var(--warning)">Website under construction</h2>
-  <div class="topbar">
-    <div class="tabs-nav">
-      <button class="tab-btn active" data-tab="HTML">HTML</button>
-      <button class="tab-btn" data-tab="PHP">PHP</button>
-      <button class="tab-btn" data-tab="DSC++">DSC++</button>
-    </div>
-    <div class="theme-switch-wrapper" style="margin-left:auto;">
-      <span id="mode-text">Dark</span>
-      <label class="theme-switch" for="checkbox">
-        <input type="checkbox" id="checkbox" />
-        <div class="slider round"></div>
-      </label>
-    </div>
     
-  </div>
-  <style>
+    /* Tab Navigation Styles */
     .tabs-nav {
       display: flex;
       gap: 8px;
@@ -234,6 +224,23 @@ body::after {
       border-radius: 50%;
     }
   </style>
+</head>
+<body>
+  <h2 style="color:var(--warning)">Website under construction</h2>
+  <div class="topbar">
+    <div class="tabs-nav">
+      <button class="tab-btn active" data-tab="HTML">HTML</button>
+      <button class="tab-btn" data-tab="PHP">PHP</button>
+      <button class="tab-btn" data-tab="DSC++">DSC++</button>
+    </div>
+    <div class="theme-switch-wrapper" style="margin-left:auto;">
+      <span id="mode-text">Dark</span>
+      <label class="theme-switch" for="checkbox">
+        <input type="checkbox" id="checkbox" />
+        <div class="slider round"></div>
+      </label>
+    </div>
+  </div>
   <div id="linkContainer" class="link-container">Loading...</div>
   <script>
     const dscppExpts = [
