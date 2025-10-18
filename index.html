@@ -24,6 +24,64 @@
     --text: #24292f;
     --warning:#ddc400;
   }
+
+  /* CSS for Pop up to ask for name */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place, even on scroll */
+    z-index: 1000; /* Sit on top of everything */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Black with 50% opacity */
+  }
+
+  /* The modal's content box */
+  .modal-content {
+    background-color: #fefefe;
+    /* Center the modal */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    padding: 25px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 450px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    text-align: center;
+  }
+
+  /* Style the form elements */
+  #nameForm input[type="text"] {
+    width: 80%;
+    padding: 12px;
+    margin: 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+
+  #nameForm button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+
+  #nameForm button:hover {
+    background-color: #0056b3;
+  }
+  /********* Pop up CSS Ends Here *********/
+
+
   body { 
     background: var(--bg);
     color: var(--text);
@@ -247,8 +305,89 @@
       </label>
     </div>
   </div>
+  <div id="analyticsModal" class="modal">
+    <div class="modal-content">
+      <p>We would like to know your name for analytics purposes.</p>
+      <form id="nameForm">
+        <input type="text" id="userName" name="userName" placeholder="Enter your name" required>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
   <div id="linkContainer" class="link-container">Loading...</div>
   <script>
+    // Wait until the entire window is loaded
+    window.onload = function() {
+        // Check if the user's name is already stored in localStorage
+        const storedName = localStorage.getItem('userName');
+
+        if (storedName) {
+            // --- THIS IS A RETURN VISIT ---      
+            console.log("Welcome back, " + storedName + "! Logging your visit.");
+            // The user has visited before.
+            // Don't show the modal, just send the stored name to the server
+            // to log this new visit.
+            sendAnalyticsData(storedName);
+
+        } else {
+            // --- THIS IS THE FIRST VISIT ---
+            console.log("First visit. Showing modal.");
+            // Get the modal and form elements
+            const modal = document.getElementById("analyticsModal");
+            const form = document.getElementById("nameForm");
+
+            // Show the modal
+            modal.style.display = "block";
+
+            // Handle the form submission
+            form.addEventListener("submit", function(event) {
+                // Prevent the default form action (page reload)
+                event.preventDefault(); 
+
+                const userName = document.getElementById("userName").value;
+
+                if (userName.trim() !== "") {
+                    // 1. Save the name to localStorage for future visits
+                    localStorage.setItem('userName', userName);
+                    
+                    // 2. Send the name to the server for the first log
+                    sendAnalyticsData(userName);
+
+                    // 3. Give feedback and hide the modal
+                    alert("Thank you, " + userName + "!");
+                    modal.style.display = "none";
+                }
+            });
+        }
+    };
+
+    /**
+     * A helper function to send the name data to the server.
+     * This is used for both the first visit and return visits.
+     * @param {string} name - The user's name to log.
+     */
+    function sendAnalyticsData(name) {
+        
+        const formData = new FormData();
+        formData.append('userName', name);
+
+        // Send the data to the PHP script using Fetch
+        fetch('C:/xampp/htdocs/Nathan/project/save_name.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            // Log the server's response in the console
+            console.log("Server response: " + data); 
+        })
+        .catch(error => {
+            console.error('Error sending analytics data:', error);
+        });
+    }
+    // JS to handle pop up ends here
+
+    // Experiment Data
     const dscppExpts = [
       {
         name: "Expt 1",
