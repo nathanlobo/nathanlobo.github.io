@@ -6,103 +6,108 @@
   <title>CodeStore - Lobo</title>
   <link rel="icon" type="image/x-icon" href="./icon.png">
   <style>
-              :root {
-  --bg: #0d1117;
-  --panel: #0d1117;
-  --muted: #8b949e;
-  --border: #30363d;
-  --accent: #74b5ff;
-  --text: #c9d1d9;
-  --warning:yellow;
-}
-:root.light {
-  --bg: #ffffff;
-  --panel: #f6f8fa;
-  --muted: #57606a;
-  --border: #d0d7de;
-  --accent: #0969da;
-  --text: #24292f;
-  --warning:#ddc400;
-}
-body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
-.topbar {
-  position: sticky;
-  top: 0;
-  display:flex; 
-  align-items:center;
-  padding:8px 0px;
-  border-bottom:1px solid var(--border);
-  background:var(--panel);
-  z-index: 999;
-}
-.btn {
-  background:transparent;
-  border:1px solid transparent;
-  color:var(--muted);
-  padding:6px 10px;
-  border-radius:6px;
-  cursor:pointer; font-weight:700;
-}
-.btn:hover {background-color: #0b64ffab;}
+  :root {
+    --bg: #0d1117;
+    --panel: #0d1117;
+    --muted: #8b949e;
+    --border: #30363d;
+    --accent: #74b5ff;
+    --text: #c9d1d9;
+    --warning:yellow;
+  }
+  :root.light {
+    --bg: #ffffff;
+    --panel: #f6f8fa;
+    --muted: #57606a;
+    --border: #d0d7de;
+    --accent: #0969da;
+    --text: #24292f;
+    --warning:#ddc400;
+  }
+  body { 
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; 
+  }
+  .topbar {
+    position: sticky;
+    top: 0;
+    display:flex; 
+    align-items:center;
+    padding:8px 0px;
+    border-bottom:1px solid var(--border);
+    background:var(--panel);
+    z-index: 999;
+  }
+  .btn {
+    background:transparent;
+    border:1px solid transparent;
+    color:var(--muted);
+    padding:6px 10px;
+    border-radius:6px;
+    cursor:pointer; font-weight:700;
+  }
+  .btn:hover { background-color: #0b64ffab; }
 
-/* Footer Styles */
-.footer-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--panel);
-  border-top: 1px solid var(--border);
-  padding: 8px;
-  z-index: 1000;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-}
-.footer-content {
-  max-width: 900px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap:10px;
-}
-.social-links {
-  display: flex;
-  gap: 30px;
-  align-items: center;
-}
-.social-icon {
-  color: var(--muted);
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-.social-icon:hover {
-  color: var(--accent);
-  background: rgba(116, 181, 255, 0.1);
-  transform: translateY(-2px);
-}
-.footer-text {
-  margin: 0;
-  font-size: 13px;
-  color: var(--muted);
-}
-.footer-title {
-  margin: 0;
-  font-size: 13px;
-  letter-spacing: 2.5px;
-  word-spacing: 5px;
-  font-weight: 700;
-  color: var(--muted);
-}
-/* Add padding to body to prevent content from being hidden behind footer */
-body::after {
-  content: '';
-  display: block;
-  height: 100px;
-}
-              
+  /* Footer Styles */
+  .footer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    padding: 8px;
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  }
+  .footer-content {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:10px;
+  }
+  .social-links {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+  }
+  .social-icon {
+    color: var(--muted);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  .social-icon:hover {
+    color: var(--accent);
+    background: rgba(116, 181, 255, 0.1);
+    transform: translateY(-2px);
+  }
+  .footer-text {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .footer-title {
+    margin: 0;
+    font-size: 13px;
+    letter-spacing: 2.5px;
+    word-spacing: 5px;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  /* Add padding to body to prevent content from being hidden behind footer */
+  body::after {
+    content: '';
+    display: block;
+    height: 100px;
+  }        
   body { font-family: Arial, sans-serif; background: var(--bg); color: var(--text); padding:12px; }
   .link-container { display:flex; flex-direction:column; gap:15px; max-width:900px; margin:auto; margin-top:32px; }
     /* MODIFIED: Changed display to block for full-width internal content */
