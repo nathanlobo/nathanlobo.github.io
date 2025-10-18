@@ -345,17 +345,17 @@
 
                 const userName = document.getElementById("userName").value;
 
-                if (userName.trim() !== "") {
-                    // 1. Save the name to localStorage for future visits
-                    localStorage.setItem('userName', userName);
+                // if (userName.trim() !== "") {
+                //     // 1. Save the name to localStorage for future visits
+                //     localStorage.setItem('userName', userName);
                     
-                    // 2. Send the name to the server for the first log
-                    sendAnalyticsData(userName);
+                //     // 2. Send the name to the server for the first log
+                //     sendAnalyticsData(userName);
 
-                    // 3. Give feedback and hide the modal
-                    alert("Thank you, " + userName + "!");
-                    modal.style.display = "none";
-                }
+                //     // 3. Give feedback and hide the modal
+                //     alert("Thank you, " + userName + "!");
+                //     modal.style.display = "none";
+                // }
             });
         }
     };
