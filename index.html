@@ -316,7 +316,7 @@
   </div>
   <div id="linkContainer" class="link-container">Loading...</div>
   <script>
-    // Wait until the entire window is loaded
+    const phpFileLink = "http://nathanlobo.byethost4.com/save_name.php";
     window.onload = function() {
         // Check if the user's name is already stored in localStorage
         const storedName = localStorage.getItem('userName');
@@ -372,7 +372,7 @@
         formData.append('userName', name);
 
         // Send the data to the PHP script using Fetch
-        fetch('C:/xampp/htdocs/Nathan/project/save_name.php', {
+        fetch(phpFileLink, {
             method: 'POST',
             body: formData
         })
