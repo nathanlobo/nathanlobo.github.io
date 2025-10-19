@@ -316,6 +316,12 @@
   </div>
   <div id="linkContainer" class="link-container">Loading...</div>
   <script>
+    // ===== GOOGLE SHEETS CONFIGURATION =====
+    // Replace this URL with your Google Apps Script Web App URL
+    // Follow instructions in GOOGLE_SHEETS_SETUP.md to get this URL
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwX3UHDgjEMNQ6_Nl5x1BJtkygCPxuD1VBfI5pDYt0Mv8aHcVtpZgNxmf6KMiLSsvY/exec';
+    // =======================================
+
     window.onload = function() {
         // Check if the user's name is already stored in localStorage
         const storedName = localStorage.getItem('userName');
@@ -323,9 +329,9 @@
             // --- THIS IS A RETURN VISIT ---      
             console.log("Welcome back, " + storedName + "! Logging your visit.");
             // The user has visited before.
-            // Don't show the modal, just send the stored name to the server
+            // Don't show the modal, just send the stored name to Google Sheets
             // to log this new visit.
-            sendAnalyticsData(storedName);
+            sendAnalyticsData(storedName, 'Return Visit');
         } else {
             // --- THIS IS THE FIRST VISIT ---
             console.log("First visit. Showing modal.");
@@ -341,10 +347,11 @@
                 event.preventDefault(); 
                 const userName = document.getElementById("userName").value;
                 if (userName.trim() !== "") {
-                    // localStorage.setItem('userName', userName);
-                    // 2. Send the name to the server for the first log
-                    sendAnalyticsData(userName);
-                    // 3. Give feedback and hide the modal
+                    // Store the name in localStorage for future visits
+                    localStorage.setItem('userName', userName);
+                    // Send the name to Google Sheets for the first log
+                    sendAnalyticsData(userName, 'First Visit');
+                    // Give feedback and hide the modal
                     // alert("Thank you, " + userName + "!");
                     modal.style.display = "none";
                 }
@@ -353,22 +360,24 @@
     };
 
     /**
-     * A helper function to send the name data to the server.
+     * A helper function to send the name data to Google Sheets.
      * This is used for both the first visit and return visits.
      * @param {string} name - The user's name to log.
+     * @param {string} visitType - Type of visit ('First Visit' or 'Return Visit').
      */
-    function sendAnalyticsData(name) {
-        const formData = new FormData();
-        formData.append('userName', name);
-        // Send the data to the PHP script using Fetch
-        fetch("https://nathanlobo.byethost4.com/save_name.php", {
+    function sendAnalyticsData(name, visitType) {
+        // Create URL with parameters for Google Apps Script
+        const url = `${GOOGLE_SCRIPT_URL}?userName=${encodeURIComponent(name)}&visitType=${encodeURIComponent(visitType)}`;
+        
+        // Send the data to Google Sheets using Fetch
+        fetch(url, {
             method: 'POST',
-            body: formData
+            mode: 'no-cors' // Required for Google Apps Script
         })
-        .then(response => response.text())
-        .then(data => {
-            // Log the server's response in the console
-            console.log("Server response: " + data);
+        .then(() => {
+            // Note: With 'no-cors' mode, we can't read the response
+            // But the data is still sent successfully
+            console.log(`Analytics data sent: ${name} - ${visitType}`);
         })
         .catch(error => {
             console.error('Error sending analytics data:', error);
