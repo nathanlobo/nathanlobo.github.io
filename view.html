@@ -39,6 +39,62 @@
       --code-bg: #f6f8fa;
       --text: #24292f;
     }
+    
+    /* CSS for Pop up to ask for name */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place, even on scroll */
+    z-index: 1000; /* Sit on top of everything */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Black with 50% opacity */
+  }
+
+  /* The modal's content box */
+  .modal-content {
+    background-color: var(--bg);
+    /* Center the modal */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    padding: 20px 8px;
+    border: 1px solid var(--text);
+    width: 90%;
+    max-width: 450px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    text-align: center;
+  }
+
+  /* Style the form elements */
+  #nameForm input[type="text"] {
+    width: 80%;
+    padding: 12px;
+    margin: 15px 0;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    font-size: 16px;
+  }
+
+  #nameForm button {
+    background-color: var(--accent);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+
+  #nameForm button:hover {
+    background-color: #0056b3;
+  }
+  /********* Pop up CSS Ends Here *********/
 
     .topbar {
       display: flex;
@@ -155,14 +211,26 @@
     .slider.round:before {
       border-radius: 50%;
     }
+    .file-description {
+      background: var(--panel);
+      padding: 12px 16px;
+      margin: 0 auto 16px;
+      max-width: 1100px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text);
+      font-weight: 500;
+    }
   </style>
 </head>
 <body>
   <div class="topbar">
-  <!--<button id="downloadBtn" class="btn">⬇ Download</button>-->
-  <h1 id="fileName">Loading...</h1>
   <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+    <button id="zoomOutBtn" class="btn" style="font-size: 30px;" title="Decrease font size">-</button>
+    <button id="zoomInBtn" class="btn" style="font-size: 30px;" title="Increase font size">+</button>
     <button id="copyBtn" class="btn" title="Copy code to clipboard">Copy</button>
+    <button id="downloadBtn" class="btn" title="Download file">Download</button>
     <div class="theme-switch-wrapper">
     <span id="mode-text">Dark</span>
     <label class="theme-switch" for="checkbox">
@@ -172,13 +240,94 @@
   </div>
   </div>
   </div>
+  <div id="analyticsModal" class="modal">
+    <div class="modal-content">
+      <p>Would like to know your name for analytics purposes.</p>
+      <form id="nameForm">
+        <input type="text" id="userName" name="userName" placeholder="Enter your name" required autofocus>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
   <div class="viewer">
+    <div id="fileDescription" class="file-description"></div>
     <div class="code-wrap">
       <div id="lineNumbers" class="line-numbers" aria-hidden="true"></div>
       <pre><code id="fileContent" class="hljs"></code></pre>
     </div>
   </div>
   <script>
+    // ===== GOOGLE SHEETS CONFIGURATION =====
+    // Replace this URL with your Google Apps Script Web App URL
+    // Follow instructions in GOOGLE_SHEETS_SETUP.md to get this URL
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwgXbi_LPG8TjWaOjeT2cPUWeoBRJ3U0DSrJTy3ikAn0hdXJ7nSXedTx_mu3xbHQLLm/exec';
+    // =======================================
+    window.onload = function() {
+        // Check if the user's name is already stored in localStorage
+        const storedName = localStorage.getItem('userName');
+        if (storedName) {
+            // --- THIS IS A RETURN VISIT ---      
+            console.log("Welcome back, " + storedName + "! Logging your visit.");
+            // The user has visited before.
+            // Don't show the modal, just send the stored name to Google Sheets
+            // to log this new visit.
+
+            sendAnalyticsData(storedName, 'Return Visit', localStorage.getItem('filePath'));
+        } else {
+            // --- THIS IS THE FIRST VISIT ---
+            console.log("First visit. Showing modal.");
+            // Get the modal and form elements
+            const modal = document.getElementById("analyticsModal");
+            const form = document.getElementById("nameForm");
+            // Show the modal
+            modal.style.display = "block";
+            // Handle the form submission
+            form.addEventListener("submit", function(event) {
+                // Prevent the default form action (page reload)
+                event.preventDefault(); 
+                const userName = document.getElementById("userName").value;
+                if (userName.trim() !== "") {
+                    // Store the name in localStorage for future visits
+                    localStorage.setItem('userName', userName);
+                    localStorage.getItem('filePath');
+                    // Send the name to Google Sheets for the first log
+                    sendAnalyticsData(userName, 'First Visit', localStorage.getItem('filePath'));
+                    // Give feedback and hide the modal
+                    // alert("Thank you, " + userName + "!");
+                    modal.style.display = "none";
+                }
+            });
+        }
+    };
+
+    /**
+     * A helper function to send the name data to Google Sheets.
+     * This is used for both the first visit and return visits.
+     * @param {string} name - The user's name to log.
+     * @param {string} visitType - Type of visit ('First Visit' or 'Return Visit').
+     */
+    function sendAnalyticsData(name, visitType, visitPage) {
+        // Create URL with parameters for Google Apps Script
+        const url = `${GOOGLE_SCRIPT_URL}?userName=${encodeURIComponent(name)}
+                                          &visitType=${encodeURIComponent(visitType)}
+                                          &visitPage=${encodeURIComponent(visitPage)}`;
+        
+        // Send the data to Google Sheets using Fetch
+        fetch(url, {
+            method: 'POST',
+            mode: 'no-cors' // Required for Google Apps Script
+        })
+        .then(() => {
+            // Note: With 'no-cors' mode, we can't read the response
+            // But the data is still sent successfully
+            console.log(`Analytics data sent: ${name} - ${visitType}`);
+        })
+        .catch(error => {
+            console.error('Error sending analytics data:', error);
+        });
+    }
+    // JS to handle pop up ends here
+
     const owner = "nathanlobo";
     const repo = "CodeStore";
     const branch = "main";
@@ -192,17 +341,129 @@
     }
 
     const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
-    const fileNameEl = document.getElementById('fileName');
     const contentEl = document.getElementById('fileContent');
     const lineNumbersEl = document.getElementById('lineNumbers');
     const downloadBtn = document.getElementById('downloadBtn');
     const themeBtn = document.getElementById('themeToggle');
     const hljsTheme = document.getElementById('hljs-theme');
+    const fileDescriptionEl = document.getElementById('fileDescription');
 
-    fileNameEl.textContent = filePath;
+    // Experiment data from index.html to get file descriptions
+    const dscppExpts = [
+      {
+        name: "Expt 1",
+        files: ["DSCpp/expt1/overloading_1a.cpp", "DSCpp/expt1/overloading_1b.cpp", "DSCpp/expt1/overloading_1c.cpp", "DSCpp/expt1/overloading_1d.cpp"],
+        filedesc:["Expt 1a - To store and manage college details.", "Expt 1b - To represent a bank account with basic operations.", "Expt 1c - To calculate area of different shapes using function overloading.", "Expt 1d - To calculate averages using function overloading."]
+      },
+      {
+        name: "Expt 2",
+        files: ["DSCpp/expt2/expt2a.cpp", "DSCpp/expt2/expt2b.cpp", "DSCpp/expt2/expt2c.cpp", "DSCpp/expt2/expt2d.cpp", "DSCpp/expt2/expt2e.cpp"],
+        filedesc:["Expt 2a - To create a class box and use friend function to calculate volume.", "Expt 2b - To create 2 student classes & use a friend function to access & calculate their total marks.", "Expt 2c - To create a class account & use a friend function to transfer funds from 1 acc to other, ensuring the source account has sufficient balance.", "Expt 2d - To create 2 classes A & B, let B be friend of A, so that it can access & display private members of B.", "Expt 2e - To create classes account & bank, & to be able to access and modify the balance."]
+      },
+      {
+        name: "Expt 3",
+        files: ["DSCpp/expt3/expt3.1.a.cpp", "DSCpp/expt3/expt3.1.b.cpp", "DSCpp/expt3/expt3.2.a.cpp", "DSCpp/expt3/expt3.2.b.cpp", "DSCpp/expt3/expt3.3.a.cpp", "DSCpp/expt3/expt3.3.b.cpp", "DSCpp/expt3/expt3.4.a.cpp", "DSCpp/expt3/expt3.5.a.cpp", "DSCpp/expt3/expt3.6.a.cpp", "DSCpp/expt3/expt3.7.a.cpp"],
+        filedesc:["Expt 3.1a - Single Inheritance in Public Mode", "Expt 3.1b - Public Inheritance Example with Employee and Programmer", "Expt 3.2a - Single Inheritance in Private Mode", "Expt 3.2b - Private Inheritance Example with Bank and Account", "Expt 3.3a - Making Private Members Inheritable Using Protected Access", "Expt 3.3b - Protected Member Inheritance Example with Student and Marks", "Expt 3.4a - Multilevel Inheritance", "Expt 3.5a - Multiple Inheritance", "Expt 3.6a - Hierarchical Inheritance in C++ (University Example)", "Expt 3.7a - Hybrid Inheritance in C++ (University Example)"]
+      }
+    ];
+    const htmlExpts = [
+      {
+        name: "Expt 1",
+        files: ["WD-HTML/Expt-1/expt1a.html", "WD-HTML/Expt-1/expt1b.html", "WD-HTML/Expt-1/expt1c.html"],
+        filedesc:["Expt 1a - Basic HTML Tags", "Expt 1b - All Text Tags", "Expt 1c - All Table Tags (Basic)"]
+      },
+      {
+        name: "Expt 2",
+        files: ["WD-HTML/Expt-2/expt2a.html", "WD-HTML/Expt-2/expt2b.html"],
+        filedesc:["Expt 2a - Class Timetable", "Expt 2b - Table with All Table Tags (Own Idea)"]
+      },
+      {
+        name: "Expt 3",
+        files: ["WD-HTML/Expt-3/expt3-login.html", "WD-HTML/Expt-3/expt3-register.html"],
+        filedesc:["Expt 3a - Login Page", "Expt 3b - Registeration / Form Page"]
+      },
+      {
+        name: "Expt 4",
+        files: ["WD-HTML/Expt-4/all_css.html","WD-HTML/Expt-4/styles.css"],
+        filedesc:["Expt 4 - All Cascading Stylesheet Tags","External .CSS - All Cascading Stylesheet Tags"]
+      },
+      {
+        name: "Expt 5",
+        files: ["WD-HTML/Expt-5/expt5.1-odd-even.html", "WD-HTML/Expt-5/expt5.2-print-day-of-week.html", "WD-HTML/Expt-5/expt5.3-simple-calc.html", "WD-HTML/Expt-5/expt5.4-for-loop.html", "WD-HTML/Expt-5/expt5.5-for-in-loop.html", "WD-HTML/Expt-5/expt5.6-for-of-loop.html", "WD-HTML/Expt-5/expt5.7-loop-over-string.html", "WD-HTML/Expt-5/expt5.8-multiply-using-func.html", "WD-HTML/Expt-5/expt5.9-add-using-func-with-parameter.html"],
+        filedesc:["Expt 5.1 - WAJS program to check if entered number is odd or even using if-else", "Expt 5.2 - WAJS program to print day of the week corresponding to entered number", "Expt 5.3 - WAJS program to implement simple calculator using switch statement", "Expt 5.4 - WAJS program to implement For Loop", "Expt 5.5 - WAJS program to implement For In Loop", "Expt 5.6 - WAJS program to implement For Of Loop", "Expt 5.7 - WAJS program to implement Loop Over a String", "Expt 5.8 - WAJS program to create a function to Multiply", "Expt 5.9 - WAJS program to create a function to add with parameters"]
+      },
+      {
+        name: "Expt 6",
+        files: ["WD-HTML/Expt-6/expt6-form-validation-js.html"],
+        filedesc:["Expt 6 - Implementation of different Javascript functions for validation."]
+      }
+    ];
+    const phpExpts = [
+      {
+        name: "Expt 1",
+        files: ["WD-PHP/expt1_basic_php/basics.php"],
+        filedesc:["Expt 1 - Implementation of basic PHP Programs."]
+      },
+      {
+        name: "Expt 2",
+        files: ["WD-PHP/expt2_request_method/get.html", "WD-PHP/expt2_request_method/post.html", "WD-PHP/expt2_request_method/request.html"],
+        filedesc:["Expt 2 - Implementation of PHP GET method.", "Expt 2 - Implementation of PHP POST method.", "Expt 2 - Implementation of PHP REQUEST method."]
+      },
+      {
+        name: "Expt 3",
+        files: ["WD-PHP/mysql/expt3_mysql_basic.php", "WD-PHP/mysql/expt3_create_database_table.sql", "WD-PHP/mysql/expt3_to_view_table_delete_row.sql"],
+        filedesc:["Expt 3 - Implementation of PHP & Connection to MySQL", "Expt 3 - MySQL Code to Create database & table", "Expt 3 - MySQL Code to view table, delete row & delete database"]
+      },
+      {
+        name: "Expt 4",
+        files: ["WD-PHP/mysql/expt4_mysql_form_insert.php"],
+        filedesc:["Expt 4 - Implementation of PHP Insert & View Operation"]
+      },
+      {
+        name: "Expt 5",
+        files: ["WD-PHP/mysql/expt5_mysql_form_edit.php"],
+        filedesc:["Expt 5 - Implementation of PHP Update Operation"]
+      },
+      {
+        name: "Expt 6",
+        files: ["WD-PHP/mysql/expt6_mysql_delete.php"],
+        filedesc:["Expt 6 - Implementation of PHP Delete Operation"]
+      },
+      {
+        name: "Not an Expt",
+        files: ["WD-PHP/mysql/mysql_insert_edit_delete.php"],
+        filedesc:["Implementation of PHP Insert, Edit & Delete Operation"]
+      },
+      {
+        name: "Expt 7",
+        files: ["WD-PHP/expt7-cookies.php"],
+        filedesc:["Expt 7 - Implementation of Cookies using PHP"]
+      },
+      {
+        name: "Expt 8",
+        files: ["WD-PHP/expt8-sessions.php"],
+        filedesc:["Expt 8 - Implementation of Sessions using PHP"]
+      }
+    ];
+
+    // Function to find file description
+    function getFileDescription(filePath) {
+      const allExpts = [...dscppExpts, ...htmlExpts, ...phpExpts];
+      for (const exp of allExpts) {
+        const fileIndex = exp.files.indexOf(filePath);
+        if (fileIndex !== -1 && exp.filedesc && exp.filedesc[fileIndex]) {
+          return exp.filedesc[fileIndex];
+        }
+      }
+      return filePath; // Fallback to file path if no description found
+    }
+
+    // Set description to the description box
+    const fileDescription = getFileDescription(filePath);
+    fileDescriptionEl.textContent = fileDescription;
   
     // --- Download Helper ---
-    /*async function downloadFile(rawUrl, filename) {
+    async function downloadFile(rawUrl, filename) {
       const res = await fetch(rawUrl);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const blob = await res.blob();
@@ -216,9 +477,17 @@
       a.remove();
       setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
     }
-    downloadBtn.addEventListener('click', () =>
-      downloadFile(rawUrl, filePath.split('/').pop())
-    );*/
+
+    downloadBtn.addEventListener('click', () => {
+      downloadFile(rawUrl, filePath.split('/').pop());
+      
+      // Analytics for download button
+      const storedName = localStorage.getItem('userName');
+      const filePath = localStorage.getItem('filePath');
+      if (storedName && filePath) {
+        sendAnalyticsData(storedName, 'Downloaded', filePath);
+      }
+    });
 
     // --- Theme Switch (toggle) ---
     document.addEventListener('DOMContentLoaded', function() {
@@ -373,10 +642,96 @@
       try {
         await copyText(text);
         setTempText(copyBtn, 'Copied!');
+
+        // Analytics for copy button
+        const storedName = localStorage.getItem('userName');
+        const filePath = localStorage.getItem('filePath');
+        if (storedName && filePath) {
+          sendAnalyticsData(storedName, 'Copied', filePath);
+        }
       } catch (e) {
         console.error('Copy failed', e);
         setTempText(copyBtn, 'Failed');
       }
+    });
+  })();
+
+  // --- Download button handler ---
+  (function setupDownloadButton(){
+    const downloadBtn = document.getElementById('downloadBtn');
+    if (!downloadBtn) return;
+    const filePath = localStorage.getItem('filePath');
+    const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
+    downloadBtn.addEventListener('click', async () => {
+      // Analytics for download button
+      const storedName = localStorage.getItem('userName');
+      if (storedName && filePath) {
+        sendAnalyticsData(storedName, 'Download', filePath);
+      }
+      try {
+        const res = await fetch(rawUrl);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const blob = await res.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = filePath.split('/').pop();
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
+      } catch (err) {
+        console.error('Download failed:', err);
+      }
+    });
+  })();
+
+  // --- Zoom In/Out functionality ---
+  (function setupZoomButtons(){
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    const preEl = document.querySelector('pre');
+    
+    if (!zoomInBtn || !zoomOutBtn || !preEl) return;
+    
+    // Get initial font size from localStorage or default to 13px
+    let fontSize = parseInt(localStorage.getItem('codeFontSize')) || 13;
+    preEl.style.fontSize = fontSize + 'px';
+    
+    // Update line numbers alignment when font size changes
+    function updateLineNumbersAlignment() {
+      const lineNumbersEl = document.getElementById('lineNumbers');
+      if (lineNumbersEl) {
+        const codeStyles = window.getComputedStyle(contentEl);
+        lineNumbersEl.style.fontSize = codeStyles.fontSize;
+        
+        // Update line number spans to match new line height
+        let lineHeightPx = codeStyles.lineHeight;
+        if (!lineHeightPx || lineHeightPx === 'normal' || /^[0-9.]+$/.test(lineHeightPx)) {
+          const fs = parseFloat(codeStyles.fontSize) || fontSize;
+          lineHeightPx = (fs * 1.6) + 'px';
+        }
+        
+        const spans = lineNumbersEl.querySelectorAll('span');
+        spans.forEach(s => {
+          s.style.height = lineHeightPx;
+          s.style.lineHeight = lineHeightPx;
+        });
+      }
+    }
+    
+    zoomInBtn.addEventListener('click', () => {
+      fontSize = Math.min(fontSize + 1, 30); // Max 30px
+      preEl.style.fontSize = fontSize + 'px';
+      localStorage.setItem('codeFontSize', fontSize);
+      updateLineNumbersAlignment();
+    });
+    
+    zoomOutBtn.addEventListener('click', () => {
+      fontSize = Math.max(fontSize - 1, 8); // Min 8px
+      preEl.style.fontSize = fontSize + 'px';
+      localStorage.setItem('codeFontSize', fontSize);
+      updateLineNumbersAlignment();
     });
   })();
   </script>

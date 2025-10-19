@@ -195,7 +195,7 @@
         gap: 8px; 
     }
     /* MODIFIED: Added flex-shrink: 0 to prevent buttons from shrinking */
-    .button-container { display:flex; gap:8px; flex-shrink: 0; }
+    .button-container { display:flex; gap:8px; flex-shrink:0; }
     .btn { padding:8px 12px; border-radius:5px; border:none; cursor:pointer; font-weight:700; }
     .btn-view, .btn-output, .btn-download { background:#0b66ff; color:white; }
     /* responsive */
@@ -316,59 +316,33 @@
   </div>
   <div id="linkContainer" class="link-container">Loading...</div>
   <script>
-    // ===== GOOGLE SHEETS CONFIGURATION =====
-    // Replace this URL with your Google Apps Script Web App URL
-    // Follow instructions in GOOGLE_SHEETS_SETUP.md to get this URL
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwX3UHDgjEMNQ6_Nl5x1BJtkygCPxuD1VBfI5pDYt0Mv8aHcVtpZgNxmf6KMiLSsvY/exec';
-    // =======================================
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwgXbi_LPG8TjWaOjeT2cPUWeoBRJ3U0DSrJTy3ikAn0hdXJ7nSXedTx_mu3xbHQLLm/exec';
     window.onload = function() {
-        // Check if the user's name is already stored in localStorage
-        const storedName = localStorage.getItem('userName');
-        if (storedName) {
-            // --- THIS IS A RETURN VISIT ---      
-            console.log("Welcome back, " + storedName + "! Logging your visit.");
-            // The user has visited before.
-            // Don't show the modal, just send the stored name to Google Sheets
-            // to log this new visit.
-            sendAnalyticsData(storedName, 'Return Visit');
-        } else {
-            // --- THIS IS THE FIRST VISIT ---
-            console.log("First visit. Showing modal.");
-            // Get the modal and form elements
-            const modal = document.getElementById("analyticsModal");
-            const form = document.getElementById("nameForm");
-            // Show the modal
-            modal.style.display = "block";
-            // modal.style.display = "none" /////////// COMMENT ME /////////////
-            // Handle the form submission
-            form.addEventListener("submit", function(event) {
-                // Prevent the default form action (page reload)
-                event.preventDefault(); 
-                const userName = document.getElementById("userName").value;
-                if (userName.trim() !== "") {
-                    // Store the name in localStorage for future visits
-                    localStorage.setItem('userName', userName);
-                    // Send the name to Google Sheets for the first log
-                    sendAnalyticsData(userName, 'First Visit');
-                    // Give feedback and hide the modal
-                    // alert("Thank you, " + userName + "!");
-                    modal.style.display = "none";
-                }
-            });
+      const storedName = localStorage.getItem('userName');
+      if (storedName) {
+          console.log("Welcome back, " + storedName + "! Logging your visit.");
+          visitType = 'Return Visit';           
+      } else {
+          console.log("First visit. Showing modal.");
+          const modal = document.getElementById("analyticsModal");
+          const form = document.getElementById("nameForm");
+          modal.style.display = "block";
+          form.addEventListener("submit", function(event) {
+            event.preventDefault(); 
+            const userName = document.getElementById("userName").value;
+            if (userName.trim() !== "") {
+                localStorage.setItem('userName', userName);
+                visitType = 'First Visit';
+                modal.style.display = "none";
+            }
+          });
         }
+        sendAnalyticsData(storedName, visitType, localStorage.getItem('selectedTab'));
     };
-
-    /**
-     * A helper function to send the name data to Google Sheets.
-     * This is used for both the first visit and return visits.
-     * @param {string} name - The user's name to log.
-     * @param {string} visitType - Type of visit ('First Visit' or 'Return Visit').
-     */
-    function sendAnalyticsData(name, visitType) {
-        // Create URL with parameters for Google Apps Script
-        const url = `${GOOGLE_SCRIPT_URL}?userName=${encodeURIComponent(name)}&visitType=${encodeURIComponent(visitType)}`;
-        
-        // Send the data to Google Sheets using Fetch
+    function sendAnalyticsData(name, visitType, visitPage) {
+        const url = `${GOOGLE_SCRIPT_URL}?userName=${encodeURIComponent(name)}
+                                          &visitType=${encodeURIComponent(visitType)}
+                                          &visitPage=${encodeURIComponent(visitPage)}`;
         fetch(url, {
             method: 'POST',
             mode: 'no-cors' // Required for Google Apps Script
@@ -677,11 +651,22 @@
                   outputBtn.title = 'Output temporarily disabled';
                 } else if (localStorage.getItem('selectedTab') === 'PHP' && Array.isArray(exp.outputLinks) && exp.outputLinks[fileIdx]) {
                   outputBtn.addEventListener('click', () => {
-                    window.open(exp.outputLinks[fileIdx], '_blank');
+                    const outputUrl = exp.outputLinks[fileIdx];
+                    // Track analytics for output button click
+                    const storedName = localStorage.getItem('userName');
+                    if (storedName) {
+                      sendAnalyticsData(storedName, 'Output', outputUrl);
+                    }
+                    window.open(outputUrl, '_blank');
                   });
                 } else {
                   outputBtn.addEventListener('click', () => {
                     const outputUrl = `https://nathanlobo.github.io/CodeStore/${filePath}`;
+                    // Track analytics for output button click
+                    const storedName = localStorage.getItem('userName');
+                    if (storedName) {
+                      sendAnalyticsData(storedName, 'Output', outputUrl);
+                    }
                     window.open(outputUrl, '_blank');
                   });
                 }
@@ -700,12 +685,24 @@
             if (zipDownloads[filePath]) {
               const zipUrl = zipDownloads[filePath];
               downloadBtn.addEventListener('click', () => {
+                // Track analytics for download button click
+                const storedName = localStorage.getItem('userName');
+                if (storedName) {
+                  sendAnalyticsData(storedName, 'Download', zipUrl);
+                }
                 // Use the last part of the URL as filename
                 const zipFileName = zipUrl.split('/').pop();
                 downloadFile(zipUrl, zipFileName);
               });
             } else {
-              downloadBtn.addEventListener('click', () => downloadFile(rawUrl, filePath.split('/').pop()));
+              downloadBtn.addEventListener('click', () => {
+                // Track analytics for download button click
+                const storedName = localStorage.getItem('userName');
+                if (storedName) {
+                  sendAnalyticsData(storedName, 'Download', filePath);
+                }
+                downloadFile(rawUrl, filePath.split('/').pop());
+              });
             }
 
             btnContainer.appendChild(downloadBtn);
@@ -725,7 +722,7 @@
     }
 
     // Tab switching logic with experiment filtering and persistence
-    function activateTab(tabName) {
+    function activateTab(tabName, trackAnalytics = false) {
       document.querySelectorAll('.tab-btn').forEach(b => {
         if (b.dataset.tab === tabName) {
           b.classList.add('active');
@@ -734,6 +731,15 @@
         }
       });
       localStorage.setItem('selectedTab', tabName);
+      
+      // Track tab switch in analytics if requested
+      if (trackAnalytics) {
+        const storedName = localStorage.getItem('userName');
+        if (storedName) {
+          sendAnalyticsData(storedName, 'Tab Switch', tabName);
+        }
+      }
+      
       if (tabName === 'HTML') {
         renderExperiments(htmlExpts);
       } else if (tabName === 'DSC++') {
@@ -747,7 +753,7 @@
 
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', function() {
-        activateTab(this.dataset.tab);
+        activateTab(this.dataset.tab, true); // Enable analytics tracking on manual tab clicks
       });
     });
 
@@ -786,10 +792,20 @@
                     root.classList.remove('light');
                     localStorage.setItem('theme', 'dark-mode');
                     modeText.textContent = 'Dark';
+                    // Analytics: Dark Mode
+                    const storedName = localStorage.getItem('userName');
+                    if (storedName) {
+                      sendAnalyticsData(storedName, 'Dark Mode', '');
+                    }
                   } else {
                     root.classList.add('light');
                     localStorage.setItem('theme', 'light-mode');
                     modeText.textContent = 'Light';
+                    // Analytics: Light Mode
+                    const storedName = localStorage.getItem('userName');
+                    if (storedName) {
+                      sendAnalyticsData(storedName, 'Light Mode', '');
+                    }
                   }
                 });
               });
@@ -824,5 +840,27 @@
       <p class="footer-text">© 2025 Nathan Lobo. All rights reserved.</p>
     </div>
   </footer>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add analytics for social button clicks
+    const socialSelectors = [
+      { selector: 'a[title="WhatsApp"]', type: 'WhatsApp' },
+      { selector: 'a[title="Instagram"]', type: 'Instagram' },
+      { selector: 'a[title="GitHub"]', type: 'GitHub' },
+      { selector: 'a[title="Gmail"]', type: 'Email' }
+    ];
+    socialSelectors.forEach(({ selector, type }) => {
+      const btn = document.querySelector(selector);
+      if (btn) {
+        btn.addEventListener('click', function() {
+          const storedName = localStorage.getItem('userName');
+          if (storedName) {
+            sendAnalyticsData(storedName, type, '');
+          }
+        });
+      }
+    });
+  });
+  </script>
 </body>
 </html>

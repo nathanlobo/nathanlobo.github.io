@@ -8,7 +8,8 @@
 4. In the first row, add headers:
    - Column A: **Name**
    - Column B: **Timestamp**
-   - Column C: **Visit Type** (First Visit / Return Visit)
+   - Column C: **Visit Type** (First Visit / Return Visit / Tab Switch)
+   - Column D: **Page/Tab** (HTML / PHP / DSC++)
 
 ## Step 2: Create Google Apps Script
 
@@ -25,10 +26,11 @@ function doPost(e) {
     // Parse the incoming data
     var userName = e.parameter.userName;
     var visitType = e.parameter.visitType || 'Unknown';
+    var visitPage = e.parameter.visitPage || 'N/A';
     var timestamp = new Date();
     
     // Append a new row with the data
-    sheet.appendRow([userName, timestamp, visitType]);
+    sheet.appendRow([userName, timestamp, visitType, visitPage]);
     
     // Return success response
     return ContentService.createTextOutput(JSON.stringify({
@@ -81,6 +83,8 @@ Replace the `GOOGLE_SCRIPT_URL` in your `index.html` file with the Web App URL y
    - The name you entered
    - Current timestamp
    - Visit type (First Visit or Return Visit)
+   - Page/Tab visited (HTML, PHP, or DSC++)
+4. Switch between tabs (HTML, PHP, DSC++) and watch new rows being added to track your navigation
 
 ## Troubleshooting
 
@@ -93,4 +97,20 @@ Replace the `GOOGLE_SCRIPT_URL` in your `index.html` file with the Web App URL y
 - Data appears in the spreadsheet in real-time
 - You can view analytics directly in Google Sheets
 - Use Google Sheets features for charts, filtering, and analysis
-- The script handles both first visits and return visits
+- The script handles:
+  - **First visits**: When user enters their name
+  - **Return visits**: When user comes back to the site
+  - **Tab switches**: When user navigates between HTML, PHP, DSC++ tabs
+  - **Output clicks**: When user views the output of a file (includes the output URL)
+  - **Downloads**: When user downloads a file (includes the file path or zip URL)
+- All analytics are only tracked if the user has already entered their name
+
+## Analytics Data Examples
+
+| Name | Timestamp | Visit Type | Page/Tab |
+|------|-----------|------------|----------|
+| John | 2025-10-19 10:30:15 | First Visit | HTML |
+| John | 2025-10-19 10:30:45 | Tab Switch | PHP |
+| John | 2025-10-19 10:31:10 | Output | https://nathanlobo.github.io/CodeStore/WD-HTML/Expt-1/expt1a.html |
+| John | 2025-10-19 10:31:30 | Download | WD-HTML/Expt-1/expt1a.html |
+| John | 2025-10-19 10:32:00 | Tab Switch | DSC++ |
