@@ -46,7 +46,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     
-    padding: 25px;
+    padding: 20px 8px;
     border: 1px solid var(--text);
     width: 90%;
     max-width: 450px;
@@ -307,9 +307,9 @@
   </div>
   <div id="analyticsModal" class="modal">
     <div class="modal-content">
-      <p>We would like to know your name for analytics purposes.</p>
+      <p>Would like to know your name for analytics purposes.</p>
       <form id="nameForm">
-        <input type="text" id="userName" name="userName" placeholder="Enter your name" required>
+        <input type="text" id="userName" name="userName" placeholder="Enter your name" required autofocus>
         <button type="submit">Submit</button>
       </form>
     </div>
@@ -321,7 +321,6 @@
     // Follow instructions in GOOGLE_SHEETS_SETUP.md to get this URL
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwX3UHDgjEMNQ6_Nl5x1BJtkygCPxuD1VBfI5pDYt0Mv8aHcVtpZgNxmf6KMiLSsvY/exec';
     // =======================================
-
     window.onload = function() {
         // Check if the user's name is already stored in localStorage
         const storedName = localStorage.getItem('userName');
@@ -763,6 +762,14 @@
                 const modeText = document.getElementById('mode-text');
                 const root = document.documentElement;
                 // 1. Check Local Storage for preference
+                if (localStorage.getItem('theme') === null) {
+                  // No preference stored, check system preference
+                  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    localStorage.setItem('theme', 'dark-mode');
+                  } else {
+                    localStorage.setItem('theme', 'light-mode');
+                  }
+                }
                 const currentTheme = localStorage.getItem('theme');
                 if (currentTheme === 'dark-mode') {
                   root.classList.remove('light');
