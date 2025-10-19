@@ -370,8 +370,7 @@
     // JS to handle pop up ends here
 
     // Experiment Data
-    const dscppExpts = [
-      {
+    const dscppExpts = [{
         name: "Expt 1",
         files: ["DSCpp/expt1/overloading_1a.cpp", 
                 "DSCpp/expt1/overloading_1b.cpp",
@@ -417,8 +416,24 @@
                   "Expt 3.5a - Multiple Inheritance",
                   "Expt 3.6a - Hierarchical Inheritance in C++ (University Example)",
                   "Expt 3.7a - Hybrid Inheritance in C++ (University Example)"]
-      }
-    ];
+      },
+      {
+        name: "Expt 4",
+        files: ["DSCpp/expt4/expt4a-linklist",
+                "DSCpp/expt4/expt4b-doublelinklist"],
+        filedesc:["Expt 4a - Implementation of Singly Linked List",
+                  "Expt 4b - Implementation of Double Linked List"]
+      },
+      {
+        name: "Expt 5",
+        files: ["DSCpp/expt5-stack"],
+        filedesc:["Expt 5 - Implementation of Stack"]
+      },
+      {
+        name: "Expt 6",
+        files: ["DSCpp/expt6-queue"],
+        filedesc:["Expt 5 - Implementation of Queue"]
+      }];
     const htmlExpts = [
       {
         name: "Expt 1",
@@ -475,6 +490,23 @@
         name: "Expt 6",
         files: ["WD-HTML/Expt-6/expt6-form-validation-js.html",],
         filedesc:["Expt 6 - Implementation of different Javascript functions for validation."]
+      },
+      {
+        name: "Expt 8 - Implementation of JSON on the Client Framework",
+        files: ["WD-HTML/Expt-8/8.1-parse-json.html",
+                "WD-HTML/Expt-8/8.2-parse-json-array.html",
+                "WD-HTML/Expt-8/8.3-stringify-json.html",
+                "WD-HTML/Expt-8/8.4-stringify-json-array.html",
+                "WD-HTML/Expt-8/8.5-accessing-object-dot-notation.html",
+                "WD-HTML/Expt-8/8.6-accessing-object-bracket-notation.html",
+                "WD-HTML/Expt-8/8.7-json-array-loop.html"],
+        filedesc:["Expt 8.1 - "]
+      },
+      {
+        name: "Expt 9 - Implementation of JSON on Server Side",
+        files: ["WD-HTML/Expt-9/xmlhttprequest.html","WD-HTML/Expt-9/network1.json"],
+        filedesc:["Expt 6 - Implementation of different Javascript functions for validation."],
+        outputLinks: ["https://nathanlobo.byethost4.com/Expt-9/xmlhttprequest.html"]
       },
     ];
     const phpExpts = [
@@ -652,6 +684,13 @@
               ) {
                 showOutputBtn = false;
               }
+              if (
+                localStorage.getItem('selectedTab') === 'HTML' &&
+                exp.name.includes('Expt 9') &&
+                (fileIdx === 1)
+              ) {
+                showOutputBtn = false;
+              }
               if (showOutputBtn) {
                 const outputBtn = document.createElement('button');
                 outputBtn.className = 'btn btn-output';
@@ -661,7 +700,7 @@
                   outputBtn.style.display = 'none';
                   outputBtn.style.opacity = '0.5';
                   outputBtn.title = 'Output temporarily disabled';
-                } else if (localStorage.getItem('selectedTab') === 'PHP' && Array.isArray(exp.outputLinks) && exp.outputLinks[fileIdx]) {
+                } else if (Array.isArray(exp.outputLinks) && exp.outputLinks[fileIdx]) {
                   outputBtn.addEventListener('click', () => {
                     const outputUrl = exp.outputLinks[fileIdx];
                     // Track analytics for output button click
