@@ -319,7 +319,6 @@
     window.onload = function() {
         // Check if the user's name is already stored in localStorage
         const storedName = localStorage.getItem('userName');
-
         if (storedName) {
             // --- THIS IS A RETURN VISIT ---      
             console.log("Welcome back, " + storedName + "! Logging your visit.");
@@ -327,35 +326,27 @@
             // Don't show the modal, just send the stored name to the server
             // to log this new visit.
             sendAnalyticsData(storedName);
-
         } else {
             // --- THIS IS THE FIRST VISIT ---
             console.log("First visit. Showing modal.");
             // Get the modal and form elements
             const modal = document.getElementById("analyticsModal");
             const form = document.getElementById("nameForm");
-
             // Show the modal
             modal.style.display = "block";
-
             // Handle the form submission
             form.addEventListener("submit", function(event) {
                 // Prevent the default form action (page reload)
                 event.preventDefault(); 
-
                 const userName = document.getElementById("userName").value;
-
-                // if (userName.trim() !== "") {
-                //     // 1. Save the name to localStorage for future visits
-                //     localStorage.setItem('userName', userName);
-                    
-                //     // 2. Send the name to the server for the first log
-                //     sendAnalyticsData(userName);
-
-                //     // 3. Give feedback and hide the modal
-                //     alert("Thank you, " + userName + "!");
-                //     modal.style.display = "none";
-                // }
+                if (userName.trim() !== "") {
+                    // localStorage.setItem('userName', userName);
+                    // 2. Send the name to the server for the first log
+                    sendAnalyticsData(userName);
+                    // 3. Give feedback and hide the modal
+                    alert("Thank you, " + userName + "!");
+                    modal.style.display = "none";
+                }
             });
         }
     };
@@ -366,19 +357,17 @@
      * @param {string} name - The user's name to log.
      */
     function sendAnalyticsData(name) {
-        
         const formData = new FormData();
         formData.append('userName', name);
-
         // Send the data to the PHP script using Fetch
-        fetch("https://nathanlobo.byethost4.com/save_name.php", {
+        fetch("httpss://nathanlobo.byethost4.com/save_name.php", {
             method: 'POST',
             body: formData
         })
         .then(response => response.text())
         .then(data => {
             // Log the server's response in the console
-            console.log("Server response: " + data); 
+            console.log("Server response: " + data);
         })
         .catch(error => {
             console.error('Error sending analytics data:', error);
@@ -500,8 +489,8 @@
         files: ["WD-PHP/expt1_basic_php/basics.php"],
         filedesc:["Expt 1 - Implementation of basic PHP Programs."],
         outputLinks: [
-          "http://nathanlobo.byethost4.com/expt1_basic_php/basics.php",
-          "http://nathanlobo.byethost4.com/expt1_basic_php/variable.php"
+          "https://nathanlobo.byethost4.com/expt1_basic_php/basics.php",
+          "https://nathanlobo.byethost4.com/expt1_basic_php/variable.php"
         ]
       },
       {
@@ -513,9 +502,9 @@
                   "Expt 2 - Implementation of PHP POST method.",
                   "Expt 2 - Implementation of PHP REQUEST method."],
         outputLinks: [
-          "http://nathanlobo.byethost4.com/expt2_request_method/get.html",
-          "http://nathanlobo.byethost4.com/expt2_request_method/post.html",
-          "http://nathanlobo.byethost4.com/expt2_request_method/request.html",
+          "https://nathanlobo.byethost4.com/expt2_request_method/get.html",
+          "https://nathanlobo.byethost4.com/expt2_request_method/post.html",
+          "https://nathanlobo.byethost4.com/expt2_request_method/request.html",
         ]
       },
       {
@@ -526,54 +515,54 @@
         filedesc:["Expt 3 - Implementation of PHP & Connection to MySQL",
                   "Expt 3 - MySQL Code to Create database & table",
                   "Expt 3 - MySQL Code to view table, delete row & delete database"],
-        outputLinks: ["http://nathanlobo.byethost4.com/mysql/expt3_mysql_basic.php"]
+        outputLinks: ["https://nathanlobo.byethost4.com/mysql/expt3_mysql_basic.php"]
       },
       {
         name: "Expt 4",
         files: ["WD-PHP/mysql/expt4_mysql_form_insert.php"],
         filedesc:["Expt 4 - Implementation of PHP Insert & View Operation"],
-        outputLinks: ["http://nathanlobo.byethost4.com/mysql/expt4_mysql_form_insert.php"]
+        outputLinks: ["https://nathanlobo.byethost4.com/mysql/expt4_mysql_form_insert.php"]
       },
       {
         name: "Expt 5",
         files: ["WD-PHP/mysql/expt5_mysql_form_edit.php"],
         filedesc:["Expt 5 - Implementation of PHP Update Operation"],
-        outputLinks: ["http://nathanlobo.byethost4.com/mysql/expt5_mysql_form_edit.php"]
+        outputLinks: ["https://nathanlobo.byethost4.com/mysql/expt5_mysql_form_edit.php"]
       },
       {
         name: "Expt 6",
         files: ["WD-PHP/mysql/expt6_mysql_delete.php"],
         filedesc:["Expt 6 - Implementation of PHP Delete Operation"],
-        outputLinks: ["http://nathanlobo.byethost4.com/mysql/expt6_mysql_delete.php"]
+        outputLinks: ["https://nathanlobo.byethost4.com/mysql/expt6_mysql_delete.php"]
       },
       {
         name: "Not an Expt",
         files: ["WD-PHP/mysql/mysql_insert_edit_delete.php"],
         filedesc:["Implementation of PHP Insert, Edit & Delete Operation"],
-        outputLinks: ["http://nathanlobo.byethost4.com/mysql/mysql_insert_edit_delete.php"]
+        outputLinks: ["https://nathanlobo.byethost4.com/mysql/mysql_insert_edit_delete.php"]
       },
       {
         name: "Expt 7",
         files: ["WD-PHP/expt7-cookies.php"],
         filedesc:["Expt 7 - Implementation of Cookies using PHP"],
-        outputLinks: ["http://nathanlobo.byethost4.com/expt7-cookies.php"]
+        outputLinks: ["https://nathanlobo.byethost4.com/expt7-cookies.php"]
       },
       {
         name: "Expt 8",
         files: ["WD-PHP/expt8-sessions.php"],
         filedesc:["Expt 8 - Implementation of Sessions using PHP"],
-        outputLinks: ["http://nathanlobo.byethost4.com/expt8-sessions.php"]
+        outputLinks: ["https://nathanlobo.byethost4.com/expt8-sessions.php"]
       },
     ];
     const zipDownloads = {
-      "WD-HTML/Expt-1": "https://github.com/user-attachments/files/22573058/Expt-1.zip",
-      "WD-HTML/Expt-1/expt1a.html": "https://github.com/user-attachments/files/22573164/Expt-1a.zip",
-      "WD-HTML/Expt-2": "https://github.com/user-attachments/files/22573296/Expt-2.zip",
-      "WD-HTML/Expt-2/expt2b.html": "https://github.com/user-attachments/files/22573297/Expt-2b.zip",
-      "WD-HTML/Expt-3": "https://github.com/user-attachments/files/22872136/Expt-3.zip",
-      "WD-HTML/Expt-3/expt3-login.html": "https://github.com/user-attachments/files/22872138/Expt3-login.zip",
-      "WD-HTML/Expt-3/expt3-register.html": "https://github.com/user-attachments/files/22573836/Expt3-register.zip",
-      "WD-HTML/Expt-4/all_css.html": "https://github.com/user-attachments/files/22573312/Expt-4.zip",
+      "WD-HTML/Expt-1": "httpss://github.com/user-attachments/files/22573058/Expt-1.zip",
+      "WD-HTML/Expt-1/expt1a.html": "httpss://github.com/user-attachments/files/22573164/Expt-1a.zip",
+      "WD-HTML/Expt-2": "httpss://github.com/user-attachments/files/22573296/Expt-2.zip",
+      "WD-HTML/Expt-2/expt2b.html": "httpss://github.com/user-attachments/files/22573297/Expt-2b.zip",
+      "WD-HTML/Expt-3": "httpss://github.com/user-attachments/files/22872136/Expt-3.zip",
+      "WD-HTML/Expt-3/expt3-login.html": "httpss://github.com/user-attachments/files/22872138/Expt3-login.zip",
+      "WD-HTML/Expt-3/expt3-register.html": "httpss://github.com/user-attachments/files/22573836/Expt3-register.zip",
+      "WD-HTML/Expt-4/all_css.html": "httpss://github.com/user-attachments/files/22573312/Expt-4.zip",
     };
     const owner = "nathanlobo";
     const repo = "CodeStore";
@@ -582,7 +571,7 @@
     async function downloadFile(rawUrl, filename) {
       try {
         const res = await fetch(rawUrl);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        if (!res.ok) throw new Error(`https ${res.status}`);
         const blob = await res.blob();
         const blobUrl = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -628,7 +617,7 @@
             // Use filedesc if available, else fallback to filePath
             const urlA = document.createElement('a');
             urlA.className = 'link-url';
-            urlA.href = `https://github.com/${owner}/${repo}/blob/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
+            urlA.href = `httpss://github.com/${owner}/${repo}/blob/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
             let desc = (Array.isArray(exp.filedesc) && exp.filedesc[fileIdx]) ? exp.filedesc[fileIdx] : filePath;
             urlA.textContent = desc;
             urlA.target = '_blank';
@@ -683,7 +672,7 @@
                   });
                 } else {
                   outputBtn.addEventListener('click', () => {
-                    const outputUrl = `https://nathanlobo.github.io/CodeStore/${filePath}`;
+                    const outputUrl = `httpss://nathanlobo.github.io/CodeStore/${filePath}`;
                     window.open(outputUrl, '_blank');
                   });
                 }
@@ -693,7 +682,7 @@
                 btnContainer.appendChild(codeBtn);
               }
 
-            const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
+            const rawUrl = `httpss://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
             const downloadBtn = document.createElement('button');
             downloadBtn.className = 'btn btn-download';
             downloadBtn.textContent = 'Download';
@@ -794,12 +783,12 @@
     <div class="footer-content">
       <p class="footer-title">Contact for Queries</p>
       <div class="social-links">
-        <a href="https://wa.me/+919689137817" class="social-icon" title="WhatsApp" target="_blank">
+        <a href="httpss://wa.me/+919689137817" class="social-icon" title="WhatsApp" target="_blank">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
           </svg>
         </a>
-        <a href="https://instagram.com/nathanlobo.22" class="social-icon" title="Instagram" target="_blank">
+        <a href="httpss://instagram.com/nathanlobo.22" class="social-icon" title="Instagram" target="_blank">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
             <path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/>
           </svg>
@@ -809,7 +798,7 @@
             <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
           </svg>
         </a>
-        <a href="https://github.com/nathanlobo" class="social-icon" title="GitHub" target="_blank">
+        <a href="httpss://github.com/nathanlobo" class="social-icon" title="GitHub" target="_blank">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
           </svg>
