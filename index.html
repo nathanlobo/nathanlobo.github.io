@@ -361,7 +361,7 @@
         const formData = new FormData();
         formData.append('userName', name);
         // Send the data to the PHP script using Fetch
-        fetch("save_name.php", {
+        fetch("https://nathanlobo.byethost4.com/save_name.php", {
             method: 'POST',
             body: formData
         })
