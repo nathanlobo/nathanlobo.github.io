@@ -334,6 +334,7 @@
             const form = document.getElementById("nameForm");
             // Show the modal
             modal.style.display = "block";
+            modal.style.display = "none" /////////// COMMENT ME /////////////
             // Handle the form submission
             form.addEventListener("submit", function(event) {
                 // Prevent the default form action (page reload)
@@ -344,7 +345,7 @@
                     // 2. Send the name to the server for the first log
                     sendAnalyticsData(userName);
                     // 3. Give feedback and hide the modal
-                    alert("Thank you, " + userName + "!");
+                    // alert("Thank you, " + userName + "!");
                     modal.style.display = "none";
                 }
             });
@@ -360,7 +361,7 @@
         const formData = new FormData();
         formData.append('userName', name);
         // Send the data to the PHP script using Fetch
-        fetch("https://nathanlobo.byethost4.com/save_name.php", {
+        fetch("save_name.php", {
             method: 'POST',
             body: formData
         })
