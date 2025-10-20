@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<head>
+    <title>C++ Compiler</title>
+    <style>
+        .coding-interface {
+        display: flex;
+        flex-direction: column;
+        width: 80%; /* Adjust as needed */
+        margin: 20px auto;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        font-family: 'Courier New', monospace; /* Monospaced font for code */
+    }
+
+    .code-editor, .code-output {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+    }
+
+    textarea#code-input {
+        width: 100%;
+        height: 200px; /* Adjust height */
+        border: none;
+        resize: vertical; /* Allow vertical resizing */
+        background-color: #f8f8f8;
+        color: #333;
+        font-size: 14px;
+        padding: 10px;
+        box-sizing: border-box; /* Include padding in width/height */
+    }
+
+    pre#output-display {
+        background-color: #333;
+        color: #0f0; /* Green text for console output */
+        padding: 10px;
+        min-height: 100px; /* Minimum height for output */
+        overflow-y: auto; /* Scroll if content exceeds height */
+        white-space: pre-wrap; /* Preserve whitespace and wrap text */
+    }
+
+    .controls {
+        padding: 15px;
+        text-align: right;
+    }
+
+    button#run-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+    </style>
+</head>
+<body>
+    <div class="coding-interface">
+        <!-- Code editor area -->
+        <div class="code-editor">
+            <textarea id="code-input" >#include <iostream>
+using namespace std;
+class collegeAccount {
+private:
+    string collegename;
+    string deptname;
+    string location;
+public:
+    void getdetails() {
+        cout << "Enter college name: ";
+        getline(cin, collegename);
+        cout << "Enter department name: ";
+        getline(cin, deptname);
+        cout << "Enter location: ";
+        getline(cin, location);
+    }
+    void displaydata() {
+        cout << "\nCollege Name: " << collegename << endl;
+        cout << "Department Name: " << deptname << endl;
+        cout << "Location: " << location << endl;
+    }
+};
+int main() {
+    collegeAccount c;
+    c.getdetails();
+    c.displaydata();
+    return 0;
+}</textarea>
+        </div>
+
+        <!-- Output/Console area -->
+        <div class="code-output">
+            <textarea id="output-display"></textarea>
+        </div>
+
+        <!-- Run button or other controls -->
+        <div class="controls">
+            <button id="run-button">Run Code</button>
+        </div>
+    </div>
+</body>
+<script>
+</script>
+</html>

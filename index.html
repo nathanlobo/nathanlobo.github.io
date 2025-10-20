@@ -331,26 +331,29 @@
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwgXbi_LPG8TjWaOjeT2cPUWeoBRJ3U0DSrJTy3ikAn0hdXJ7nSXedTx_mu3xbHQLLm/exec';
     window.onload = function() {
       const storedName = localStorage.getItem('userName');
+      const currentTab = localStorage.getItem('selectedTab') || 'HTML';
+
       if (storedName) {
-          console.log("Welcome back, " + storedName + "! Logging your visit.");
-          visitType = 'Return Visit';           
+        console.log("Welcome back, " + storedName + "! Logging your visit.");
+        const visitType = 'Return Visit';
+        // Send immediately for returning visitors
+        sendAnalyticsData(storedName, visitType, currentTab);
       } else {
-          console.log("First visit. Showing modal.");
-          const modal = document.getElementById("analyticsModal");
-          const form = document.getElementById("nameForm");
-          modal.style.display = "block";
-          form.addEventListener("submit", function(event) {
-            event.preventDefault(); 
-            const userName = document.getElementById("userName").value;
-            if (userName.trim() !== "") {
-                localStorage.setItem('userName', userName);
-                visitType = 'First Visit';
-                modal.style.display = "none";
-                sendAnalyticsData(username, visitType, 'HTML');
-            }
-          });
-        }
-        sendAnalyticsData(storedName, visitType, localStorage.getItem('selectedTab'));
+        console.log("First visit. Showing modal.");
+        const modal = document.getElementById("analyticsModal");
+        const form = document.getElementById("nameForm");
+        modal.style.display = "block";
+        form.addEventListener("submit", function(event) {
+          event.preventDefault();
+          const userName = document.getElementById("userName").value.trim();
+          if (userName) {
+            localStorage.setItem('userName', userName);
+            modal.style.display = "none";
+            // Send right after the user submits their name on first visit
+            sendAnalyticsData(userName, 'First Visit', localStorage.getItem('selectedTab') || 'HTML');
+          }
+        });
+      }
     };
     function sendAnalyticsData(name, visitType, visitPage) {
         const url = `${GOOGLE_SCRIPT_URL}?userName=${encodeURIComponent(name)}
