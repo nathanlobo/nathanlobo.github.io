@@ -346,10 +346,9 @@
                 localStorage.setItem('userName', userName);
                 visitType = 'First Visit';
                 modal.style.display = "none";
+                sendAnalyticsData(username, visitType, 'HTML');
             }
           });
-    
-        sendAnalyticsData(username, visitType, 'HTML');
         }
         sendAnalyticsData(storedName, visitType, localStorage.getItem('selectedTab'));
     };
