@@ -302,7 +302,7 @@
     <div id="fileDescription" class="file-description"></div>
     <div class="code-wrap">
       <div id="lineNumbers" class="line-numbers" aria-hidden="true"></div>
-      <pre><code id="fileContent" class="hljs"></code></pre>
+      <pre><code id="fileContent" class="hljs">Loading Code...</code></pre>
     </div>
   </div>
   <script>
@@ -400,6 +400,23 @@
     // Get file description from localStorage (set by index.html)
     const fileDescription = localStorage.getItem('fileDescription') || filePath;
     fileDescriptionEl.textContent = fileDescription;
+
+    // Function to hide loading overlay
+    function hideLoadingOverlay() {
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      if (loadingOverlay && !loadingOverlay.classList.contains('hidden')) {
+        loadingOverlay.classList.add('hidden');
+        setTimeout(() => {
+          loadingOverlay.style.display = 'none';
+        }, 500);
+      }
+    }
+
+    // Set timeout to hide loading after 10 seconds if code hasn't loaded
+    const loadingTimeout = setTimeout(() => {
+      console.warn('Loading timeout reached');
+      hideLoadingOverlay();
+    }, 10000); // 10 second timeout
   
     // --- Download Helper ---
     async function downloadFile(rawUrl, filename) {
@@ -535,11 +552,16 @@
         alignLineNumbers();
         window.addEventListener('resize', alignLineNumbers);
 
-        
+        // Hide loading overlay after code is successfully loaded
+        clearTimeout(loadingTimeout);
+        hideLoadingOverlay();
       })
       .catch(err => {
-        contentEl.textContent = "Error loading file.";
+        contentEl.textContent = "Error loading file! Refresh the page";
         console.error(err);
+        // Hide loading overlay on error too
+        clearTimeout(loadingTimeout);
+        hideLoadingOverlay();
       });
 
   // --- Copy button handler ---
@@ -673,18 +695,6 @@
       updateLineNumbersAlignment();
     });
   })();
-
-  // Hide loading overlay after content is loaded
-  window.addEventListener('load', function() {
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    setTimeout(() => {
-      loadingOverlay.classList.add('hidden');
-      // Remove from DOM after fade out animation completes
-      setTimeout(() => {
-        loadingOverlay.style.display = 'none';
-      }, 500);
-    }, 300); // Small delay to ensure smooth transition
-  });
   </script>
   <!-- Removed duplicate theme script to fix redeclaration errors -->
 </body>
