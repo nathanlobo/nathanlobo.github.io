@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Compiler & Runner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .language-select {
+            padding: 8px 15px;
+            border: 2px solid white;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-select:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .language-select option {
+            background: #667eea;
+            color: white;
+        }
+
+        .run-btn {
+            padding: 10px 25px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .run-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5);
+        }
+
+        .run-btn:active {
+            transform: translateY(0);
+        }
+
+        .clear-btn {
+            padding: 10px 25px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .clear-btn:hover {
+            background: #ee5a52;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+        }
+
+        .clear-btn:active {
+            transform: translateY(0);
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .editor-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-right: 2px solid #e0e0e0;
+        }
+
+        .section-header {
+            background: #f5f5f5;
+            padding: 12px 20px;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-header::before {
+            content: "📝";
+            font-size: 18px;
+        }
+
+        .code-area {
+            flex: 1;
+            padding: 20px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            border: none;
+            resize: none;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            line-height: 1.6;
+            outline: none;
+        }
+
+        .code-area::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .code-area::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+
+        .code-area::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 5px;
+        }
+
+        .code-area::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+
+        .terminal-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f9f9f9;
+        }
+
+        .terminal-header {
+            background: #2d2d2d;
+            padding: 12px 20px;
+            font-weight: 600;
+            color: #4CAF50;
+            border-bottom: 2px solid #1e1e1e;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .terminal-header::before {
+            font-size: 18px;
+        }
+
+        .terminal-area {
+            flex: 1;
+            padding: 20px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            border: none;
+            resize: none;
+            background: #0c0c0c;
+            color: #00ff00;
+            line-height: 1.6;
+            outline: none;
+        }
+
+        .terminal-area::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .terminal-area::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        .terminal-area::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 5px;
+        }
+
+        .terminal-area::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .status-bar {
+            background: #f5f5f5;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid #e0e0e0;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .status-bar .status-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4CAF50;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .editor-section {
+                border-right: none;
+                border-bottom: 2px solid #e0e0e0;
+            }
+
+            .controls {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Code Compiler & Runner</h1>
+            <div class="controls">
+                <select class="language-select" id="languageSelect">
+                    <option value="c++" selected>C++</option>
+                </select>
+                <button class="run-btn" onclick="runCode()">▶ Run Code</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="editor-section">
+                <div class="section-header">Code Editor</div>
+                <textarea class="code-area" id="codeEditor" placeholder="// Write your code here..."></textarea>
+            </div>
+
+            <div class="terminal-section">
+                <div class="terminal-header">Terminal Output</div>
+                <textarea class="terminal-area" id="terminal" placeholder="Output will appear here..."></textarea>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-indicator"></span>
+                <span>Ready</span>
+            </div>
+            <div class="status-item">
+                <span id="lineCount">Lines: 0</span>
+            </div>
+            <div class="status-item">
+                <span id="charCount">Characters: 0</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const codeEditor = document.getElementById('codeEditor');
+        const terminal = document.getElementById('terminal');
+        const languageSelect = document.getElementById('languageSelect');
+        const lineCount = document.getElementById('lineCount');
+        const charCount = document.getElementById('charCount');
+
+        terminal.addEventListener('input', function() {
+            const currentValue = this.value;
+            codeEditor.textContent = 'Current Text: ' + currentValue;
+        });
+
+        terminal.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.value += '\n';
+                console.log("Enter key pressed! Textarea content:");
+            }
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 4;
+            }
+        });
+
+        // Update status bar
+        codeEditor.addEventListener('input', function() {
+            const lines = this.value.split('\n').length;
+            const chars = this.value.length;
+            lineCount.textContent = `Lines: ${lines}`;
+            charCount.textContent = `Characters: ${chars}`;
+        });
+
+        // Run code function (simulated)
+        function runCode() {
+            const code = codeEditor.value;
+            const language = languageSelect.value;
+            terminal.value = 'Compiling ' + language.toUpperCase() + ' code...\n';
+            if (!code.trim()) {
+                terminal.value = '❌ Error: No code to run!\n';
+                return;
+            }
+
+            // Simulate compilation/execution
+            setTimeout(() => {                
+                // Simulated output (in real scenario, this would be actual execution)
+                if (language === 'c++') {
+                    terminal.value = `Hello, World!\n`;
+                } else if (language === 'python') {
+                    terminal.value = `Hello, World!\n`;
+                } else if (language === 'javascript') {
+                    terminal.value = `Hello, World!\n`;
+                } else if (language === 'java') {
+                    terminal.value = `Hello, World!\n`;
+                }
+                terminal.value += `\n✓ Program executed successfully\n`;
+                terminal.value += `⏱ Execution time: 0.123s\n`;
+            }, 1000);
+        }
+
+
+        // Handle tab key in textarea
+        codeEditor.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 4;
+            }
+        });
+
+        // Initialize line and char count
+        window.onload = function() {
+            const lines = codeEditor.value.split('\n').length;
+            const chars = codeEditor.value.length;
+            lineCount.textContent = `Lines: ${lines}`;
+            charCount.textContent = `Characters: ${chars}`;
+        };
+    </script>
+</body>
+</html>
