@@ -148,9 +148,9 @@ const htmlExpts = [
               "Expt 8.7 - Looping through JSON Array"]
     },
     {
-    name: "Expt 9 - Implementation of JSON on Server Side",
+    name: "Expt 9 - Implementation of JSON on Server Side.",
     files: ["WD-HTML/Expt-9/xmlhttprequest.html","WD-HTML/Expt-9/network1.json"],
-    filedesc:["Expt 6 - Implementation of different Javascript functions for validation.", "JSON File containing data for XMLHttpRequest."],
+    filedesc:["Expt 9 - Implementation of JSON on Server Side.", "JSON File containing data for XMLHttpRequest."],
     outputLinks: ["https://nathanlobo.byethost4.com/Expt-9/xmlhttprequest.html"]
     },
 ];
