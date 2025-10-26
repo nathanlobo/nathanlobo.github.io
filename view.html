@@ -9,6 +9,8 @@
   <link id="hljs-theme" rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <!-- html2canvas for screenshots (use modern version with Promises) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
     body {
@@ -25,7 +27,7 @@
       --muted: #8b949e;
       --border: #30363d;
       --accent: #58a6ff;
-      --code-bg: #010409;
+      --code-bg: #000000;
       --text: #c9d1d9;
     }
 
@@ -36,7 +38,7 @@
       --muted: #57606a;
       --border: #d0d7de;
       --accent: #0969da;
-      --code-bg: #f6f8fa;
+      --code-bg: #ffffff;
       --text: #24292f;
     }
     
@@ -122,37 +124,54 @@
       margin: 0;
       color: var(--text);
       word-break: break-all;
+      font-family: Georgia, serif;
     }
-    .viewer { max-width: 1100px; margin: 20px auto; padding: 16px; }
+    .viewer {
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 16px; }
     .code-wrap {
       position: relative;
       border-radius: 8px;
       border: 1px solid var(--border);
       overflow: auto;
       background: var(--code-bg);
-      padding-left: 60px;
+      padding-left: 56px;
     }
     pre {
-      margin: 0; padding: 16px 20px;
+      margin: 0; 
+      padding: 16px 4px;
       white-space: pre;
       font-family: 'Fira Code', monospace;
-      font-size: 13px; line-height: 1.6; color: var(--text);
+      font-size: 13px; 
+      line-height: 1.6;
+      color: var(--text);
     }
     /* Align line-numbers to exactly match the pre block's padding and line height */
     .line-numbers {
-      position: absolute; left: 0; top: 0;
-      width: 56px; background: var(--panel);
+      position: absolute; 
+      left: 0; 
+      top: 0;
+      width: 56px; 
+      background: var(--panel);
       border-right: 1px solid var(--border);
       color: var(--muted);
-      /* Match the vertical padding of pre (16px) and a little horizontal padding */
-      padding-top: 16px; padding-bottom: 16px; padding-left: 8px; padding-right: 8px;
+      padding-top: 16px;
+      padding-bottom: 16px;
+      padding-left: 8px; 
+      padding-right: 4px;
       text-align: right;
       user-select: none;
       box-sizing: border-box;
     }
     /* Use the same line-height as the code (1.6) so numbers line up exactly.
-       Setting height and line-height ensures the baseline matches. */
-    .line-numbers span { display: block; height: 1.6em; line-height: 1.6em; padding: 0 6px; }
+    Setting height and line-height ensures the baseline matches. */
+    .line-numbers span {
+      display: block;
+      height: 1.6em;
+      line-height: 1.6em;
+      padding: 0 6px; 
+    }
 
     .theme-switch-wrapper {
       display: flex;
@@ -265,6 +284,62 @@
       color: var(--text);
       font-weight: 500;
     }
+
+    /* Screenshot background dropdown styles */
+    .screenshot-controls {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .bg-dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-top: 8px;
+      padding: 8px;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      min-width: 200px;
+    }
+    
+    .bg-dropdown.show {
+      display: block;
+    }
+    
+    .bg-option {
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.2s;
+      gap: 10px;
+      color: var(--text);
+    }
+    
+    .bg-option:hover {
+      background: rgba(88, 166, 255, 0.1);
+    }
+    
+    .bg-preview {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    
+    .bg-preview.black {
+      background: #000000;
+    }
+    
+    .bg-preview.white {
+      background: #ffffff;
+    }
   </style>
 </head>
 <body>
@@ -300,11 +375,27 @@
   </div>
   <div class="viewer">
     <div id="fileDescription" class="file-description"></div>
-    <div class="code-wrap">
+    <div style="text-align: center; margin: 0 0 16px 0;">
+      <div class="screenshot-controls">
+        <button id="screenshot-btn" class="btn" style="background: var(--accent); color: white; padding: 10px 20px;">📸 Generate Code Screenshot</button>
+        <div id="bg-dropdown" class="bg-dropdown">
+          <div class="bg-option" data-bg="black">
+            <div class="bg-preview black"></div>
+            <span>Black Background</span>
+          </div>
+          <div class="bg-option" data-bg="white">
+            <div class="bg-preview white"></div>
+            <span>White Background</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="code-wrap" id="code-editor">
       <div id="lineNumbers" class="line-numbers" aria-hidden="true"></div>
-      <pre><code id="fileContent" class="hljs">Loading Code...</code></pre>
+      <pre><code id="fileContent" class="hljs">Loading Code...<br>Refresh if Code Doesn't Load</code></pre>
     </div>
   </div>
+
   <script>
     // ===== GOOGLE SHEETS CONFIGURATION =====
     // Replace this URL with your Google Apps Script Web App URL
@@ -693,6 +784,233 @@
       preEl.style.fontSize = fontSize + 'px';
       localStorage.setItem('codeFontSize', fontSize);
       updateLineNumbersAlignment();
+    });
+  })();
+
+  // --- Screenshot button handler ---
+  (function setupScreenshotButton(){
+    const screenshotBtn = document.getElementById('screenshot-btn');
+    const codeEditor = document.getElementById('code-editor');
+    const bgDropdown = document.getElementById('bg-dropdown');
+    const bgOptions = document.querySelectorAll('.bg-option');
+
+    if (!screenshotBtn) {
+      console.error('Screenshot elements not found');
+      return;
+    }
+
+    if (!codeEditor) {
+      console.error('Code editor element not found');
+      return;
+    }
+
+    // Show/hide dropdown when clicking the screenshot button
+    screenshotBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      
+      // Reset button text if it was showing "Screenshot Downloaded"
+      if (screenshotBtn.textContent.includes('Downloaded') || screenshotBtn.textContent.includes('Failed')) {
+        screenshotBtn.textContent = '📸 Generate Code Screenshot';
+      }
+      
+      bgDropdown.classList.toggle('show');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!bgDropdown.contains(e.target) && e.target !== screenshotBtn) {
+        bgDropdown.classList.remove('show');
+      }
+    });
+
+    // Backwards-compatible capture helper (supports html2canvas <=0.4.x and >=1.x)
+    function captureElement(el, opts = {}) {
+      return new Promise((resolve, reject) => {
+        try {
+          const options = Object.assign({
+            backgroundColor: null,
+            scale: 2,
+            logging: false,
+            useCORS: true
+          }, opts);
+
+          const maybe = window.html2canvas ? html2canvas(el, options) : null;
+
+          if (maybe && typeof maybe.then === 'function') {
+            // Modern versions return a Promise
+            maybe.then(resolve).catch(reject);
+          } else {
+            // Older 0.4.x API uses onrendered callback
+            options.onrendered = resolve;
+            html2canvas(el, options);
+          }
+        } catch (e) {
+          reject(e);
+        }
+      });
+    }
+
+    function generateScreenshot(backgroundColor) {
+      // Hide dropdown
+      bgDropdown.classList.remove('show');
+
+      // Show loading feedback
+      screenshotBtn.textContent = '⏳ Generating...';
+      screenshotBtn.disabled = true;
+
+      // Get the pre and line-numbers elements
+      const preEl = codeEditor.querySelector('pre');
+      const lineNumbersEl = codeEditor.querySelector('.line-numbers');
+      const codeEl = codeEditor.querySelector('code');
+
+      // Temporarily expand the code container to capture full content
+      const originalOverflow = codeEditor.style.overflow;
+      const originalMaxWidth = codeEditor.style.maxWidth;
+      const originalWidth = codeEditor.style.width;
+      const originalBackground = codeEditor.style.background;
+      const originalPreBackground = preEl ? preEl.style.background : '';
+      const originalLineNumsBackground = lineNumbersEl ? lineNumbersEl.style.background : '';
+      const originalCodeColor = codeEl ? codeEl.style.color : '';
+      
+      // Remove scrollbars and let content expand to full width
+      codeEditor.style.overflow = 'visible';
+      codeEditor.style.maxWidth = 'none';
+      codeEditor.style.width = 'fit-content';
+      
+      // Set the background color on all elements
+      codeEditor.style.background = backgroundColor;
+      if (preEl) preEl.style.background = backgroundColor;
+      if (lineNumbersEl) lineNumbersEl.style.background = backgroundColor;
+      
+      // If white background, temporarily apply light syntax highlighting
+      if (backgroundColor === '#ffffff' && codeEl) {
+        // Save current classes and apply light theme temporarily
+        const tempLink = document.createElement('link');
+        tempLink.rel = 'stylesheet';
+        tempLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css';
+        tempLink.id = 'temp-hljs-light';
+        document.head.appendChild(tempLink);
+        
+        // Wait for stylesheet to load
+        tempLink.onload = function() {
+          // Re-highlight with light theme
+          hljs.highlightElement(codeEl);
+          captureAndDownload();
+        };
+      } else {
+        captureAndDownload();
+      }
+      
+      function captureAndDownload() {
+        // Give browser time to reflow before capturing
+        setTimeout(() => {
+          captureElement(codeEditor, {
+            backgroundColor: backgroundColor
+          })
+            .then(function(canvas) {
+              // Restore original styles
+              codeEditor.style.overflow = originalOverflow;
+              codeEditor.style.maxWidth = originalMaxWidth;
+              codeEditor.style.width = originalWidth;
+              codeEditor.style.background = originalBackground;
+              if (preEl) preEl.style.background = originalPreBackground;
+              if (lineNumbersEl) lineNumbersEl.style.background = originalLineNumsBackground;
+              if (codeEl) codeEl.style.color = originalCodeColor;
+              
+              // Remove temp light theme and re-highlight with original theme
+              const tempTheme = document.getElementById('temp-hljs-light');
+              if (tempTheme) {
+                tempTheme.remove();
+                hljs.highlightElement(codeEl);
+              }
+              
+              // Directly download the screenshot
+              if (canvas.toBlob) {
+                canvas.toBlob(function(blob) {
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  const fileName = (localStorage.getItem('filePath') || 'code').split('/').pop();
+                  a.href = url;
+                  a.download = `${fileName}-screenshot.png`;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+
+                  // Update button to show success
+                  screenshotBtn.textContent = '✅ Screenshot Downloaded';
+                  screenshotBtn.disabled = false;
+                  
+                  // Reset button text after 3 seconds
+                  setTimeout(() => {
+                    screenshotBtn.textContent = '📸 Generate Code Screenshot';
+                  }, 3000);
+
+                  // Analytics for screenshot download
+                  const storedName = localStorage.getItem('userName');
+                  const filePath = localStorage.getItem('filePath');
+                  if (storedName && filePath) {
+                    sendAnalyticsData(storedName, 'Screenshot Downloaded', filePath);
+                  }
+                });
+              } else {
+                // Fallback for very old browsers
+                const dataUrl = canvas.toDataURL('image/png');
+                const a = document.createElement('a');
+                const fileName = (localStorage.getItem('filePath') || 'code').split('/').pop();
+                a.href = dataUrl;
+                a.download = `${fileName}-screenshot.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                // Update button to show success
+                screenshotBtn.textContent = '✅ Screenshot Downloaded';
+                screenshotBtn.disabled = false;
+                
+                // Reset button text after 3 seconds
+                setTimeout(() => {
+                  screenshotBtn.textContent = '📸 Generate Code Screenshot';
+                }, 3000);
+              }
+            })
+            .catch(function(error) {
+              // Restore original styles on error too
+              codeEditor.style.overflow = originalOverflow;
+              codeEditor.style.maxWidth = originalMaxWidth;
+              codeEditor.style.width = originalWidth;
+              codeEditor.style.background = originalBackground;
+              if (preEl) preEl.style.background = originalPreBackground;
+              if (lineNumbersEl) lineNumbersEl.style.background = originalLineNumsBackground;
+              
+              // Remove temp light theme on error
+              const tempTheme = document.getElementById('temp-hljs-light');
+              if (tempTheme) {
+                tempTheme.remove();
+                if (codeEl) hljs.highlightElement(codeEl);
+              }
+              
+              console.error('Screenshot failed:', error);
+              screenshotBtn.textContent = '❌ Failed - Try Again';
+              screenshotBtn.disabled = false;
+              
+              // Reset button text after 3 seconds
+              setTimeout(() => {
+                screenshotBtn.textContent = '📸 Generate Code Screenshot';
+              }, 3000);
+            });
+        }, 100); // 100ms delay for reflow
+      }
+    }
+
+    // Handle background option clicks
+    bgOptions.forEach(option => {
+      option.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const bgColor = this.getAttribute('data-bg');
+        const backgroundColor = bgColor === 'white' ? '#ffffff' : '#000000';
+        generateScreenshot(backgroundColor);
+      });
     });
   })();
   </script>
