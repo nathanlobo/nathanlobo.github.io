@@ -643,9 +643,14 @@
               let showOutputBtn = true;
               // Hide Output button for 2nd and 3rd files of Expt 3 in PHP experiments
               if (
+                localStorage.getItem('selectedTab') === 'PHP' && exp.name === 'Expt 3' && (fileIdx === 1 || fileIdx === 2)
+              ) {
+                showOutputBtn = false;
+              }
+              if (
                 localStorage.getItem('selectedTab') === 'PHP' &&
-                exp.name === 'Expt 3' &&
-                (fileIdx === 1 || fileIdx === 2)
+                exp.name === 'Expt 9' &&
+                (fileIdx === 1)
               ) {
                 showOutputBtn = false;
               }
