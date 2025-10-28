@@ -55,17 +55,17 @@ const dscppExpts = [{
     {
     name: "Expt 5",
     files: ["DSCpp/expt5-stack.cpp"],
-    filedesc:["Expt 5 - Implementation of Stack"]
+    filedesc:["Implementation of Stack"]
     },
     {
     name: "Expt 6",
     files: ["DSCpp/expt6-queue.cpp"],
-    filedesc:["Expt 6 - Implementation of Queue"]
+    filedesc:["Implementation of Queue"]
     },
     {
     name: "Expt 7",
     files: ["DSCpp/expt7-bubble_sort.cpp"],
-    filedesc:["Expt 7 - C++ program to implement Bubble Sort algorithm on the given array."]
+    filedesc:["Expt 7a - C++ program to implement Bubble Sort algorithm on the given array."]
     },
 ];
 const htmlExpts = [
@@ -95,7 +95,7 @@ const htmlExpts = [
     {
     name: "Expt 4",
     files: ["WD-HTML/Expt-4/all_css.html","WD-HTML/Expt-4/styles.css"],
-    filedesc:["Expt 4 - All Cascading Stylesheet Tags","External .CSS - All Cascading Stylesheet Tags"]
+    filedesc:["All Cascading Stylesheet Tags","External .CSS file"]
     },
     {
     name: "Expt 5",
@@ -123,7 +123,7 @@ const htmlExpts = [
     {
     name: "Expt 6",
     files: ["WD-HTML/Expt-6/expt6-form-validation-js.html",],
-    filedesc:["Expt 6 - Implementation of different Javascript functions for validation."]
+    filedesc:["Implementation of different Javascript functions for validation."]
     },
     {
     name: "Expt 7 - Implementation of JS Functions for validation of user login and registration form",
@@ -150,7 +150,7 @@ const htmlExpts = [
     {
     name: "Expt 9 - Implementation of JSON on Server Side.",
     files: ["WD-HTML/Expt-9/xmlhttprequest.html","WD-HTML/Expt-9/network1.json"],
-    filedesc:["Expt 9 - Implementation of JSON on Server Side.", "JSON File containing data for XMLHttpRequest."],
+    filedesc:["Implementation of JSON on Server Side.", "JSON File containing data for XMLHttpRequest."],
     outputLinks: ["https://nathanlobo.byethost4.com/Expt-9/xmlhttprequest.html"]
     },
 ];
@@ -158,77 +158,88 @@ const phpExpts = [
     {
     name: "Expt 1",
     files: ["WD-PHP/expt1_basic_php/basics.php"],
-    filedesc:["Expt 1 - Implementation of basic PHP Programs."],
-    outputLinks: [
-        "https://nathanlobo.byethost4.com/expt1_basic_php/basics.php",
-        "https://nathanlobo.byethost4.com/expt1_basic_php/variable.php"
-    ]
+    filedesc:["Implementation of basic PHP Programs."],
+    outputLinks: ["https://nathanlobo.byethost4.com/expt1_basic_php/basics.php"],
+    outputFalse: null
     },
     {
     name: "Expt 2",
     files: ["WD-PHP/expt2_request_method/get.html",
+            "WD-PHP/expt2_request_method/get.php",
             "WD-PHP/expt2_request_method/post.html",
+            "WD-PHP/expt2_request_method/post.php",
             "WD-PHP/expt2_request_method/request.html"],
-    filedesc:["Expt 2 - Implementation of PHP GET method.",
-                "Expt 2 - Implementation of PHP POST method.",
-                "Expt 2 - Implementation of PHP REQUEST method."],
-    outputLinks: [
-        "https://nathanlobo.byethost4.com/expt2_request_method/get.html",
-        "https://nathanlobo.byethost4.com/expt2_request_method/post.html",
-        "https://nathanlobo.byethost4.com/expt2_request_method/request.html",
-    ]
+            "WD-PHP/expt2_request_method/request.php"],
+    filedesc:["Expt 2a - Implementation of PHP GET method.",
+              "Expt 2a - GET method .php file",
+              "Expt 2b - Implementation of PHP POST method.",
+              "Expt 2b - POST method .php file",
+              "Expt 2c - Implementation of PHP REQUEST method."],
+              "Expt 2c - REQUEST method .php file"],
+    outputLinks: ["https://nathanlobo.byethost4.com/expt2_request_method/get.html",
+                  "https://nathanlobo.byethost4.com/expt2_request_method/post.html",
+                  "https://nathanlobo.byethost4.com/expt2_request_method/request.html"],
+    outputFalse: [2,4,6]
     },
     {
     name: "Expt 3",
     files: ["WD-PHP/mysql/expt3_mysql_basic.php",
             "WD-PHP/mysql/expt3_create_database_table.sql",
             "WD-PHP/mysql/expt3_to_view_table_delete_row.sql",],
-    filedesc:["Expt 3 - Implementation of PHP & Connection to MySQL",
-                "Expt 3 - MySQL Code to Create database & table",
-                "Expt 3 - MySQL Code to view table, delete row & delete database"],
-    outputLinks: ["https://nathanlobo.byethost4.com/mysql/expt3_mysql_basic.php"]
+    filedesc:["Implementation of PHP & Connection to MySQL",
+                "MySQL Code to Create database & table",
+                "MySQL Code to view table, delete row & delete database"],
+    outputLinks: ["https://nathanlobo.byethost4.com/mysql/expt3_mysql_basic.php"],
+    outputFalse: [2,3]
     },
     {
     name: "Expt 4",
     files: ["WD-PHP/mysql/expt4_mysql_form_insert.php"],
-    filedesc:["Expt 4 - Implementation of PHP Insert & View Operation"],
-    outputLinks: ["https://nathanlobo.byethost4.com/mysql/expt4_mysql_form_insert.php"]
+    filedesc:["Implementation of PHP Insert & View Operation"],
+    outputLinks: ["https://nathanlobo.byethost4.com/mysql/expt4_mysql_form_insert.php"],
+    outputFalse: null
     },
     {
     name: "Expt 5",
     files: ["WD-PHP/mysql/expt5_mysql_form_edit.php"],
-    filedesc:["Expt 5 - Implementation of PHP Update Operation"],
-    outputLinks: ["https://nathanlobo.byethost4.com/mysql/expt5_mysql_form_edit.php"]
+    filedesc:["Implementation of PHP Update Operation"],
+    outputLinks: ["https://nathanlobo.byethost4.com/mysql/expt5_mysql_form_edit.php"],
+    outputFalse: null
     },
     {
     name: "Expt 6",
     files: ["WD-PHP/mysql/expt6_mysql_delete.php"],
-    filedesc:["Expt 6 - Implementation of PHP Delete Operation"],
-    outputLinks: ["https://nathanlobo.byethost4.com/mysql/expt6_mysql_delete.php"]
+    filedesc:["Implementation of PHP Delete Operation"],
+    outputLinks: ["https://nathanlobo.byethost4.com/mysql/expt6_mysql_delete.php"],
+    outputFalse: null
     },
     {
     name: "Not an Expt",
     files: ["WD-PHP/mysql/mysql_insert_edit_delete.php"],
     filedesc:["Implementation of PHP Insert, Edit & Delete Operation"],
-    outputLinks: ["https://nathanlobo.byethost4.com/mysql/mysql_insert_edit_delete.php"]
+    outputLinks: ["https://nathanlobo.byethost4.com/mysql/mysql_insert_edit_delete.php"],
+    outputFalse: null
     },
     {
     name: "Expt 7",
     files: ["WD-PHP/expt7-cookies.php"],
-    filedesc:["Expt 7 - Implementation of Cookies using PHP"],
-    outputLinks: ["https://nathanlobo.byethost4.com/expt7-cookies.php"]
+    filedesc:["Implementation of Cookies using PHP"],
+    outputLinks: ["https://nathanlobo.byethost4.com/expt7-cookies.php"],
+    outputFalse: null
     },
     {
     name: "Expt 8",
     files: ["WD-PHP/expt8-sessions.php"],
-    filedesc:["Expt 8 - Implementation of Sessions using PHP"],
-    outputLinks: ["https://nathanlobo.byethost4.com/expt8-sessions.php"]
+    filedesc:["Implementation of Sessions using PHP"],
+    outputLinks: ["https://nathanlobo.byethost4.com/expt8-sessions.php"],
+    outputFalse: null
     },
     {
     name: "Expt 9",
     files: ["WD-PHP/ajax/expt9-ajax.html","WD-PHP/ajax/data.php"],
     filedesc:["Implementation of AJAX (Main .html file)","Implementation of AJAX (data.php file)"],
-    outputLinks: ["https://nathanlobo.byethost4.com/ajax/expt9-ajax.html"]
+    outputLinks: ["https://nathanlobo.byethost4.com/ajax/expt9-ajax.html"],
+    outputFalse: [2] // As output btn shouldn't be displayed for 2nd file
     },
 ];
 const zipDownloads = {
