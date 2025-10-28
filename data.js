@@ -228,7 +228,7 @@ const phpExpts = [
     name: "Expt 9",
     files: ["WD-PHP/ajax/expt9-ajax.html","WD-PHP/ajax/data.php"],
     filedesc:["Implementation of AJAX (Main .html file)","Implementation of AJAX (data.php file)"],
-    outputLinks: ["https://nathanlobo.byethost4.com/expt8-sessions.php"]
+    outputLinks: ["https://nathanlobo.byethost4.com/ajax/expt9-ajax.html"]
     },
 ];
 const zipDownloads = {
