@@ -174,7 +174,7 @@ const phpExpts = [
               "Expt 2a - GET method .php file",
               "Expt 2b - Implementation of PHP POST method.",
               "Expt 2b - POST method .php file",
-              "Expt 2c - Implementation of PHP REQUEST method."],
+              "Expt 2c - Implementation of PHP REQUEST method.",
               "Expt 2c - REQUEST method .php file"],
     outputLinks: ["https://nathanlobo.byethost4.com/expt2_request_method/get.html",
                   "https://nathanlobo.byethost4.com/expt2_request_method/post.html",
