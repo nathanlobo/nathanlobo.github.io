@@ -168,7 +168,7 @@ const phpExpts = [
             "WD-PHP/expt2_request_method/get.php",
             "WD-PHP/expt2_request_method/post.html",
             "WD-PHP/expt2_request_method/post.php",
-            "WD-PHP/expt2_request_method/request.html"],
+            "WD-PHP/expt2_request_method/request.html",
             "WD-PHP/expt2_request_method/request.php"],
     filedesc:["Expt 2a - Implementation of PHP GET method.",
               "Expt 2a - GET method .php file",
