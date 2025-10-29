@@ -64,8 +64,9 @@ const dscppExpts = [{
     },
     {
     name: "Expt 7",
-    files: ["DSCpp/expt7-bubble_sort.cpp"],
-    filedesc:["Expt 7a - C++ program to implement Bubble Sort algorithm on the given array."]
+    files: ["DSCpp/expt7/expt7a-bubble_sort.cpp","DSCpp/expt7/expt7b-insertion_sort.cpp"],
+    filedesc:["Expt 7a - C++ program to implement Bubble Sort algorithm.",
+              "Expt 7b - C++ program to implement Insertion Sort algorithm."]
     },
 ];
 const htmlExpts = [
