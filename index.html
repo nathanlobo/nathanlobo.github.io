@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- <base href="" /> -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CodeStore by NL</title>
   <link rel="icon" type="image/x-icon" href="./icon.png">
-  <script src="./data.js"></script>
-  <script src="./index-script.js"></script>
   <!-- Open Graph Meta Tags for Social Sharing -->
   <meta property="og:title" content="CodeStore by Lobo" />
   <meta property="og:description" content="OneStop CodeStore - Browse & download code experiments for HTML, PHP, & DSC++. #AITD" />
@@ -188,7 +187,6 @@
   }
 }
 
-  
   .topbar {
     top: 0; /* Stops the top bar from going beyond top out of screen */
     margin-top: 5px;
@@ -457,7 +455,7 @@
   <div class="header-container">
   
   <a href="https://nathanlobo.github.io/" class="logo-link">
-    <img src="./icon.png" alt="CodeStore Logo" class="logo-icon">
+    <img src="icon.png" alt="CodeStore Logo" class="logo-icon">
     <h1 class="logo-text">CodeStore</h1>
   </a>
   
@@ -494,6 +492,8 @@
     </div>
   </div>
   <div id="linkContainer" class="link-container">Loading...</div>
+  <script src="./data.js"></script>
+  <script src="./index-script.js"></script>
   <script>
     skipBtn = document.getElementById("skip");
     skipCount = 0;
@@ -636,7 +636,7 @@
               localStorage.setItem('filePath', filePath);
               localStorage.setItem('experimentName', exp.name || `Experiment ${idx+1}`);
               localStorage.setItem('fileDescription', desc); // Store file description
-              window.location.href = 'view.html';
+              window.location.href = 'code.html';
             });
 
             // Output button logic
@@ -690,12 +690,15 @@
                 } else {
                   outputBtn.addEventListener('click', () => {
                     const outputUrl = `https://nathanlobo.github.io/CodeStore/${filePath}`;
-                    // Track analytics for output button click
+                    localStorage.setItem('filePath', filePath);
+                    localStorage.setItem('experimentName', exp.name || `Experiment ${idx+1}`);
+                    localStorage.setItem('fileDescription', desc); // Store file description
                     const storedName = localStorage.getItem('userName');
                     if (storedName) {
                       sendAnalyticsData(storedName, 'Output', outputUrl);
                     }
-                    window.open(outputUrl, '_blank');
+                    window.location.href = 'output.html';
+                    // window.open(outputUrl, '_blank');
                   });
                 }
                 btnContainer.appendChild(codeBtn);

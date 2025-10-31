@@ -444,6 +444,7 @@
 
     // Get file description from localStorage (set by index.html)
     const fileDescription = localStorage.getItem('fileDescription') || filePath;
+    document.title = fileDescription
     fileDescriptionEl.textContent = fileDescription;
 
     // Function to hide loading overlay

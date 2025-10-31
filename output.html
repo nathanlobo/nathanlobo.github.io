@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Output</title>
+    <style>
+        body { 
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; 
+            margin-top: 0;
+        }
+        .outputFrame {
+            height: 100vh;
+            width: 100%;
+            border: 1px solid black;
+            border-radius: 8px;
+        }
+        .heading {
+            background-color: white;
+            top: 0; 
+            z-index: 999;
+            position: sticky;
+            align-self: center;
+            width: 100%;
+            font-size: 16px;
+            border: 1px solid black;
+            padding: 8px 8px;
+            margin-bottom: 6px;
+            display:flex;
+            border-radius: 0 0 8px 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="heading" class="heading">Title</div>
+    <div style="text-align: center; margin: 0 0 16px 0;">
+      <div class="screenshot-controls">
+        <button id="screenshot-btn" class="btn" style="background: var(--accent); color: white; padding: 10px 20px;">📸 Generate Code Screenshot</button>
+        <div id="bg-dropdown" class="bg-dropdown">
+          <div class="bg-option" data-bg="black">
+            <div class="bg-preview black"></div>
+            <span>Black Background</span>
+          </div>
+          <div class="bg-option" data-bg="white">
+            <div class="bg-preview white"></div>
+            <span>White Background</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <iframe class="outputFrame" title="Output iframe"></iframe>
+</body>
+<script>
+    const filePath = localStorage.getItem('filePath');
+    const experimentName = localStorage.getItem('experimentName');
+    const fileDescription = localStorage.getItem('fileDescription');
+    document.title = fileDescription
+    document.getElementById('heading').textContent = fileDescription
+    if (filePath) {
+        const iframe = document.querySelector('iframe');
+        iframe.src = `https://nathanlobo.github.io/CodeStore/${filePath}`;
+    }
+</script>
+</html>

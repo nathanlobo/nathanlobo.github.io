@@ -52,9 +52,6 @@ checkbox.addEventListener('change', function() {
 });
 });
 
-
-
-
 document.addEventListener('DOMContentLoaded', function() {
 // Add analytics for social button clicks
 const socialSelectors = [
