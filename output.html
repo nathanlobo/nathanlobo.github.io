@@ -33,12 +33,24 @@
             border-radius: 0 0 8px 8px;
         }
     </style>
+    <script>
+      const filePath = localStorage.getItem('filePath');
+      const experimentName = localStorage.getItem('experimentName');
+      const fileDescription = localStorage.getItem('fileDescription');
+      window.location.href = `https://nathanlobo.github.io/CodeStore/${filePath}`; // Replace with your desired URL
+      document.title = fileDescription
+      document.getElementById('heading').textContent = fileDescription
+      if (filePath) {
+          const iframe = document.querySelector('iframe');
+          iframe.src = `https://nathanlobo.github.io/CodeStore/${filePath}`;
+      }
+  </script>
 </head>
 <body>
     <div id="heading" class="heading">Title</div>
     <div style="text-align: center; margin: 0 0 16px 0;">
       <div class="screenshot-controls">
-        <button id="screenshot-btn" class="btn" style="background: var(--accent); color: white; padding: 10px 20px;">📸 Generate Code Screenshot</button>
+        <!-- <button id="screenshot-btn" class="btn" style="background: var(--accent); color: white; padding: 10px 20px;">📸 Generate Code Screenshot</button>
         <div id="bg-dropdown" class="bg-dropdown">
           <div class="bg-option" data-bg="black">
             <div class="bg-preview black"></div>
@@ -47,21 +59,11 @@
           <div class="bg-option" data-bg="white">
             <div class="bg-preview white"></div>
             <span>White Background</span>
-          </div>
-        </div>
+          </div> 
+        </div> -->
       </div>
     </div>
     <iframe class="outputFrame" title="Output iframe"></iframe>
 </body>
-<script>
-    const filePath = localStorage.getItem('filePath');
-    const experimentName = localStorage.getItem('experimentName');
-    const fileDescription = localStorage.getItem('fileDescription');
-    document.title = fileDescription
-    document.getElementById('heading').textContent = fileDescription
-    if (filePath) {
-        const iframe = document.querySelector('iframe');
-        iframe.src = `https://nathanlobo.github.io/CodeStore/${filePath}`;
-    }
-</script>
+
 </html>

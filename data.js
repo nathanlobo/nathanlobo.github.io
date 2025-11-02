@@ -109,7 +109,13 @@ const htmlExpts = [
             "WD-HTML/Expt-5/expt5.6-for-of-loop.html",
             "WD-HTML/Expt-5/expt5.7-loop-over-string.html",
             "WD-HTML/Expt-5/expt5.8-multiply-using-func.html",
-            "WD-HTML/Expt-5/expt5.9-add-using-func-with-parameter.html"
+            "WD-HTML/Expt-5/expt5.9-add-using-func-with-parameter.html",
+            "WD-HTML/Expt-5/expt5.10-factorial.html",
+            "WD-HTML/Expt-5/expt5.11-while-loop.html",
+            "WD-HTML/Expt-5/expt5.12-do-while.html",
+            "WD-HTML/Expt-5/expt5.13-sum-of-array.html",
+            "WD-HTML/Expt-5/expt5.14-matrix-multiplication.html",
+            "WD-HTML/Expt-5/expt5.15-power-of-number.html"
     ],
     filedesc:["Expt 5.1 - WAJS program to check if entered number is odd or even using if-else",
                 "Expt 5.2 - WAJS program to print day of the week corresponding to entered number",
@@ -119,7 +125,13 @@ const htmlExpts = [
                 "Expt 5.6 - WAJS program to implement For Of Loop",
                 "Expt 5.7 - WAJS program to implement Loop Over a String",
                 "Expt 5.8 - WAJS program to create a function to Multiply",
-                "Expt 5.9 - WAJS program to create a function to add with parameters"
+                "Expt 5.9 - WAJS program to create a function to add with parameters",
+                "Expt 5.10 - WAJS program to create a function find factorial",
+                "Expt 5.11 - WAJS program to implement While Loop",
+                "Expt 5.12 - WAJS program to implement Do While Loop",
+                "Expt 5.13 - WAJS program to implement Sum of Array Elements",
+                "Expt 5.14 - WAJS program to implement Multiplication of 2 Matrices",
+                "Expt 5.14 - WAJS program to find Power of a Number"
     ]
     },
     {
