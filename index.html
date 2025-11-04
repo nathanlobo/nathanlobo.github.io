@@ -642,32 +642,11 @@
             // Output button logic
               let showOutputBtn = true;
               // Hide Output button for 2nd and 3rd files of Expt 3 in PHP experiments
-              if (
-                localStorage.getItem('selectedTab') === 'PHP' && exp.name === 'Expt 3' && (fileIdx === 1 || fileIdx === 2)
-              ) {
-                showOutputBtn = false;
-              }
-              if (
-                localStorage.getItem('selectedTab') === 'PHP' &&
-                exp.name === 'Expt 9' &&
-                (fileIdx === 1)
-              ) {
-                showOutputBtn = false;
-              }
-              if (
-                localStorage.getItem('selectedTab') === 'HTML' &&
-                exp.name === 'Expt 4' &&
-                (fileIdx === 1)
-              ) {
-                showOutputBtn = false;
-              }
-              if (
-                localStorage.getItem('selectedTab') === 'HTML' &&
-                exp.name.includes('Expt 9') &&
-                (fileIdx === 1)
-              ) {
-                showOutputBtn = false;
-              }
+              if (localStorage.getItem('selectedTab') === 'PHP' && exp.name === 'Expt 2' && (fileIdx === 1 || fileIdx === 3 || fileIdx === 5)) { showOutputBtn = false; }
+              if (localStorage.getItem('selectedTab') === 'PHP' && exp.name === 'Expt 3' && (fileIdx === 1 || fileIdx === 2)) { showOutputBtn = false; }
+              if (localStorage.getItem('selectedTab') === 'PHP' && exp.name === 'Expt 9' && (fileIdx === 1)) { showOutputBtn = false; }
+              if (localStorage.getItem('selectedTab') === 'HTML' && exp.name === 'Expt 4' && (fileIdx === 1)) { showOutputBtn = false; }
+              if (localStorage.getItem('selectedTab') === 'HTML' && exp.name.includes('Expt 9') && (fileIdx === 1)) { showOutputBtn = false; }
               if (showOutputBtn) {
                 const outputBtn = document.createElement('button');
                 outputBtn.className = 'btn btn-output';
