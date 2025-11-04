@@ -191,8 +191,11 @@ const phpExpts = [
               "Expt 2c - Implementation of PHP REQUEST method.",
               "Expt 2c - REQUEST method .php file"],
     outputLinks: ["https://nathanlobo.byethost4.com/expt2_request_method/get.html",
+                  "https://nathanlobo.byethost4.com/expt2_request_method/get.php",
                   "https://nathanlobo.byethost4.com/expt2_request_method/post.html",
+                  "https://nathanlobo.byethost4.com/expt2_request_method/post.php",
                   "https://nathanlobo.byethost4.com/expt2_request_method/request.html"],
+                  "https://nathanlobo.byethost4.com/expt2_request_method/request.php",
     outputFalse: [2,4,6]
     },
     {
