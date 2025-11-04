@@ -195,7 +195,7 @@ const phpExpts = [
                   "https://nathanlobo.byethost4.com/expt2_request_method/post.html",
                   "https://nathanlobo.byethost4.com/expt2_request_method/post.php",
                   "https://nathanlobo.byethost4.com/expt2_request_method/request.html",
-                  "https://nathanlobo.byethost4.com/expt2_request_method/request.php"]
+                  "https://nathanlobo.byethost4.com/expt2_request_method/request.php"],
     outputFalse: [2,4,6]
     },
     {
