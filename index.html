@@ -492,7 +492,30 @@
     </div>
   </div>
   <div id="linkContainer" class="link-container">Loading...</div>
-  <script src="./data.js"></script>
+  <script>
+    // Load data from JSON file
+    let dscppExpts = [];
+    let htmlExpts = [];
+    let phpExpts = [];
+    let zipDownloads = {};
+
+    fetch('./data.json')
+      .then(response => response.json())
+      .then(data => {
+        dscppExpts = data.dscppExpts;
+        htmlExpts = data.htmlExpts;
+        phpExpts = data.phpExpts;
+        zipDownloads = data.zipDownloads;
+        
+        // Initialize the page after data is loaded
+        const lastTab = localStorage.getItem('selectedTab') || 'HTML';
+        activateTab(lastTab);
+      })
+      .catch(error => {
+        console.error('Error loading data:', error);
+        document.getElementById('linkContainer').innerHTML = '<p>Error loading experiments data.</p>';
+      });
+  </script>
   <script src="./index-script.js"></script>
   <script>
     skipBtn = document.getElementById("skip");
@@ -768,9 +791,7 @@
       });
     });
 
-    // On page load, restore last selected tab or default to HTML
-    const lastTab = localStorage.getItem('selectedTab') || 'HTML';
-    activateTab(lastTab);
+    // Note: activateTab is now called after data.json is loaded (see fetch callback above)
     
     // Hide loading overlay after content is loaded
     window.addEventListener('load', function() {
