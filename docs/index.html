@@ -507,9 +507,25 @@
         phpExpts = data.phpExpts;
         zipDownloads = data.zipDownloads;
         
-        // Initialize the page after data is loaded
+        // Initialize the page after data is loaded.
+        // Ensure activateTab is defined by waiting until DOMContentLoaded if still parsing.
         const lastTab = localStorage.getItem('selectedTab') || 'HTML';
-        activateTab(lastTab);
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => {
+            if (typeof window.activateTab === 'function') {
+              window.activateTab(lastTab);
+            }
+          }, { once: true });
+        } else {
+          if (typeof window.activateTab === 'function') {
+            window.activateTab(lastTab);
+          } else {
+            // Fallback: schedule on next macrotask in case scripts are still evaluating
+            setTimeout(() => {
+              if (typeof window.activateTab === 'function') window.activateTab(lastTab);
+            }, 0);
+          }
+        }
       })
       .catch(error => {
         console.error('Error loading data:', error);
@@ -518,15 +534,15 @@
   </script>
   <script src="./index-script.js"></script>
   <script>
-    skipBtn = document.getElementById("skip");
-    skipCount = 0;
+  skipBtn = document.getElementById("skip");
+  skipCount = 0;
     skipBtn.addEventListener("click", function() {
       if (skipCount==0){
         const modalText = document.getElementById("modal-text");
         const modalWarn = document.getElementById("modal-warning");
         modalText.textContent = "I've Asked Just for your name, Not your Bank Account details.";
         modalWarn.textContent = "";
-        skipCount =+ 1;
+  skipCount += 1;
       }
       else if (skipCount==1){
         const modalText = document.getElementById("modal-text");

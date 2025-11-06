@@ -98,6 +98,15 @@
         "Expt 7a - C++ program to implement Bubble Sort algorithm.",
         "Expt 7b - C++ program to implement Insertion Sort algorithm."
       ]
+    },
+    {
+      "name": "Expt 8",
+      "files": [
+        "DSCpp/expt8-graph-to-matrix-n-list.cpp"
+      ],
+      "filedesc": [
+        "Expt 8 - C++ program to implement Graph To Matrix & List.cpp"
+      ]
     }
   ],
   "htmlExpts": [
