@@ -1,0 +1,24 @@
+{
+  "name": "nathanlobo.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index-script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nathanlobo/nathanlobo.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nathanlobo/nathanlobo.github.io/issues"
+  },
+  "homepage": "https://github.com/nathanlobo/nathanlobo.github.io#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
