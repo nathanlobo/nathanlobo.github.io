@@ -1,7 +1,7 @@
 {
   "dscppExpts": [
     {
-      "name": "Expt 1",
+      "name": "Expt 1 - Implementing Classes, Objects, and Overloading",
       "files": [
         "DSCpp/expt1/overloading_1a.cpp",
         "DSCpp/expt1/overloading_1b.cpp",
@@ -16,7 +16,7 @@
       ]
     },
     {
-      "name": "Expt 2",
+      "name": "Expt 2 - Friend Function and Friend Classes",
       "files": [
         "DSCpp/expt2/expt2a.cpp",
         "DSCpp/expt2/expt2b.cpp",
@@ -33,7 +33,7 @@
       ]
     },
     {
-      "name": "Expt 3",
+      "name": "Expt 3 -  Implementation of Inheritance",
       "files": [
         "DSCpp/expt3/expt3.1.a.cpp",
         "DSCpp/expt3/expt3.1.b.cpp",
@@ -76,7 +76,7 @@
         "DSCpp/expt5-stack.cpp"
       ],
       "filedesc": [
-        "Implementation of Stack"
+        "Implementation of Stack Using Array/Linked List"
       ]
     },
     {
@@ -85,18 +85,18 @@
         "DSCpp/expt6-queue.cpp"
       ],
       "filedesc": [
-        "Implementation of Queue"
+        "Implementation of Queue Using Array/Linked List"
       ]
     },
     {
-      "name": "Expt 7",
+      "name": "Expt 7 - Implementation of Sorting Techniques",
       "files": [
         "DSCpp/expt7/expt7a-bubble_sort.cpp",
         "DSCpp/expt7/expt7b-insertion_sort.cpp"
       ],
       "filedesc": [
-        "Expt 7a - C++ program to implement Bubble Sort algorithm.",
-        "Expt 7b - C++ program to implement Insertion Sort algorithm."
+        "Expt 7a - Implementation Bubble Sort Algorithm.",
+        "Expt 7b - Implementation Insertion Sort Algorithm."
       ]
     },
     {
@@ -105,7 +105,7 @@
         "DSCpp/expt8-graph-to-matrix-n-list.cpp"
       ],
       "filedesc": [
-        "Expt 8 - C++ program to implement Graph To Matrix & List.cpp"
+        "Implementation of Graph Representations (Adjacency Matrix and Adjacency List)"
       ]
     }
   ],
