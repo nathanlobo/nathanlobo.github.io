@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/nathanlobo/nathanlobo.github.io#readme",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "node-fetch": "^2.7.0"
   }
 }

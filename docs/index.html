@@ -627,7 +627,6 @@
               window.location.href = 'code.html';
             });
 
-            // Output button logic
               let showOutputBtn = true;
               // Hide Output button for 2nd and 3rd files of Expt 3 in PHP experiments
               if (localStorage.getItem('selectedTab') === 'PHP' && exp.name === 'Expt 2' && (fileIdx === 1 || fileIdx === 3 || fileIdx === 5)) { showOutputBtn = false; }
@@ -647,12 +646,15 @@
                 } else if (Array.isArray(exp.outputLinks) && exp.outputLinks[fileIdx]) {
                   outputBtn.addEventListener('click', () => {
                     const outputUrl = exp.outputLinks[fileIdx];
-                    // Track analytics for output button click
+                    localStorage.setItem('filePath', filePath);
+                    localStorage.setItem('experimentName', exp.name || `Experiment ${idx+1}`);
+                    localStorage.setItem('fileDescription', desc); // Store file description
                     const storedName = localStorage.getItem('userName');
                     if (storedName) {
                       sendAnalyticsData(storedName, 'Output', outputUrl);
                     }
                     window.open(outputUrl, '_blank');
+                    // window.location.href = 'output.html';
                   });
                 } else {
                   outputBtn.addEventListener('click', () => {

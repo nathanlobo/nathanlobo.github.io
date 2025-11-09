@@ -37,13 +37,55 @@
       const filePath = localStorage.getItem('filePath');
       const experimentName = localStorage.getItem('experimentName');
       const fileDescription = localStorage.getItem('fileDescription');
-      window.location.href = `https://nathanlobo.github.io/CodeStore/${filePath}`; // Replace with your desired URL
-      document.title = fileDescription
-      document.getElementById('heading').textContent = fileDescription
-      if (filePath) {
-          const iframe = document.querySelector('iframe');
-          iframe.src = `https://nathanlobo.github.io/CodeStore/${filePath}`;
-      }
+      addEventListener("fetch", event => {
+  event.respondWith(handleRequest(event.request))
+})
+
+async function handleRequest(request) {
+  const url = new URL(request.url)
+  // point to your byethost subdomain
+  url.hostname = "nathanlobo.byethost4.com"   // change this
+
+  // forward method, headers, body
+  const originReq = new Request(url.toString(), {
+    method: request.method,
+    headers: request.headers,
+    body: request.body,
+    redirect: "follow"
+  })
+
+  const originResp = await fetch(originReq)
+
+  // copy headers, then delete the blocking ones
+  const newHeaders = new Headers(originResp.headers)
+  newHeaders.delete("x-frame-options")
+  newHeaders.delete("frame-options")
+  newHeaders.delete("content-security-policy")         // remove full CSP
+  newHeaders.delete("x-content-security-policy")
+  // if you want to allow all frames:
+  newHeaders.set("Content-Security-Policy", "frame-ancestors *")
+
+  // return response body as stream for larger pages
+  return new Response(originResp.body, {
+    status: originResp.status,
+    statusText: originResp.statusText,
+    headers: newHeaders
+  })
+}
+
+      // Set title immediately (document.title can be set anytime)
+      document.title = fileDescription;
+      
+      // Wait for DOM to be ready before manipulating elements
+      document.addEventListener('DOMContentLoaded', function() {
+          document.getElementById('heading').textContent = fileDescription;
+          if (filePath) {
+              const iframe = document.querySelector('iframe');
+              // iframe.src = `https://nathanlobo.github.io/CodeStore/${filePath}`;
+              iframe.src = `https://nathanlobo.byethost4.com/expt1_basic_php/basics.php`;
+          }
+      });
+      
   </script>
 </head>
 <body>
