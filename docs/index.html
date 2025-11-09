@@ -352,6 +352,38 @@
       border-radius: 50%;
     }
     
+    /* Version Selector Dropdown Styles */
+    .version-dropdown {
+      display: none;
+      position: absolute;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 0;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      min-width: 160px;
+      margin-top: 4px;
+    }
+    
+    .version-dropdown.show {
+      display: block;
+    }
+    
+    .version-option {
+      padding: 10px 16px;
+      cursor: pointer;
+      color: var(--text);
+      transition: background 0.2s;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .version-option:hover {
+      background: rgba(88, 166, 255, 0.1);
+      color: var(--accent);
+    }
+    
     /* Loading Spinner Styles */
     #loadingOverlay {
       position: fixed;
@@ -574,6 +606,81 @@
       }
     }
 
+    // Version Selector Function for Expt 7
+    function showVersionSelector(button, action, filePath, exp, desc, idx, fileIdx) {
+      // Remove any existing dropdowns
+      document.querySelectorAll('.version-dropdown').forEach(d => d.remove());
+      
+      // Create dropdown
+      const dropdown = document.createElement('div');
+      dropdown.className = 'version-dropdown show';
+      
+      // Create options
+      const originalOption = document.createElement('div');
+      originalOption.className = 'version-option';
+      originalOption.textContent = '📄 Original Version';
+      originalOption.addEventListener('click', () => {
+        handleVersionSelection(action, filePath, exp, desc, idx, fileIdx, 'original');
+        dropdown.remove();
+      });
+      
+      const easyOption = document.createElement('div');
+      easyOption.className = 'version-option';
+      easyOption.textContent = '✨ Easy Version';
+      easyOption.addEventListener('click', () => {
+        // Convert to -v2 version
+        const easyFilePath = filePath.replace('.html', '-v2.html');
+        handleVersionSelection(action, easyFilePath, exp, desc, idx, fileIdx, 'easy');
+        dropdown.remove();
+      });
+      
+      dropdown.appendChild(originalOption);
+      dropdown.appendChild(easyOption);
+      
+      // Position dropdown below button
+      const rect = button.getBoundingClientRect();
+      dropdown.style.position = 'fixed';
+      dropdown.style.top = (rect.bottom + 4) + 'px';
+      dropdown.style.left = rect.left + 'px';
+      
+      document.body.appendChild(dropdown);
+      
+      // Close dropdown when clicking outside
+      setTimeout(() => {
+        const closeDropdown = (e) => {
+          if (!dropdown.contains(e.target) && e.target !== button) {
+            dropdown.remove();
+            document.removeEventListener('click', closeDropdown);
+          }
+        };
+        document.addEventListener('click', closeDropdown);
+      }, 100);
+    }
+    
+    function handleVersionSelection(action, filePath, exp, desc, idx, fileIdx, version) {
+      localStorage.setItem('filePath', filePath);
+      localStorage.setItem('experimentName', exp.name || `Experiment ${idx+1}`);
+      localStorage.setItem('fileDescription', desc);
+      
+      if (action === 'code') {
+        window.location.href = 'code.html';
+      } else if (action === 'output') {
+        const outputUrl = `https://nathanlobo.github.io/CodeStore/${filePath}`;
+        const storedName = localStorage.getItem('userName');
+        if (storedName) {
+          sendAnalyticsData(storedName, 'Output', outputUrl);
+        }
+        window.location.href = 'output.html';
+      } else if (action === 'download') {
+        const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
+        const storedName = localStorage.getItem('userName');
+        if (storedName) {
+          sendAnalyticsData(storedName, 'Download', filePath);
+        }
+        downloadFile(rawUrl, filePath.split('/').pop());
+      }
+    }
+
     // Render experiment cards
     function renderExperiments(expts) {
       if (!Array.isArray(expts) || expts.length === 0) {
@@ -620,12 +727,24 @@
             const codeBtn = document.createElement('button');
             codeBtn.className = 'btn btn-view';
             codeBtn.textContent = 'Code';
-            codeBtn.addEventListener('click', () => {
-              localStorage.setItem('filePath', filePath);
-              localStorage.setItem('experimentName', exp.name || `Experiment ${idx+1}`);
-              localStorage.setItem('fileDescription', desc); // Store file description
-              window.location.href = 'code.html';
-            });
+            
+            // Check if this is Expt 7 HTML to show version selector
+            const isExpt7HTML = localStorage.getItem('selectedTab') === 'HTML' && 
+                                exp.name.includes('Expt 7');
+            
+            if (isExpt7HTML) {
+              codeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showVersionSelector(e.target, 'code', filePath, exp, desc, idx);
+              });
+            } else {
+              codeBtn.addEventListener('click', () => {
+                localStorage.setItem('filePath', filePath);
+                localStorage.setItem('experimentName', exp.name || `Experiment ${idx+1}`);
+                localStorage.setItem('fileDescription', desc); // Store file description
+                window.location.href = 'code.html';
+              });
+            }
 
               let showOutputBtn = true;
               // Hide Output button for 2nd and 3rd files of Expt 3 in PHP experiments
@@ -643,6 +762,11 @@
                   outputBtn.style.display = 'none';
                   outputBtn.style.opacity = '0.5';
                   outputBtn.title = 'Output temporarily disabled';
+                } else if (isExpt7HTML) {
+                  outputBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    showVersionSelector(e.target, 'output', filePath, exp, desc, idx, fileIdx);
+                  });
                 } else if (Array.isArray(exp.outputLinks) && exp.outputLinks[fileIdx]) {
                   outputBtn.addEventListener('click', () => {
                     const outputUrl = exp.outputLinks[fileIdx];
@@ -682,7 +806,12 @@
             downloadBtn.textContent = 'Download';
 
             // Check if this file should trigger a release zip download
-            if (zipDownloads[filePath]) {
+            if (isExpt7HTML) {
+              downloadBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showVersionSelector(e.target, 'download', filePath, exp, desc, idx);
+              });
+            } else if (zipDownloads[filePath]) {
               const zipUrl = zipDownloads[filePath];
               downloadBtn.addEventListener('click', () => {
                 // Track analytics for download button click
