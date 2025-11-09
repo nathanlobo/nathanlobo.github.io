@@ -205,8 +205,8 @@
     {
       "name": "Expt 7 - Implementation of JS Functions for validation of user login and registration form",
       "files": [
-        "WD-HTML/Expt-7/expt7-login.html",
-        "WD-HTML/Expt-7/expt7-register.html"
+        "WD-HTML/Expt-7/expt7-login-v2.html",
+        "WD-HTML/Expt-7/expt7-register-v2.html"
       ],
       "filedesc": [
         "Expt 7a - JS User Login Form Validation",
