@@ -637,11 +637,22 @@
       dropdown.appendChild(originalOption);
       dropdown.appendChild(easyOption);
       
-      // Position dropdown below button
+      // Position dropdown below button with mobile-friendly positioning
       const rect = button.getBoundingClientRect();
       dropdown.style.position = 'fixed';
       dropdown.style.top = (rect.bottom + 4) + 'px';
-      dropdown.style.left = rect.left + 'px';
+      
+      // Calculate left position, ensuring dropdown doesn't overflow right edge
+      const dropdownWidth = 160; // min-width from CSS
+      const viewportWidth = window.innerWidth;
+      let leftPos = rect.left;
+      
+      // If dropdown would overflow right edge, align it to the right instead
+      if (leftPos + dropdownWidth > viewportWidth) {
+        leftPos = Math.max(8, viewportWidth - dropdownWidth - 8);
+      }
+      
+      dropdown.style.left = leftPos + 'px';
       
       document.body.appendChild(dropdown);
       
