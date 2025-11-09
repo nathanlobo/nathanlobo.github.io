@@ -37,6 +37,8 @@
       const filePath = localStorage.getItem('filePath');
       const experimentName = localStorage.getItem('experimentName');
       const fileDescription = localStorage.getItem('fileDescription');
+      window.location.href = `https://nathanlobo.github.io/CodeStore/${filePath}`; // Replace with your desired URL
+      document.title = fileDescription;
       addEventListener("fetch", event => {
   event.respondWith(handleRequest(event.request))
 })
