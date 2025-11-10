@@ -66,17 +66,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 },650)
                 setTimeout(function(){
                     btn.classList.remove('change-color');
-                },1000)
-                setTimeout(function(){
-                    footerTitle.classList.add('change');
                     setTimeout(function(){
-                        footerText.classList.add('change');
-                        btn.classList.add('change-color');
-                    },1000)
-                    setTimeout(function(){
-                        footerTitle.classList.remove('change');
-                    },1000)
+                        footerTitle.classList.add('change');
+                        setTimeout(function(){
+                            footerText.classList.add('change');
+                            btn.classList.add('change-color');
+                        },1000)
+                        setTimeout(function(){
+                            footerTitle.classList.remove('change');
+                        },1000)
+                    },800)
                 },1000)
+                
                 
             },1000)
         });
