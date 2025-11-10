@@ -93,22 +93,21 @@
   justify-content: space-between;
   align-items: center;
 }
-
 .logo-link {
   display: flex;
   align-items: center;
   text-decoration: none;
   color: inherit;
-  flex-shrink: 0; 
+  flex-shrink: 0;
 }
 
 .logo-icon {
-  height: 60px;
+  height: 40px;
 }
 
 .logo-text {
   margin-left: 12px;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
   margin-top: 0;
   margin-bottom: 0;
@@ -117,10 +116,10 @@
 .status-text {
   text-align: right;
   color: var(--warning);
-  margin: 0px 0;
+  margin-top: 4px;
+  margin-bottom: 0;
   font-size: 16px;
   letter-spacing: .8px;
-  padding: 8px;
 }
 
 @media (max-width: 620px) {
@@ -467,26 +466,30 @@
       font-size: 16px;
       font-weight: 600;
     }
+    hr {
+      border: none; /* Remove default border */
+      border-top: 2px solid var(--border); /* Add a custom top border */
+      width: 100%; /* Adjust width */
+      margin: 10px auto; /* Center the line and add spacing */
+    }
   </style>
 </head>
 <body>
   <!-- Loading Overlay -->
   <div id="loadingOverlay">
-    <div class="spinner"></div>
-    <div class="loading-text">Loading CodeStore...</div>
+      <div class="spinner"></div>
+      <div class="loading-text">Loading CodeStore...</div>
   </div>
   <div class="header-container">
-  
-  <a href="https://nathanlobo.github.io/" class="logo-link">
-    <img src="icon.png" alt="CodeStore Logo" class="logo-icon">
-    <h1 class="logo-text">CodeStore</h1>
-  </a>
-  
-  <div class="status-box">
-    <p class="status-text"><i>Coming up</i> 🔜 <b>DSC++</b> Code Outputs</p>
+    <a href="https://nathanlobo.github.io/" class="logo-link">
+      <img src="icon.png" alt="CodeStore Logo" class="logo-icon">
+      <h1 class="logo-text">CodeStore</h1>
+    </a>
+    <hr>
+    <div class="status-box">
+      <p class="status-text"><i>Coming up</i> 🔜 <b>DSC++</b> Code Outputs</p>
+    </div>
   </div>
-  
-</div>
   <div class="topbar">
     <div class="tabs-nav">
       <button class="tab-btn active" data-tab="HTML">HTML</button>
