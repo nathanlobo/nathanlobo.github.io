@@ -247,6 +247,31 @@
       "outputLinks": [
         "https://nathanlobo.byethost4.com/Expt-9/xmlhttprequest.html"
       ]
+    },
+    {
+      "name": "Expt 10 - Implementation of XML",
+      "files": [
+        "WD-HTML/Expt-10/expt10a-bookstore.xml",
+        "WD-HTML/Expt-10/expt10b-ownIdea.xml"
+      ],
+      "filedesc": [
+        "Implementation of XML BookStore.",
+        "Implementation of XML OwnIdea."
+      ]
+    },
+    {
+      "name": "Expt 11 - Implementation of XSL.",
+      "files": [
+        "WD-HTML/Expt-11/cdcatalog.xml",
+        "WD-HTML/Expt-11/cdcatalog.xsl"
+      ],
+      "filedesc": [
+        "Implementation of XSL on XML CD Catalog. (.xml file)",
+        "XSL File for CD Catalog. (.xsl file)"
+      ],
+      "outputLinks": [
+        "https://nathanlobo.byethost4.com/html-expt-11/cdcatalog.xml"
+      ]
     }
   ],
   "phpExpts": [
