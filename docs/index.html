@@ -772,20 +772,6 @@ hr{
       return prefedUserData;
     }
 
-    // Check if code contains "Nathan" or "Lobo"
-    async function checkCodeContainsName(filePath) {
-      try {
-        const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
-        const response = await fetch(rawUrl);
-        if (!response.ok) throw new Error(`Failed to fetch code: ${response.status}`);
-        const code = await response.text();
-        return code.includes('Nathan') || code.includes('Lobo');
-      } catch (error) {
-        console.error('Error fetching code:', error);
-        return false;
-      }
-    }
-
     // Validate roll number against prefedUser.json
     async function validateRollNo(rollNo) {
       const users = await loadPrefedUserData();
@@ -1075,18 +1061,7 @@ hr{
                         localStorage.setItem('experimentName', exp.name || `Experiment ${idx+1}`);
                         localStorage.setItem('fileDescription', desc);
                         
-                        // Step 1: Check if code contains "Nathan" or "Lobo"
-                        const containsName = await checkCodeContainsName(filePath);
-                        
-                        if (!containsName) {
-                          // No personalization, redirect to base link
-                          const baseUrl = exp.outputLinks[fileIdx];
-                          sendAnalyticsData(null, 'Output', baseUrl);
-                          window.open(baseUrl, '_self');
-                          return;
-                        }
-                        
-                        // Step 2: Code contains name, check for roll number
+                        // Step 1: Check for roll number
                         let rollNo = localStorage.getItem('rollNo');
                         
                         if (!rollNo) {
@@ -1104,7 +1079,7 @@ hr{
                           }
                         }
                         
-                        // Step 3: Redirect with roll number appended
+                        // Step 2: Redirect with roll number appended
                         const baseUrl = exp.outputLinks[fileIdx];
                         const finalUrl = `${baseUrl}/${rollNo}`;
                         
