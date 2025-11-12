@@ -13,6 +13,12 @@
         "Expt 1b - To represent a bank account with basic operations.",
         "Expt 1c - To calculate area of different shapes using function overloading.",
         "Expt 1d - To calculate averages using function overloading."
+      ],
+      "outputLinks": [
+        "https://cpp-zkxv.onrender.com/1a",
+        "https://cpp-zkxv.onrender.com/1b",
+        "https://cpp-zkxv.onrender.com/1c",
+        "https://cpp-zkxv.onrender.com/1d"
       ]
     },
     {
@@ -30,6 +36,13 @@
         "Expt 2c - To create a class account & use a friend function to transfer funds from 1 acc to other, ensuring the source account has sufficient balance.",
         "Expt 2d - To create 2 classes A & B, let B be friend of A, so that it can access & display private members of B.",
         "Expt 2e - To create classes account & bank, & to be able to access and modify the balance."
+      ],
+      "outputLinks": [
+        "https://cpp-zkxv.onrender.com/2a",
+        "https://cpp-zkxv.onrender.com/2b",
+        "https://cpp-zkxv.onrender.com/2c",
+        "https://cpp-zkxv.onrender.com/2d",
+        "https://cpp-zkxv.onrender.com/2e"
       ]
     },
     {
@@ -57,6 +70,18 @@
         "Expt 3.5a - Multiple Inheritance",
         "Expt 3.6a - Hierarchical Inheritance in C++ (University Example)",
         "Expt 3.7a - Hybrid Inheritance in C++ (University Example)"
+      ],
+      "outputLinks": [
+        "https://cpp-zkxv.onrender.com/3_1a",
+        "https://cpp-zkxv.onrender.com/3_1b",
+        "https://cpp-zkxv.onrender.com/3_2a",
+        "https://cpp-zkxv.onrender.com/3_2b",
+        "https://cpp-zkxv.onrender.com/3_3a",
+        "https://cpp-zkxv.onrender.com/3_3b",
+        "https://cpp-zkxv.onrender.com/3_4a",
+        "https://cpp-zkxv.onrender.com/3_5a",
+        "https://cpp-zkxv.onrender.com/3_6a",
+        "https://cpp-zkxv.onrender.com/3_7a"
       ]
     },
     {
@@ -68,6 +93,10 @@
       "filedesc": [
         "Expt 4a - Implementation of Singly Linked List",
         "Expt 4b - Implementation of Double Linked List"
+      ],
+      "outputLinks": [
+        "https://cpp-zkxv.onrender.com/4a",
+        "https://cpp-zkxv.onrender.com/4b"
       ]
     },
     {
@@ -77,6 +106,9 @@
       ],
       "filedesc": [
         "Implementation of Stack Using Array/Linked List"
+      ],
+      "outputLinks": [
+        "https://cpp-zkxv.onrender.com/5"
       ]
     },
     {
@@ -86,6 +118,9 @@
       ],
       "filedesc": [
         "Implementation of Queue Using Array/Linked List"
+      ],
+      "outputLinks": [
+        "https://cpp-zkxv.onrender.com/6"
       ]
     },
     {
@@ -97,6 +132,10 @@
       "filedesc": [
         "Expt 7a - Implementation Bubble Sort Algorithm.",
         "Expt 7b - Implementation Insertion Sort Algorithm."
+      ],
+      "outputLinks": [
+        "https://cpp-zkxv.onrender.com/7a",
+        "https://cpp-zkxv.onrender.com/7b"
       ]
     },
     {
@@ -106,6 +145,9 @@
       ],
       "filedesc": [
         "Implementation of Graph Representations (Adjacency Matrix and Adjacency List)"
+      ],
+      "outputLinks": [
+        "https://cpp-zkxv.onrender.com/8"
       ]
     }
   ],

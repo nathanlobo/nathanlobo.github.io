@@ -424,27 +424,33 @@
 
   <script>
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwgXbi_LPG8TjWaOjeT2cPUWeoBRJ3U0DSrJTy3ikAn0hdXJ7nSXedTx_mu3xbHQLLm/exec';
-    window.onload = function() {
-      const storedName = localStorage.getItem('userName');
-      if (storedName) {
-        console.log("Welcome back, " + storedName + "! Logging your visit.");
-        sendAnalyticsData(storedName, 'Return Visit', localStorage.getItem('filePath'));
-      }
+
+    // Helper to read identifier from storage
+    window.getStoredUserName = function() {
+      return localStorage.getItem('rollNo') || localStorage.getItem('userName');
     };
 
-    function sendAnalyticsData(name, visitType, visitPage) {
-        const url = `${GOOGLE_SCRIPT_URL}?userName=${encodeURIComponent(name)}
-                                          &visitType=${encodeURIComponent(visitType)}
-                                          &visitPage=${encodeURIComponent(visitPage)}`;
-        fetch(url, {
-          method: 'POST',
-          mode: 'no-cors'
-        }).then(() => {
-          console.log(`Analytics data sent: ${name} - ${visitType}`);
-        }).catch(error => {
-          console.error('Error sending analytics data:', error);
-        });
-    }
+    // Global analytics sender with fallback to stored id
+    window.sendAnalyticsData = function(name, visitType, visitPage) {
+      if (!name) name = getStoredUserName();
+      if (!name) {
+        console.log('Analytics not sent: No user identifier available');
+        return;
+      }
+      const url = `${GOOGLE_SCRIPT_URL}?userName=${encodeURIComponent(name)}&visitType=${encodeURIComponent(visitType)}&visitPage=${encodeURIComponent(visitPage)}`;
+      fetch(url, { method: 'POST', mode: 'no-cors' })
+        .then(() => console.log(`Analytics data sent: ${name} - ${visitType}`))
+        .catch(error => console.error('Error sending analytics data:', error));
+    };
+
+    window.onload = function() {
+      const storedName = getStoredUserName();
+      if (storedName) {
+        console.log("Welcome back, " + storedName + "! Logging your visit.");
+        // Use global fallback inside analytics sender
+        sendAnalyticsData(null, 'Return Visit', localStorage.getItem('filePath'));
+      }
+    };
 
     const owner = "nathanlobo";
     const repo = "CodeStore";
@@ -515,13 +521,9 @@
 
     downloadBtn.addEventListener('click', () => {
       downloadFile(rawUrl, filePath.split('/').pop());
-      
       // Analytics for download button
-      const storedName = localStorage.getItem('userName');
-      const filePath = localStorage.getItem('filePath');
-      if (storedName && filePath) {
-        sendAnalyticsData(storedName, 'Downloaded', filePath);
-      }
+      const pathForAnalytics = localStorage.getItem('filePath') || filePath;
+      sendAnalyticsData(null, 'Download', pathForAnalytics);
     });
 
     // --- Theme Switch (toggle) ---
@@ -550,11 +552,15 @@
           localStorage.setItem('theme', 'dark-mode');
           modeText.textContent = 'Dark';
           hljsTheme.href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css";
+          // Analytics
+          if (window.sendAnalyticsData) sendAnalyticsData(null, 'Dark Mode', '');
         } else {
           root.classList.add('light');
           localStorage.setItem('theme', 'light-mode');
           modeText.textContent = 'Light';
           hljsTheme.href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css";
+          // Analytics
+          if (window.sendAnalyticsData) sendAnalyticsData(null, 'Light Mode', '');
         }
       });
     });
@@ -684,10 +690,9 @@
         setTempText(copyBtn, 'Copied!');
 
         // Analytics for copy button
-        const storedName = localStorage.getItem('userName');
         const filePath = localStorage.getItem('filePath');
-        if (storedName && filePath) {
-          sendAnalyticsData(storedName, 'Copied', filePath);
+        if (filePath) {
+          sendAnalyticsData(null, 'Copied', filePath);
         }
       } catch (e) {
         console.error('Copy failed', e);
@@ -704,9 +709,8 @@
     const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
     downloadBtn.addEventListener('click', async () => {
       // Analytics for download button
-      const storedName = localStorage.getItem('userName');
-      if (storedName && filePath) {
-        sendAnalyticsData(storedName, 'Download', filePath);
+      if (filePath) {
+        sendAnalyticsData(null, 'Download', filePath);
       }
       try {
         const res = await fetch(rawUrl);
@@ -935,10 +939,9 @@
                   }, 3000);
 
                   // Analytics for screenshot download
-                  const storedName = localStorage.getItem('userName');
                   const filePath = localStorage.getItem('filePath');
-                  if (storedName && filePath) {
-                    sendAnalyticsData(storedName, 'Screenshot Downloaded', filePath);
+                  if (filePath) {
+                    sendAnalyticsData(null, 'Screenshot Downloaded', filePath);
                   }
                 });
               } else {
@@ -960,6 +963,11 @@
                 setTimeout(() => {
                   screenshotBtn.textContent = '📸 Generate Code Screenshot';
                 }, 3000);
+                // Analytics for screenshot download (fallback path)
+                const filePath = localStorage.getItem('filePath');
+                if (filePath) {
+                  sendAnalyticsData(null, 'Screenshot Downloaded', filePath);
+                }
               }
             })
             .catch(function(error) {

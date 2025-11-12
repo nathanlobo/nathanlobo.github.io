@@ -87,6 +87,57 @@
     margin-bottom: 10px;
     letter-spacing: 0.5px;
   }
+  .modal-content form {
+    margin-top: 15px;
+  }
+  .modal-content input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+  }
+  .modal-content input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .btnGrp {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    justify-content: center;
+  }
+  .btnGrp button,
+  .btnGrp input[type="button"] {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btnGrp button[type="submit"] {
+    background: var(--accent);
+    color: white;
+  }
+  .btnGrp button[type="submit"]:hover {
+    background: #5a9eeb;
+    transform: translateY(-1px);
+  }
+  .btnGrp input[type="button"] {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btnGrp input[type="button"]:hover {
+    background: var(--panel);
+    color: var(--text);
+  }
 
 .header-container {
   display: flex;
@@ -522,6 +573,19 @@ hr{
       </form>
     </div>
   </div>
+  <div id="rollNoModal" class="modal">
+    <div class="modal-content">
+      <p id="rollno-modal-text">Roll Number Required</p>
+      <i id="rollno-modal-warning">This code requires your roll number. Please enter your roll number to view the output.</i>
+      <form id="rollNoForm">
+        <input type="text" id="rollNoInput" name="rollNoInput" placeholder="Enter your Roll No (e.g., 25LEC07)" required>
+        <div id="rollNoError" style="color: red; font-size: 14px; margin-top: 4px; display: none;"></div>
+        <div class="btnGrp">
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <div id="linkContainer" class="link-container">Loading...</div>
   <script>
     // Load data from JSON file
@@ -565,15 +629,17 @@ hr{
   </script>
   <script src="./index-script.js"></script>
   <script>
-  skipBtn = document.getElementById("skip");
-  skipCount = 0;
+  const skipBtn = document.getElementById("skip");
+  let skipCount = 0;
+  
+  if (skipBtn) {
     skipBtn.addEventListener("click", function() {
       if (skipCount==0){
         const modalText = document.getElementById("modal-text");
         const modalWarn = document.getElementById("modal-warning");
         modalText.textContent = "I've Asked Just for your name, Not your Bank Account details.";
         modalWarn.textContent = "";
-  skipCount += 1;
+        skipCount += 1;
       }
       else if (skipCount==1){
         const modalText = document.getElementById("modal-text");
@@ -585,38 +651,28 @@ hr{
         modal.style.display = "none";
       }
     });
+  }
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwgXbi_LPG8TjWaOjeT2cPUWeoBRJ3U0DSrJTy3ikAn0hdXJ7nSXedTx_mu3xbHQLLm/exec';
-    window.onload = function() {
-      const storedName = localStorage.getItem('userName');
-      const currentTab = localStorage.getItem('selectedTab') || 'HTML';
-      
-      if (storedName) {
-        console.log("Welcome back, " + storedName + "! Logging your visit.");
-        const visitType = 'Return Visit';
-        // Send immediately for returning visitors
-        sendAnalyticsData(storedName, visitType, currentTab);
-      } else {
-        console.log("First visit. Showing modal.");
-        const modal = document.getElementById("analyticsModal");
-        const form = document.getElementById("nameForm");
-        modal.style.display = "none"; ////////// Change to "block" to enable popup ////////////
-        document.getElementById("userName").focus();
-        form.addEventListener("submit", function(event) {
-          event.preventDefault();
-          const userName = document.getElementById("userName").value.trim();
-          if (userName) {
-            localStorage.setItem('userName', userName);
-            modal.style.display = "none";
-            // Send right after the user submits their name on first visit
-            sendAnalyticsData(userName, 'First Visit', localStorage.getItem('selectedTab') || 'HTML');
-          }
-        });
-      }
+    
+    // Helper function to get stored user identifier (rollNo or userName)
+    window.getStoredUserName = function() {
+        return localStorage.getItem('rollNo') || localStorage.getItem('userName');
     };
-    function sendAnalyticsData(name, visitType, visitPage) {
-        const url = `${GOOGLE_SCRIPT_URL}?userName=${encodeURIComponent(name)}
-                                          &visitType=${encodeURIComponent(visitType)}
-                                          &visitPage=${encodeURIComponent(visitPage)}`;
+    
+    // Define sendAnalyticsData function first so it's available globally
+    window.sendAnalyticsData = function(name, visitType, visitPage) {
+        // If no name provided, try to get from storage
+        if (!name) {
+            name = getStoredUserName();
+        }
+        
+        // Don't send if no user identifier is available
+        if (!name) {
+            console.log('Analytics not sent: No user identifier available');
+            return;
+        }
+        
+        const url = `${GOOGLE_SCRIPT_URL}?userName=${encodeURIComponent(name)}&visitType=${encodeURIComponent(visitType)}&visitPage=${encodeURIComponent(visitPage)}`;
         fetch(url, {
             method: 'POST',
             mode: 'no-cors' // Required for Google Apps Script
@@ -629,9 +685,53 @@ hr{
         .catch(error => {
             console.error('Error sending analytics data:', error);
         });
-    }
+    };
+    
+    window.onload = function() {
+      const storedName = localStorage.getItem('rollNo') || localStorage.getItem('userName');
+      const currentTab = localStorage.getItem('selectedTab') || 'HTML';
+      
+      if (storedName) {
+        console.log("Welcome back, " + storedName + "! Logging your visit.");
+        const visitType = 'Return Visit';
+        // Send immediately for returning visitors (use helper fallback)
+        sendAnalyticsData(null, visitType, currentTab);
+      } else {
+        console.log("First visit. Showing modal.");
+        const modal = document.getElementById("analyticsModal");
+        const form = document.getElementById("nameForm");
+        
+        if (modal && form) {
+          modal.style.display = "none"; // Change to "block" to enable popup
+          
+          if (modal.style.display === "block") {
+            const userNameInput = document.getElementById("userName");
+            if (userNameInput) {
+              userNameInput.focus();
+            }
+          }
+          
+          form.addEventListener("submit", function(event) {
+            event.preventDefault();
+            const userNameInput = document.getElementById("userName");
+            if (userNameInput) {
+              const userName = userNameInput.value.trim();
+              if (userName) {
+                localStorage.setItem('userName', userName);
+                modal.style.display = "none";
+                // Send right after the user submits their name on first visit
+                sendAnalyticsData(userName, 'First Visit', localStorage.getItem('selectedTab') || 'HTML');
+              }
+            }
+          });
+        } else {
+          console.error("Analytics modal or form not found in DOM");
+        }
+      }
+    };
     // JS to handle pop up ends here
 
+    // Define global variables first
     const owner = "nathanlobo";
     const repo = "CodeStore";
     const branch = "main";
@@ -654,6 +754,157 @@ hr{
         console.error('Download failed, opening raw URL instead:', err);
         window.open(rawUrl, '_blank');
       }
+    }
+
+    // Fetch prefedUser.json data
+    let prefedUserData = null;
+    async function loadPrefedUserData() {
+      if (!prefedUserData) {
+        try {
+          const response = await fetch('./prefedUser.json');
+          const data = await response.json();
+          prefedUserData = data['ecomp24-28'];
+        } catch (error) {
+          console.error('Error loading prefedUser.json:', error);
+          prefedUserData = [];
+        }
+      }
+      return prefedUserData;
+    }
+
+    // Check if code contains "Nathan" or "Lobo"
+    async function checkCodeContainsName(filePath) {
+      try {
+        const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
+        const response = await fetch(rawUrl);
+        if (!response.ok) throw new Error(`Failed to fetch code: ${response.status}`);
+        const code = await response.text();
+        return code.includes('Nathan') || code.includes('Lobo');
+      } catch (error) {
+        console.error('Error fetching code:', error);
+        return false;
+      }
+    }
+
+    // Validate roll number against prefedUser.json
+    async function validateRollNo(rollNo) {
+      const users = await loadPrefedUserData();
+      const normalizedRollNo = rollNo.trim().toUpperCase().replace(/\s+/g, '');
+      return users.find(user => user.roll_no.trim().toUpperCase().replace(/\s+/g, '') === normalizedRollNo);
+    }
+
+    // Check and migrate userName to rollNo
+    async function checkAndMigrateUserName() {
+      const userName = localStorage.getItem('userName');
+      if (!userName) return null;
+      
+      const users = await loadPrefedUserData();
+      const normalizedUserName = userName.trim().toUpperCase().replace(/\s+/g, '');
+      
+      // Check if userName matches roll_no or fname (possibly with roll_no)
+      const matchedUser = users.find(user => {
+        const rollNo = user.roll_no.trim().toUpperCase().replace(/\s+/g, '');
+        const fname = user.fname.trim().toUpperCase();
+        
+        // Check if userName is exactly roll_no
+        if (normalizedUserName === rollNo) return true;
+        
+        // Check if userName contains roll_no or fname
+        if (normalizedUserName.includes(rollNo) || normalizedUserName.includes(fname)) return true;
+        
+        return false;
+      });
+      
+      if (matchedUser) {
+        // Migrate to rollNo
+        localStorage.removeItem('userName');
+        localStorage.setItem('rollNo', matchedUser.roll_no);
+        return matchedUser.roll_no;
+      }
+      
+      return null;
+    }
+
+    // Show roll number modal and handle validation
+    function showRollNoModal(outputUrl, filePath, exp, desc) {
+      return new Promise((resolve, reject) => {
+        const modal = document.getElementById('rollNoModal');
+        const input = document.getElementById('rollNoInput');
+        const error = document.getElementById('rollNoError');
+        const form = document.getElementById('rollNoForm');
+        
+        // Reset state
+        input.value = '';
+        error.style.display = 'none';
+        error.textContent = '';
+        
+        // Show modal
+        modal.style.display = 'block';
+        input.focus();
+        
+        // Real-time validation on input
+        const inputHandler = async (e) => {
+          const rollNo = e.target.value.trim();
+          if (rollNo.length >= 5) { // Start validating after 5 characters
+            const user = await validateRollNo(rollNo);
+            if (!user) {
+              error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
+              error.style.display = 'block';
+            } else {
+              error.style.display = 'none';
+            }
+          } else {
+            error.style.display = 'none';
+          }
+        };
+        
+        // Handle form submission (Enter key or Submit button)
+        const submitHandler = async (e) => {
+          e.preventDefault();
+          const rollNo = input.value.trim();
+          
+          if (!rollNo) {
+            error.textContent = 'Please enter your roll number';
+            error.style.display = 'block';
+            return;
+          }
+          
+          const user = await validateRollNo(rollNo);
+          
+          if (user) {
+            // Valid roll number
+            localStorage.setItem('rollNo', user.roll_no);
+            modal.style.display = 'none';
+            
+            // Clean up event listeners
+            input.removeEventListener('input', inputHandler);
+            form.removeEventListener('submit', submitHandler);
+            modal.removeEventListener('click', closeHandler);
+            
+            // Resolve with the roll number
+            resolve(user.roll_no);
+          } else {
+            error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
+            error.style.display = 'block';
+          }
+        };
+        
+        input.addEventListener('input', inputHandler);
+        form.addEventListener('submit', submitHandler);
+        
+        // Handle modal close (if user clicks outside or closes)
+        const closeHandler = (e) => {
+          if (e.target === modal) {
+            modal.style.display = 'none';
+            input.removeEventListener('input', inputHandler);
+            form.removeEventListener('submit', submitHandler);
+            modal.removeEventListener('click', closeHandler);
+            reject('Modal closed');
+          }
+        };
+        
+        modal.addEventListener('click', closeHandler);
+      });
     }
 
     // Version Selector Function for Expt 7
@@ -724,20 +975,15 @@ hr{
       localStorage.setItem('fileDescription', desc);
       
       if (action === 'code') {
+        sendAnalyticsData(null, 'Code View', filePath);
         window.location.href = 'code.html';
       } else if (action === 'output') {
         const outputUrl = `https://nathanlobo.github.io/CodeStore/${filePath}`;
-        const storedName = localStorage.getItem('userName');
-        if (storedName) {
-          sendAnalyticsData(storedName, 'Output', outputUrl);
-        }
+        sendAnalyticsData(null, 'Output', outputUrl);
         window.location.href = 'output.html';
       } else if (action === 'download') {
         const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
-        const storedName = localStorage.getItem('userName');
-        if (storedName) {
-          sendAnalyticsData(storedName, 'Download', filePath);
-        }
+        sendAnalyticsData(null, 'Download', filePath);
         downloadFile(rawUrl, filePath.split('/').pop());
       }
     }
@@ -803,6 +1049,7 @@ hr{
                 localStorage.setItem('filePath', filePath);
                 localStorage.setItem('experimentName', exp.name || `Experiment ${idx+1}`);
                 localStorage.setItem('fileDescription', desc); // Store file description
+                sendAnalyticsData(null, 'Code View', filePath);
                 window.location.href = 'code.html';
               });
             }
@@ -820,10 +1067,60 @@ hr{
                 outputBtn.className = 'btn btn-output';
                 outputBtn.textContent = 'Output';
                 if (localStorage.getItem('selectedTab') === 'DSC++') {
-                  outputBtn.disabled = true;
-                  outputBtn.style.display = 'none';
-                  outputBtn.style.opacity = '0.5';
-                  outputBtn.title = 'Output temporarily disabled';
+                  // DSC++ output button with validation logic
+                  if (Array.isArray(exp.outputLinks) && exp.outputLinks[fileIdx]) {
+                    outputBtn.addEventListener('click', async () => {
+                      try {
+                        localStorage.setItem('filePath', filePath);
+                        localStorage.setItem('experimentName', exp.name || `Experiment ${idx+1}`);
+                        localStorage.setItem('fileDescription', desc);
+                        
+                        // Step 1: Check if code contains "Nathan" or "Lobo"
+                        const containsName = await checkCodeContainsName(filePath);
+                        
+                        if (!containsName) {
+                          // No personalization, redirect to base link
+                          const baseUrl = exp.outputLinks[fileIdx];
+                          sendAnalyticsData(null, 'Output', baseUrl);
+                          window.open(baseUrl, '_self');
+                          return;
+                        }
+                        
+                        // Step 2: Code contains name, check for roll number
+                        let rollNo = localStorage.getItem('rollNo');
+                        
+                        if (!rollNo) {
+                          // Try to migrate userName to rollNo
+                          rollNo = await checkAndMigrateUserName();
+                        }
+                        
+                        if (!rollNo) {
+                          // Show modal to get roll number
+                          try {
+                            rollNo = await showRollNoModal(exp.outputLinks[fileIdx], filePath, exp, desc);
+                          } catch (error) {
+                            console.log('User cancelled roll number input');
+                            return;
+                          }
+                        }
+                        
+                        // Step 3: Redirect with roll number appended
+                        const baseUrl = exp.outputLinks[fileIdx];
+                        const finalUrl = `${baseUrl}/${rollNo}`;
+                        
+                        sendAnalyticsData(null, 'Output', finalUrl);
+                        window.open(finalUrl, '_self');
+                      } catch (error) {
+                        console.error('Error processing output:', error);
+                        alert('An error occurred. Please try again.');
+                      }
+                    });
+                  } else {
+                    // No output link defined, disable button
+                    outputBtn.disabled = true;
+                    outputBtn.style.opacity = '0.5';
+                    outputBtn.title = 'Output not available';
+                  }
                 } else if (isExpt7HTML) {
                   outputBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -835,10 +1132,7 @@ hr{
                     localStorage.setItem('filePath', filePath);
                     localStorage.setItem('experimentName', exp.name || `Experiment ${idx+1}`);
                     localStorage.setItem('fileDescription', desc); // Store file description
-                    const storedName = localStorage.getItem('userName');
-                    if (storedName) {
-                      sendAnalyticsData(storedName, 'Output', outputUrl);
-                    }
+                    sendAnalyticsData(null, 'Output', outputUrl);
                     window.open(outputUrl, '_blank');
                     // window.location.href = 'output.html';
                   });
@@ -848,10 +1142,7 @@ hr{
                     localStorage.setItem('filePath', filePath);
                     localStorage.setItem('experimentName', exp.name || `Experiment ${idx+1}`);
                     localStorage.setItem('fileDescription', desc); // Store file description
-                    const storedName = localStorage.getItem('userName');
-                    if (storedName) {
-                      sendAnalyticsData(storedName, 'Output', outputUrl);
-                    }
+                    sendAnalyticsData(null, 'Output', outputUrl);
                     window.location.href = 'output.html';
                     // window.open(outputUrl, '_blank');
                   });
@@ -877,10 +1168,7 @@ hr{
               const zipUrl = zipDownloads[filePath];
               downloadBtn.addEventListener('click', () => {
                 // Track analytics for download button click
-                const storedName = localStorage.getItem('userName');
-                if (storedName) {
-                  sendAnalyticsData(storedName, 'Download', zipUrl);
-                }
+                sendAnalyticsData(null, 'Download', zipUrl);
                 // Use the last part of the URL as filename
                 const zipFileName = zipUrl.split('/').pop();
                 downloadFile(zipUrl, zipFileName);
@@ -888,10 +1176,7 @@ hr{
             } else {
               downloadBtn.addEventListener('click', () => {
                 // Track analytics for download button click
-                const storedName = localStorage.getItem('userName');
-                if (storedName) {
-                  sendAnalyticsData(storedName, 'Download', filePath);
-                }
+                sendAnalyticsData(null, 'Download', filePath);
                 downloadFile(rawUrl, filePath.split('/').pop());
               });
             }
@@ -925,10 +1210,7 @@ hr{
       
       // Track tab switch in analytics if requested
       if (trackAnalytics) {
-        const storedName = localStorage.getItem('userName');
-        if (storedName) {
-          sendAnalyticsData(storedName, 'Tab Switch', tabName);
-        }
+        sendAnalyticsData(null, 'Tab Switch', tabName);
       }
       
       if (tabName === 'HTML') {

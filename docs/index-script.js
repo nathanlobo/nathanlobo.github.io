@@ -29,18 +29,16 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('theme', 'dark-mode');
             modeText.textContent = 'Dark';
             // Analytics: Dark Mode
-            const storedName = localStorage.getItem('userName');
-            if (storedName) {
-                sendAnalyticsData(storedName, 'Dark Mode', '');
+            if (window.sendAnalyticsData) {
+                sendAnalyticsData(null, 'Dark Mode', '');
             }
         } else {
             root.classList.add('light');
             localStorage.setItem('theme', 'light-mode');
             modeText.textContent = 'Light';
             // Analytics: Light Mode
-            const storedName = localStorage.getItem('userName');
-            if (storedName) {
-                sendAnalyticsData(storedName, 'Light Mode', '');
+            if (window.sendAnalyticsData) {
+                sendAnalyticsData(null, 'Light Mode', '');
             }
         }
     });
@@ -87,9 +85,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const btn = document.querySelector(selector);
         if (btn) {
             btn.addEventListener('click', function() {
-                const storedName = localStorage.getItem('userName');
-                if (storedName) {
-                    sendAnalyticsData(storedName, type, '');
+                if (window.sendAnalyticsData) {
+                    sendAnalyticsData(null, type, '');
                 }
             });
         }
