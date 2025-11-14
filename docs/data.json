@@ -166,7 +166,7 @@
       ]
     },
     {
-      "name": "Expt 10 - Implementation of",
+      "name": "Expt 10 - Implementation of Shortest Path Algorithms",
       "files": [
         "DSCpp/expt10/expt10a-prims.cpp",
         "DSCpp/expt10/expt10b-kruskal.cpp",
