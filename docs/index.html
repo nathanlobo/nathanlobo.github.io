@@ -594,7 +594,7 @@ hr{
     let phpExpts = [];
     let zipDownloads = {};
 
-    fetch('../nodejs/data.json')
+    fetch('data.json')
       .then(response => response.json())
       .then(data => {
         dscppExpts = data.dscppExpts;
@@ -761,7 +761,7 @@ hr{
     async function loadPrefedUserData() {
       if (!prefedUserData) {
         try {
-          const response = await fetch('../nodejs/prefedUser.json');
+          const response = await fetch('prefedUser.json');
           const data = await response.json();
           prefedUserData = data['ecomp24-28'];
         } catch (error) {
