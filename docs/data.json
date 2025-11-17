@@ -352,10 +352,10 @@
         "WD-HTML/Expt-11/file.xsl"
       ],
       "filedesc": [
-        "Implementation of XSL on XML CD Catalog. (.xml file)",
-        "XSL File for CD Catalog. (.xsl file)",
-        "Implementation of XSL on XML OwnIdea. (.xml file)",
-        "XSL File for OwnIdea. (.xsl file)"
+        "11a - Implementation of XSL on XML CD Catalog. (.xml file)",
+        "11a - XSL File for CD Catalog. (.xsl file)",
+        "11b - Implementation of XSL on XML OwnIdea. (.xml file)",
+        "11b - XSL File for OwnIdea. (.xsl file)"
       ],
       "outputLinks": [
         "https://nathanlobo.byethost4.com/html-expt-11/cdcatalog.xml",
