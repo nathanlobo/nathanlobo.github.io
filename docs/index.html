@@ -1047,7 +1047,7 @@ hr{
               if (localStorage.getItem('selectedTab') === 'PHP' && exp.name === 'Expt 9' && (fileIdx === 1)) { showOutputBtn = false; }
               if (localStorage.getItem('selectedTab') === 'HTML' && exp.name === 'Expt 4' && (fileIdx === 1)) { showOutputBtn = false; }
               if (localStorage.getItem('selectedTab') === 'HTML' && exp.name.includes('Expt 9') && (fileIdx === 1)) { showOutputBtn = false; }
-              if (localStorage.getItem('selectedTab') === 'HTML' && exp.name.includes('Expt 11') && (fileIdx === 1)) { showOutputBtn = false; }
+              if (localStorage.getItem('selectedTab') === 'HTML' && exp.name.includes('Expt 11') && (fileIdx === 1 || fileIdx === 3)) { showOutputBtn = false; }
               if (showOutputBtn) {
                 const outputBtn = document.createElement('button');
                 outputBtn.className = 'btn btn-output';
