@@ -347,16 +347,21 @@
       "name": "Expt 11 - Implementation of XSL.",
       "files": [
         "WD-HTML/Expt-11/cdcatalog.xml",
-        "WD-HTML/Expt-11/cdcatalog.xsl"
+        "WD-HTML/Expt-11/cdcatalog.xsl",
+        "WD-HTML/Expt-11/file.xml",
+        "WD-HTML/Expt-11/file.xsl"
       ],
       "filedesc": [
         "Implementation of XSL on XML CD Catalog. (.xml file)",
-        "XSL File for CD Catalog. (.xsl file)"
+        "XSL File for CD Catalog. (.xsl file)",
+        "Implementation of XSL on XML OwnIdea. (.xml file)",
+        "XSL File for OwnIdea. (.xsl file)"
       ],
       "outputLinks": [
-        "https://nathanlobo.byethost4.com/html-expt-11/cdcatalog.xml"
+        "https://nathanlobo.byethost4.com/html-expt-11/cdcatalog.xml",
+        "https://nathanlobo.byethost4.com/html-expt-11/file.xml"
       ],
-      "outputFalse": [2]
+      "outputFalse": [2,4]
     }
   ],
   "phpExpts": [
