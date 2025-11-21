@@ -10,6 +10,7 @@
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://nathanlobo.github.io/icon.png" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1781895091731265" crossorigin="anonymous"></script>
   <link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -374,6 +375,28 @@
     .bg-preview.white {
       background: #ffffff;
     }
+
+    /* Header styles (aligned with index) */
+    .header-container {
+      max-width: 1100px;
+      margin: 12px auto 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 8px;
+    }
+    .logo-link { display:flex; align-items:center; text-decoration:none; color:inherit; }
+    .logo-icon { height: 40px; }
+    .logo-text { margin-left:12px; font-size:20px; font-weight:700; margin:0; }
+    .top-sep { border:none; border-top:1.8px solid var(--border); margin:6px 0 0; }
+
+    /* Ad containers */
+    .ad-container { max-width: 1100px; margin: 16px auto; padding: 8px; text-align:center; background: var(--panel); border:1px solid var(--border); border-radius:8px; }
+    .ad-container.bottom-ad { margin-top: 20px; margin-bottom: 20px; }
+    /* Bottom ad sizes */
+    .ad-container.bottom-ad .adsbygoogle { display:inline-block; width:728px; height:90px; }
+    @media (min-width:481px) and (max-width:900px){ .ad-container.bottom-ad .adsbygoogle { width:468px; height:70px; } }
+    @media (max-width:480px){ .ad-container.bottom-ad .adsbygoogle { width:320px; height:100px; } }
   </style>
 </head>
 <body>
@@ -382,6 +405,14 @@
     <div class="spinner"></div>
     <div class="loading-text">Loading Code...</div>
   </div>
+  <!-- Header -->
+  <div class="header-container">
+    <a href="https://nathanlobo.github.io/" class="logo-link">
+      <img src="icon.png" alt="CodeStore Logo" class="logo-icon">
+      <h1 class="logo-text">CodeStore</h1>
+    </a>
+  </div>
+  <hr class="top-sep"/>
   
   <div class="viewer">
     <div class="code-toolbar">
@@ -1010,6 +1041,24 @@
     });
   })();
   </script>
+  
+  <!-- Bottom Banner Ad -->
+  <div class="ad-container bottom-ad">
+    <ins id="code-bottom-ad" class="adsbygoogle" data-ad-client="ca-pub-1781895091731265" data-ad-slot="9876543210"></ins>
+    <script>
+      (function(){
+        var el = document.getElementById('code-bottom-ad');
+        var w = window.innerWidth || document.documentElement.clientWidth;
+        var size = {w:728,h:90};
+        if (w <= 480) size = {w:320,h:100};
+        else if (w <= 900) size = {w:468,h:70};
+        el.style.display = 'inline-block';
+        el.style.width = size.w + 'px';
+        el.style.height = size.h + 'px';
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      })();
+    </script>
+  </div>
   <!-- Removed duplicate theme script to fix redeclaration errors -->
 </body>
 </html>
