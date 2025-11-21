@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1781895091731265"
+     crossorigin="anonymous"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>About - CodeStore by NL</title>
+  <link rel="icon" type="image/x-icon" href="./icon.png">
+  <meta property="og:title" content="About CodeStore by Lobo" />
+  <meta property="og:description" content="Learn about CodeStore's mission to simplify coding education and provide free access to quality code resources." />
+  <meta property="og:image" content="https://nathanlobo.github.io/icon.png" />
+  <meta property="og:url" content="https://nathanlobo.github.io/about.html" />
+  <meta property="og:type" content="website" />
+  <style>
+    :root {
+      --bg: #0d1117;
+      --panel: #0d1117;
+      --muted: #8b949e;
+      --border: #30363d;
+      --accent: #74b5ff;
+      --text: #c9d1d9;
+      --highlight: #161d80;
+    }
+    :root.light {
+      --bg: #ffffff;
+      --panel: #f6f8fa;
+      --muted: #57606a;
+      --border: #d0d7de;
+      --accent: #0969da;
+      --text: #24292f;
+      --highlight: #e1f0ff;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--panel);
+      padding: 40px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--border);
+    }
+    .logo-link {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+    }
+    .logo-icon {
+      height: 50px;
+    }
+    .logo-text {
+      margin-left: 15px;
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+    }
+    h1 {
+      color: var(--text);
+      font-size: 36px;
+      margin-bottom: 10px;
+      margin-top: 20px;
+    }
+    h2 {
+      color: var(--text);
+      font-size: 24px;
+      margin-top: 35px;
+      margin-bottom: 15px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 10px;
+    }
+    h3 {
+      color: var(--accent);
+      font-size: 18px;
+      margin-top: 25px;
+      margin-bottom: 10px;
+    }
+    p {
+      margin-bottom: 15px;
+      color: var(--text);
+      font-size: 16px;
+    }
+    .intro {
+      font-size: 18px;
+      color: var(--muted);
+      margin-bottom: 25px;
+      font-style: italic;
+    }
+    ul {
+      margin: 15px 0;
+      padding-left: 30px;
+    }
+    li {
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    .highlight-box {
+      background: var(--highlight);
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent);
+      margin: 25px 0;
+    }
+    .highlight-box p {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.7;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 25px 0;
+    }
+    .feature-card {
+      background: var(--bg);
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .feature-card h3 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin: 30px 0;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+    }
+    .stat-number {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--accent);
+      display: block;
+    }
+    .stat-label {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+    .profile-section {
+      display: flex;
+      gap: 25px;
+      margin: 30px 0;
+      align-items: flex-start;
+    }
+    .profile-image {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      flex-shrink: 0;
+    }
+    .profile-content {
+      flex: 1;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 12px 24px;
+      background: var(--accent);
+      color: white;
+      border-radius: 6px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .back-link:hover {
+      opacity: 0.9;
+      text-decoration: none;
+    }
+    .theme-switch-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 12px;
+      gap: 2px;
+    }
+    #mode-text {
+      margin-bottom: 2px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    .theme-switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+    }
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #fff;
+      transition: 0.4s;
+    }
+    input:checked + .slider {
+      background-color: #66bb6a;
+    }
+    input:checked + .slider:before {
+      transform: translateX(16px);
+    }
+    .slider.round {
+      border-radius: 20px;
+    }
+    .slider.round:before {
+      border-radius: 50%;
+    }
+    .emoji {
+      font-size: 24px;
+      margin-right: 8px;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 28px;
+      }
+      h2 {
+        font-size: 20px;
+      }
+      .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      .profile-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .profile-image {
+        width: 120px;
+        height: 120px;
+      }
+      .stats {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header-container">
+      <a href="https://nathanlobo.github.io/" class="logo-link">
+        <img src="icon.png" alt="CodeStore Logo" class="logo-icon">
+        <h1 class="logo-text">CodeStore</h1>
+      </a>
+      <div class="theme-switch-wrapper">
+        <span id="mode-text">Dark</span>
+        <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" />
+          <div class="slider round"></div>
+        </label>
+      </div>
+    </div>
+
+    <h1>About CodeStore</h1>
+    <p class="intro">Your one-stop destination for quality code experiments and learning resources</p>
+
+    <div class="highlight-box">
+      <p><strong>Mission:</strong> To democratize coding education by providing free, instant access to well-documented code experiments across HTML, PHP, and DSC++, helping students learn through practical examples.</p>
+    </div>
+
+    <h2><span class="emoji">🎯</span>What is CodeStore?</h2>
+    <p>CodeStore is a curated collection of programming experiments designed specifically for computer science students. Whether you're working on college assignments, exploring new concepts, or building your portfolio, CodeStore provides instant access to clean, functional code with detailed outputs.</p>
+    
+    <p>Built and maintained by Nathan Lobo, CodeStore serves as a bridge between theoretical knowledge and practical implementation, making it easier for students to understand complex programming concepts through real, working examples.</p>
+
+    <h2><span class="emoji">💡</span>Core Values We Provide</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🚀 Instant Access</h3>
+        <p>No registration, no downloads (unless you want to). View code, outputs, and download files with a single click.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📚 Learn by Example</h3>
+        <p>Every experiment comes with working code and live outputs, helping you understand concepts through practical implementation.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🎨 Clean & Organized</h3>
+        <p>Well-structured code with clear documentation. Easy navigation between HTML, PHP, and DSC++ experiments.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🆓 100% Free</h3>
+        <p>All resources are completely free for educational use. No hidden fees, no premium tiers.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📱 Mobile Friendly</h3>
+        <p>Access your code experiments anywhere, anytime. Fully responsive design for all devices.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🌓 Dark/Light Mode</h3>
+        <p>Choose your preferred theme for comfortable viewing in any lighting condition.</p>
+      </div>
+    </div>
+
+    <h2><span class="emoji">✨</span>Key Features</h2>
+    <ul>
+      <li><strong>Multi-Language Support:</strong> Experiments in HTML, PHP, and DSC++ (Data Structures in C++)</li>
+      <li><strong>Live Code Viewer:</strong> Syntax-highlighted code display with line numbers and zoom controls</li>
+      <li><strong>Output Preview:</strong> See how the code runs with embedded or linked outputs</li>
+      <li><strong>One-Click Downloads:</strong> Download individual files or complete experiment packages</li>
+      <li><strong>Screenshot Tool:</strong> Generate code screenshots with custom backgrounds for documentation</li>
+      <li><strong>Version Support:</strong> Some experiments offer both original and simplified "easy" versions</li>
+      <li><strong>Personalized Experience:</strong> Roll number integration for DSC++ outputs (for AITD students)</li>
+    </ul>
+
+    <h2><span class="emoji">🎓</span>Who Benefits from CodeStore?</h2>
+    <ul>
+      <li><strong>College Students:</strong> Quick reference for assignments and lab work</li>
+      <li><strong>Self-Learners:</strong> Practical examples to reinforce programming concepts</li>
+      <li><strong>Educators:</strong> Teaching resources and example code for demonstrations</li>
+      <li><strong>Developers:</strong> Starter templates and reference implementations</li>
+    </ul>
+
+    <div class="stats">
+      <div class="stat-item">
+        <span class="stat-number">3</span>
+        <div class="stat-label">Programming Languages</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">40+</span>
+        <div class="stat-label">Code Experiments</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">100%</span>
+        <div class="stat-label">Free & Open</div>
+      </div>
+    </div>
+
+    <h2><span class="emoji">👨‍💻</span>About the Creator</h2>
+    <div class="profile-section">
+      <img src="icon.png" alt="Nathan Lobo" class="profile-image">
+      <div class="profile-content">
+        <h3>Nathan Lobo</h3>
+        <p>Computer Science student and developer passionate about making coding education accessible to everyone. I created CodeStore to help fellow students by providing a centralized repository of quality code examples that are easy to understand and use.</p>
+        <p>As a student myself, I understand the challenges of finding good code references, which is why CodeStore focuses on clarity, functionality, and ease of access. Every experiment is tested and documented to ensure it works as expected.</p>
+        <p><strong>Connect with me:</strong></p>
+        <ul style="list-style: none; padding-left: 0;">
+          <li>📧 Email: <a href="mailto:lobonathan2209@gmail.com">lobonathan2209@gmail.com</a></li>
+          <li>💬 WhatsApp: <a href="https://wa.me/+919689137817" target="_blank">+91 9689137817</a></li>
+          <li>📷 Instagram: <a href="https://instagram.com/nathanlobo.22" target="_blank">@nathanlobo.22</a></li>
+          <li>🐙 GitHub: <a href="https://github.com/nathanlobo" target="_blank">@nathanlobo</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2><span class="emoji">🚀</span>Future Plans</h2>
+    <p>CodeStore is continuously evolving. Here's what's coming:</p>
+    <ul>
+      <li>More programming languages (Python, JavaScript, Java)</li>
+      <li>Interactive code playground for live editing</li>
+      <li>User contributions and community experiments</li>
+      <li>Video tutorials and explanations</li>
+      <li>Advanced search and filtering</li>
+      <li>Code comparison tools</li>
+    </ul>
+
+    <div class="highlight-box">
+      <p><strong>Support CodeStore:</strong> While CodeStore is free, if you find this resource valuable, consider sharing it with your classmates or contributing code experiments to help others learn!</p>
+    </div>
+
+    <a href="index.html" class="back-link">← Back to CodeStore</a>
+  </div>
+
+  <script>
+    // Theme Switch
+    document.addEventListener('DOMContentLoaded', function() {
+      const checkbox = document.getElementById('checkbox');
+      const modeText = document.getElementById('mode-text');
+      const root = document.documentElement;
+      
+      const currentTheme = localStorage.getItem('theme');
+      if (currentTheme === 'dark-mode') {
+        root.classList.remove('light');
+        checkbox.checked = true;
+        modeText.textContent = 'Dark';
+      } else {
+        root.classList.add('light');
+        checkbox.checked = false;
+        modeText.textContent = 'Light';
+      }
+      
+      checkbox.addEventListener('change', function() {
+        if (this.checked) {
+          root.classList.remove('light');
+          localStorage.setItem('theme', 'dark-mode');
+          modeText.textContent = 'Dark';
+        } else {
+          root.classList.add('light');
+          localStorage.setItem('theme', 'light-mode');
+          modeText.textContent = 'Light';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
