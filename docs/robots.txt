@@ -1,0 +1,31 @@
+# Robots.txt for CodeStore by Nathan Lobo
+# https://nathanlobo.github.io/
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://nathanlobo.github.io/sitemap.xml
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Disallow code.html and output.html from direct indexing (dynamic pages)
+User-agent: *
+Disallow: /code.html
+Disallow: /output.html
+
+# Allow indexing of main pages
+Allow: /index.html
+Allow: /about.html
+Allow: /privacy-policy.html
+
+# Crawl delay (optional, helps prevent server overload)
+Crawl-delay: 1

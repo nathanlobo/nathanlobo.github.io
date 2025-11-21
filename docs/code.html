@@ -3,7 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Code View</title>
+  <title>Code View - CodeStore by NL</title>
+  <meta name="description" content="View and download code with syntax highlighting. Copy code, generate screenshots, and learn from practical programming examples." />
+  <meta name="keywords" content="code viewer, syntax highlighting, download code, programming tutorial, code screenshot" />
+  <meta name="robots" content="noindex, follow" />
+  <link rel="canonical" href="https://nathanlobo.github.io/code.html" />
   <link rel="icon" type="image/x-icon" href="./icon.png">
   <meta property="og:image" content="https://nathanlobo.github.io/icon.png" />
   <meta property="og:url" content="https://nathanlobo.github.io/" />
@@ -384,11 +388,38 @@
       justify-content: space-between;
       align-items: center;
       padding: 0 8px;
+      flex-wrap: wrap;
+      gap: 10px;
     }
     .logo-link { display:flex; align-items:center; text-decoration:none; color:inherit; }
     .logo-icon { height: 40px; }
     .logo-text { margin-left:12px; font-size:20px; font-weight:700; margin:0; }
     .top-sep { border:none; border-top:1.8px solid var(--border); margin:6px 0 0; }
+    
+    /* Navigation Menu */
+    .nav-menu {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .nav-link {
+      background: transparent;
+      color: var(--muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .nav-link:hover {
+      background: rgba(88,166,255,0.1);
+      color: var(--accent);
+    }
+    @media (max-width: 768px) {
+      .header-container { flex-direction: column; align-items: flex-start; }
+      .nav-menu { width: 100%; justify-content: space-around; }
+    }
 
     /* Ad containers */
     .ad-container { max-width: 1100px; margin: 16px auto; padding: 8px; text-align:center; background: var(--panel); border:1px solid var(--border); border-radius:8px; }
@@ -411,6 +442,11 @@
       <img src="icon.png" alt="CodeStore Logo" class="logo-icon">
       <h1 class="logo-text">CodeStore</h1>
     </a>
+    <nav class="nav-menu">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="privacy-policy.html" class="nav-link">Privacy</a>
+    </nav>
   </div>
   <hr class="top-sep"/>
   

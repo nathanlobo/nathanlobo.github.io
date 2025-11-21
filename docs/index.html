@@ -6,19 +6,45 @@
   <!-- <base href="" /> -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CodeStore by NL</title>
+  <title>CodeStore by NL - Free HTML, PHP, DSC++ Code Experiments & Tutorials</title>
+  <meta name="description" content="Access 40+ free coding experiments in HTML, PHP, and DSC++ (Data Structures C++). Download code, view outputs, and learn programming through practical examples. Perfect for students and developers." />
+  <meta name="keywords" content="HTML code examples, PHP tutorials, DSC++ programs, data structures C++, free code download, programming experiments, coding for students, computer science projects, code repository, Nathan Lobo" />
+  <meta name="author" content="Nathan Lobo" />
+  <link rel="canonical" href="https://nathanlobo.github.io/" />
   <link rel="icon" type="image/x-icon" href="./icon.png">
   <!-- Open Graph Meta Tags for Social Sharing -->
-  <meta property="og:title" content="CodeStore by Lobo" />
-  <meta property="og:description" content="OneStop CodeStore - Browse & download code experiments for HTML, PHP, & DSC++. #AITD" />
+  <meta property="og:title" content="CodeStore - Free Code Experiments for HTML, PHP & DSC++" />
+  <meta property="og:description" content="OneStop CodeStore - Browse & download 40+ code experiments for HTML, PHP, & DSC++. Free educational resources for students." />
   <meta property="og:image" content="https://nathanlobo.github.io/icon.png" />
   <meta property="og:url" content="https://nathanlobo.github.io/" />
   <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="CodeStore by NL" />
   <!-- Twitter Card Meta Tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="CodeStore by Lobo" />
-  <meta name="twitter:description" content="OneStop CodeStore - Browse & download code experiments for HTML, PHP, & DSC++. #AITD" />
+  <meta name="twitter:title" content="CodeStore - Free Code Experiments" />
+  <meta name="twitter:description" content="Access 40+ free coding experiments in HTML, PHP, & DSC++. Download code and learn programming." />
   <meta name="twitter:image" content="https://nathanlobo.github.io/icon.png" />
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "CodeStore",
+    "url": "https://nathanlobo.github.io/",
+    "description": "Free code experiments and tutorials for HTML, PHP, and DSC++",
+    "author": {
+      "@type": "Person",
+      "name": "Nathan Lobo",
+      "url": "https://github.com/nathanlobo"
+    },
+    "inLanguage": "en",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://nathanlobo.github.io/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
   <style>
   :root {
     --bg: #0d1117;
@@ -207,7 +233,40 @@ hr{
     background:var(--panel);
     z-index: 999;
     border-radius: 0 0 8px 8px;
+    gap: 10px;
   }
+  
+  /* Navigation Menu Styles */
+  .nav-menu {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 10px;
+  }
+  .nav-link {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-link:hover {
+    background: rgba(88,166,255,0.1);
+    color: var(--accent);
+  }
+  @media (max-width: 768px) {
+    .nav-menu {
+      display: none; /* Hide on mobile to avoid clutter */
+    }
+  }
+  
   .btn {
     background:transparent;
     border:1px solid transparent;
@@ -621,7 +680,11 @@ hr{
       <button class="tab-btn" data-tab="PHP">PHP</button>
       <button class="tab-btn" data-tab="DSC++">DSC++</button>
     </div>
-    <div class="theme-switch-wrapper" style="margin-left:auto;">
+    <nav class="nav-menu">
+      <a href="about.html" class="nav-link">About</a>
+      <a href="privacy-policy.html" class="nav-link">Privacy</a>
+    </nav>
+    <div class="theme-switch-wrapper">
       <span id="mode-text">Dark</span>
       <label class="theme-switch" for="checkbox">
         <input type="checkbox" id="checkbox" />
