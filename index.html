@@ -375,73 +375,12 @@ hr{
     display: block;
     height: 100px;
   }
-  /* AdSense Ad Container Styles */
-  .ad-container {
+  /* Simplified layout (ads removed) */
+  .main-content-wrapper {
     max-width: 900px;
-    margin: 20px auto;
-    padding: 10px;
-    text-align: center;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    margin: 0 auto;
   }
-  .ad-container.top-ad {
-    margin-top: 10px;
-    margin-bottom: 20px;
-    overflow-x: auto;
-  }
-  /* Top Ad: explicit size per breakpoint */
-  .ad-container.top-ad .adsbygoogle { display:inline-block; width:728px; height:90px; }
-  @media (min-width:481px) and (max-width:900px){
-    .ad-container.top-ad .adsbygoogle { width:468px; height:60px; }
-  }
-  @media (max-width:480px){
-    .ad-container.top-ad { padding:4px 0; }
-    .ad-container.top-ad .adsbygoogle { width:320px; height:50px; }
-  }
-  /* Bottom Ad: slightly taller on mobile */
-  .ad-container.bottom-ad { margin-top:20px; margin-bottom:20px; }
-  .ad-container.bottom-ad .adsbygoogle { display:inline-block; width:728px; height:90px; }
-  @media (min-width:481px) and (max-width:900px){
-    .ad-container.bottom-ad .adsbygoogle { width:468px; height:70px; }
-  }
-  @media (max-width:480px){
-    .ad-container.bottom-ad .adsbygoogle { width:320px; height:100px; }
-  }
-  /* Sidebar Ad Styles - Desktop Only */
-  .sidebar-ads {
-    display: none; /* Hidden on mobile by default */
-  }
-  @media (min-width: 1200px) {
-    .main-content-wrapper {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      max-width: 1400px;
-      margin: 0 auto;
-      position: relative;
-    }
-    .sidebar-ads {
-      display: block;
-      position: sticky;
-      top: 120px;
-      width: 160px;
-      height: fit-content;
-      flex-shrink: 0;
-    }
-    .sidebar-ad {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    .center-content {
-      flex: 1;
-      max-width: 900px;
-    }
-  }        
+  .center-content { max-width: 900px; margin: 0 auto; }
   .link-container {
     display:flex;
     flex-direction:column;
@@ -690,40 +629,10 @@ hr{
     </div>
   </div>
   <!-- Top Banner Ad -->
-  <div class="ad-container top-ad">
-    <ins id="top-ad-slot" class="adsbygoogle"
-         data-ad-client="ca-pub-1781895091731265"
-         data-ad-slot="1234567890"></ins>
-    <script>
-      (function(){
-        var el = document.getElementById('top-ad-slot');
-        var w = window.innerWidth || document.documentElement.clientWidth;
-        var size = {w:728,h:90};
-        if (w <= 480) size = {w:320,h:50};
-        else if (w <= 900) size = {w:468,h:60};
-        el.style.display = 'inline-block';
-        el.style.width = size.w + 'px';
-        el.style.height = size.h + 'px';
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      })();
-    </script>
-  </div>
+  <!-- (Removed ad banner) -->
 
-  <!-- Main Content Wrapper with Sidebars -->
+  <!-- Main Content Wrapper (ads removed) -->
   <div class="main-content-wrapper">
-    <!-- Left Sidebar Ad -->
-    <aside class="sidebar-ads left-sidebar">
-      <div class="sidebar-ad">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1781895091731265"
-             data-ad-slot="1111111111"
-             data-ad-format="vertical"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-      </div>
-    </aside>
 
     <!-- Center Content -->
     <div class="center-content">
@@ -1389,42 +1298,9 @@ hr{
     });
   </script>
 
-  <!-- Bottom Banner Ad -->
-  <div class="ad-container bottom-ad">
-    <ins id="bottom-ad-slot" class="adsbygoogle"
-         data-ad-client="ca-pub-1781895091731265"
-         data-ad-slot="9876543210"></ins>
-    <script>
-      (function(){
-        var el = document.getElementById('bottom-ad-slot');
-        var w = window.innerWidth || document.documentElement.clientWidth;
-        var size = {w:728,h:90};
-        if (w <= 480) size = {w:320,h:100};
-        else if (w <= 900) size = {w:468,h:70};
-        el.style.display = 'inline-block';
-        el.style.width = size.w + 'px';
-        el.style.height = size.h + 'px';
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      })();
-    </script>
-  </div>
+  <!-- (Removed bottom ad banner) -->
 
     </div><!-- End center-content -->
-
-    <!-- Right Sidebar Ad -->
-    <aside class="sidebar-ads right-sidebar">
-      <div class="sidebar-ad">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1781895091731265"
-             data-ad-slot="2222222222"
-             data-ad-format="vertical"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-      </div>
-    </aside>
-
   </div><!-- End main-content-wrapper -->
 
   <!-- Footer Bar -->
