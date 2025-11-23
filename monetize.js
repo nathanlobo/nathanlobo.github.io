@@ -9,7 +9,7 @@
     textDiv.innerHTML = `
       <span style="color: var(--warning, #ff0000); font-size: 20px">Content Ends here...</span>
       <br><span><b style="font-size: 20px;">--- Ad Testing Below ---</b></span>
-      <br><span style="font-size: 24px">Report immediately if Ads inappropriate</span>
+      <br><span style="font-size: 24px">Report immediately if Ads are inappropriate</span>
     `;
     container.appendChild(textDiv);
     const adContainer = document.createElement('div');
