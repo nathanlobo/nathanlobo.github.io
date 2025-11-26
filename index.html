@@ -725,8 +725,15 @@ hr{
       const currentTab = localStorage.getItem('selectedTab') || 'HTML';
       
       if (storedRollNo) {
-        // Roll number exists, user is valid
-        sendAnalyticsData(null, 'Return Visit', currentTab);
+        // Check if the stored roll number is the blocked one
+        const normalizedStored = storedRollNo.trim().toUpperCase().replace(/\s+/g, '');
+        if (normalizedStored === '25LEC07') {
+          // Don't clear localStorage, but show modal to force them to enter correct roll number
+          showBlockedRollNoModal(storedRollNo);
+        } else {
+          // Roll number exists and is valid
+          sendAnalyticsData(null, 'Return Visit', currentTab);
+        }
       } else if (storedUserName) {
         // Username exists but no roll number - validate it
         const users = await loadPrefedUserData();
@@ -753,6 +760,88 @@ hr{
         showRollNoModalForFirstTime();
       }
     };
+    
+    // Show modal for users with blocked roll number (25LEC07)
+    function showBlockedRollNoModal(blockedRollNo) {
+      const modal = document.getElementById('rollNoModal');
+      const modalText = document.getElementById('rollno-modal-text');
+      const modalWarning = document.getElementById('rollno-modal-warning');
+      const input = document.getElementById('rollNoInput');
+      const error = document.getElementById('rollNoError');
+      const form = document.getElementById('rollNoForm');
+      
+      // Update modal text to show blocked message
+      modalText.textContent = 'Invalid Roll Number';
+      modalWarning.textContent = 'IP detected, you are not 25lec07, please enter your correct roll number.';
+      modalWarning.style.color = 'var(--warning)';
+      
+      // Reset input and show modal
+      input.value = '';
+      error.style.display = 'none';
+      modal.style.display = 'block';
+      input.focus();
+      
+      // Real-time validation
+      const inputHandler = async (e) => {
+        const rollNo = e.target.value.trim();
+        if (rollNo.length >= 5) {
+          const user = await validateRollNo(rollNo);
+          if (!user) {
+            error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
+            error.style.display = 'block';
+          } else if (user.blocked) {
+            error.textContent = user.message;
+            error.style.display = 'block';
+          } else {
+            error.style.display = 'none';
+          }
+        } else {
+          error.style.display = 'none';
+        }
+      };
+      
+      // Handle submission
+      const submitHandler = async (e) => {
+        e.preventDefault();
+        const rollNo = input.value.trim();
+        
+        if (!rollNo) {
+          error.textContent = 'Please enter your roll number';
+          error.style.display = 'block';
+          return;
+        }
+        
+        const user = await validateRollNo(rollNo);
+        
+        if (user && user.blocked) {
+          // Still trying to use blocked roll number
+          error.textContent = user.message;
+          error.style.display = 'block';
+        } else if (user) {
+          // Valid roll number - update localStorage and send analytics
+          localStorage.setItem('rollNo', user.roll_no);
+          
+          // Send analytics: 25LEC07 user entered a new roll number
+          sendAnalyticsData(user.roll_no, '25LEC07 Blocked -> New RN', blockedRollNo);
+          
+          // Close modal and clean up event listeners
+          modal.style.display = 'none';
+          input.removeEventListener('input', inputHandler);
+          form.removeEventListener('submit', submitHandler);
+          
+          // Reload page after a short delay to ensure analytics is sent
+          setTimeout(() => {
+            location.reload();
+          }, 500);
+        } else {
+          error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
+          error.style.display = 'block';
+        }
+      };
+      
+      input.addEventListener('input', inputHandler);
+      form.addEventListener('submit', submitHandler);
+    }
     
     // Show modal for users with invalid usernames
     function showInvalidUserNameModal(invalidUserName) {
@@ -782,6 +871,9 @@ hr{
           if (!user) {
             error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
             error.style.display = 'block';
+          } else if (user.blocked) {
+            error.textContent = user.message;
+            error.style.display = 'block';
           } else {
             error.style.display = 'none';
           }
@@ -803,7 +895,13 @@ hr{
         
         const user = await validateRollNo(rollNo);
         
-        if (user) {
+        if (user && user.blocked) {
+          // Blocked roll number (25LEC07)
+          error.textContent = user.message;
+          error.style.display = 'block';
+          // Track analytics: someone using 25LEC07 tried to enter it
+          sendAnalyticsData('25LEC07-BLOCKED', 'RN Impersonator', rollNo);
+        } else if (user) {
           // Valid roll number - update localStorage
           localStorage.setItem('rollNo', user.roll_no);
           localStorage.removeItem('userName');
@@ -853,6 +951,9 @@ hr{
           if (!user) {
             error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
             error.style.display = 'block';
+          } else if (user.blocked) {
+            error.textContent = user.message;
+            error.style.display = 'block';
           } else {
             error.style.display = 'none';
           }
@@ -874,7 +975,13 @@ hr{
         
         const user = await validateRollNo(rollNo);
         
-        if (user) {
+        if (user && user.blocked) {
+          // Blocked roll number (25LEC07)
+          error.textContent = user.message;
+          error.style.display = 'block';
+          // Track analytics: first-time user tried to use 25LEC07
+          sendAnalyticsData('25LEC07-BLOCKED', 'RN Impersonator', rollNo);
+        } else if (user) {
           // Valid roll number
           localStorage.setItem('rollNo', user.roll_no);
           modal.style.display = 'none';
@@ -941,6 +1048,12 @@ hr{
     async function validateRollNo(rollNo) {
       const users = await loadPrefedUserData();
       const normalizedRollNo = rollNo.trim().toUpperCase().replace(/\s+/g, '');
+      
+      // Special check: Block 25LEC07 without NL suffix
+      if (normalizedRollNo === '25LEC07') {
+        return { blocked: true, message: 'IP detected, you are not 25LEC07, please enter correct roll no' };
+      }
+      
       return users.find(user => user.roll_no.trim().toUpperCase().replace(/\s+/g, '') === normalizedRollNo);
     }
 
@@ -1001,6 +1114,9 @@ hr{
             if (!user) {
               error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
               error.style.display = 'block';
+            } else if (user.blocked) {
+              error.textContent = user.message;
+              error.style.display = 'block';
             } else {
               error.style.display = 'none';
             }
@@ -1022,7 +1138,13 @@ hr{
           
           const user = await validateRollNo(rollNo);
           
-          if (user) {
+          if (user && user.blocked) {
+            // Blocked roll number (25LEC07)
+            error.textContent = user.message;
+            error.style.display = 'block';
+            // Track analytics: someone tried to use 25LEC07 for DSC++ output
+            sendAnalyticsData('25LEC07-BLOCKED', 'RN Impersonator', rollNo);
+          } else if (user) {
             // Valid roll number
             localStorage.setItem('rollNo', user.roll_no);
             modal.style.display = 'none';
