@@ -686,6 +686,31 @@ hr{
   <script>
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw4BuUioqKHAZAV2SWzZUosyhmaARl_12PH_iDe1Y5l1-NCVoo2aitJkuajInx3--nj/exec';
     
+    // Generate or retrieve a persistent deviceId (cookie + localStorage)
+    function getDeviceId() {
+      // Try localStorage first
+      let id = localStorage.getItem('deviceId');
+      if (id) return id;
+
+      // Try cookie
+      const match = document.cookie.match(/(?:^|;\s*)deviceId=([^;]+)/);
+      if (match && match[1]) {
+        id = match[1];
+        localStorage.setItem('deviceId', id);
+        return id;
+      }
+
+      // Create new cryptographically random ID
+      const bytes = new Uint8Array(16);
+      (window.crypto || window.msCrypto).getRandomValues(bytes);
+      id = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+
+      // Persist to cookie (5 years) and localStorage
+      document.cookie = `deviceId=${id}; path=/; max-age=${60*60*24*365*5}`;
+      localStorage.setItem('deviceId', id);
+      return id;
+    }
+
     // Helper function to get stored user identifier (rollNo or userName)
     window.getStoredUserName = function() {
         return localStorage.getItem('rollNo') || localStorage.getItem('userName');
@@ -703,8 +728,9 @@ hr{
             console.log('Analytics not sent: No user identifier available');
             return;
         }
-        
-        const url = `${GOOGLE_SCRIPT_URL}?userName=${encodeURIComponent(name)}&visitType=${encodeURIComponent(visitType)}&visitPage=${encodeURIComponent(visitPage)}`;
+      // Always include deviceId as final column/param
+      const deviceId = getDeviceId();
+      const url = `${GOOGLE_SCRIPT_URL}?userName=${encodeURIComponent(name)}&visitType=${encodeURIComponent(visitType)}&visitPage=${encodeURIComponent(visitPage)}&deviceId=${encodeURIComponent(deviceId)}`;
         fetch(url, {
             method: 'POST',
             mode: 'no-cors' // Required for Google Apps Script
