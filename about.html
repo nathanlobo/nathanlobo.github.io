@@ -10,10 +10,10 @@
   <meta name="description" content="Learn about CodeStore's mission to provide free programming experiments and tutorials. Created by Nathan Lobo to help students learn HTML, PHP, and DSC++ through practical examples." />
   <meta name="keywords" content="about codestore, nathan lobo, free coding resources, programming education, computer science student projects" />
   <link rel="canonical" href="https://nathanlobo.github.io/about.html" />
-  <link rel="icon" type="image/x-icon" href="./icon.png">
+  <link rel="icon" type="image/x-icon" href="./assets/icon.webp">
   <meta property="og:title" content="About CodeStore by Lobo" />
   <meta property="og:description" content="Learn about CodeStore's mission to simplify coding education and provide free access to quality code resources." />
-  <meta property="og:image" content="https://nathanlobo.github.io/icon.png" />
+  <meta property="og:image" content="https://nathanlobo.github.io/assets/icon.png" />
   <meta property="og:url" content="https://nathanlobo.github.io/about.html" />
   <meta property="og:type" content="website" />
   <style>
@@ -97,6 +97,21 @@
       font-weight: 700;
       margin: 0;
     }
+    .logo-text-container {
+      margin-left: 15px;
+    }
+    .rebrand-text {
+      font-size: 0.7em;
+      font-weight: normal;
+    }
+
+    @media (max-width: 900px) {
+      .rebrand-text {
+        display: block;
+        margin-top: 4px;
+      }
+    }
+
     h1 {
       color: var(--text);
       font-size: 36px;
@@ -300,6 +315,15 @@
         align-items: flex-start;
         gap: 15px;
       }
+      .logo-text {
+        font-size: 20px;
+        margin-left: 0;
+      }
+      .rebrand-text {
+        display: block;
+        margin-top: 4px;
+        font-size: 0.75em;
+      }
       .profile-section {
         flex-direction: column;
         align-items: center;
@@ -320,8 +344,10 @@
   <div class="container">
     <div class="header-container">
       <a href="https://nathanlobo.github.io/" class="logo-link">
-        <img src="icon.png" alt="CodeStore Logo" class="logo-icon">
-        <h1 class="logo-text">CodeStore</h1>
+        <img src="assets/icon.webp" alt="CodeStore Logo" class="logo-icon">
+        <div class="logo-text-container">
+          <h1 class="logo-text">CodeStore <span class="rebrand-text">is rebranding to Codinx</span></h1>
+        </div>
       </a>
       <nav class="nav-menu">
         <a href="index.html" class="nav-link">Home</a>
@@ -413,7 +439,7 @@
 
     <h2><span class="emoji">👨‍💻</span>About the Creator</h2>
     <div class="profile-section">
-      <img src="icon.png" alt="Nathan Lobo" class="profile-image">
+      <img src="assets/icon.webp" alt="Nathan Lobo" class="profile-image">
       <div class="profile-content">
         <h3>Nathan Lobo</h3>
         <p>Computer Science student and developer passionate about making coding education accessible to everyone. I created CodeStore to help fellow students by providing a centralized repository of quality code examples that are easy to understand and use.</p>

@@ -8,11 +8,11 @@
   <meta name="keywords" content="HTML code examples, PHP tutorials, DSC++ programs, data structures C++, free code download, programming experiments, coding for students, computer science projects, code repository, Nathan Lobo" />
   <meta name="author" content="Nathan Lobo" />
   <link rel="canonical" href="https://nathanlobo.github.io/" />
-  <link rel="icon" type="image/x-icon" href="./icon.png">
+  <link rel="icon" type="image/x-icon" href="./assets/icon.webp">
   <!-- Open Graph Meta Tags for Social Sharing -->
   <meta property="og:title" content="CodeStore - Free Code Experiments for HTML, PHP & DSC++" />
   <meta property="og:description" content="OneStop CodeStore - Browse & download 40+ code experiments for HTML, PHP, & DSC++. Free educational resources for students." />
-  <meta property="og:image" content="https://nathanlobo.github.io/icon.png" />
+  <meta property="og:image" content="https://nathanlobo.github.io/assets/icon.png" />
   <meta property="og:url" content="https://nathanlobo.github.io/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="CodeStore by NL" />
@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="CodeStore - Free Code Experiments" />
   <meta name="twitter:description" content="Access 40+ free coding experiments in HTML, PHP, & DSC++. Download code and learn programming." />
-  <meta name="twitter:image" content="https://nathanlobo.github.io/icon.png" />
+  <meta name="twitter:image" content="https://nathanlobo.github.io/assets/icon.png" />
   <!-- Structured Data for SEO -->
   <script type="application/ld+json">
   {
@@ -188,6 +188,16 @@
   margin-top: 0;
   margin-bottom: 0;
 }
+
+.logo-text-container {
+  margin-left: 12px;
+}
+
+.rebrand-text {
+  font-size: 0.7em;
+  font-weight: normal;
+}
+
 hr{
   display: none;
 }
@@ -206,9 +216,39 @@ hr{
     flex-direction: column; 
     align-items: flex-start; 
   }
-  .status-text { 
+  .rebrand-text {
+    display: block;
+    margin-top: 4px;
+  }
+  .logo-text-container {
+    margin-left: 0;
+  }
+  .status-text {
     text-align: left;
     letter-spacing: 0;
+  }
+  .footer-bar {
+    padding: 12px 8px;
+  }
+  .footer-content {
+    gap: 8px;
+  }
+  .social-links {
+    gap: 20px;
+  }
+  .social-icon {
+    width: 36px;
+    height: 36px;
+  }
+  .footer-title {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    word-spacing: 3px;
+  }
+  .footer-text {
+    font-size: 11px;
+    text-align: center;
+    line-height: 1.5;
   }
   hr {
     display: block;
@@ -282,7 +322,7 @@ hr{
     right: 0;
     background: var(--panel);
     border-top: 1px solid var(--border);
-    padding: 8px;
+    padding: 6px 8px;
     z-index: 1000;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   }
@@ -292,11 +332,11 @@ hr{
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap:10px;
+    gap: 6px;
   }
   .social-links {
     display: flex;
-    gap: 30px;
+    gap: 24px;
     align-items: center;
   }
   .social-icon {
@@ -352,17 +392,37 @@ hr{
 
   .footer-text {
     margin: 0;
-    font-size: 13px;
+    font-size: 12px;
     color: var(--muted);
   }
   .footer-text.change{
     color: var(--text);
   }
+  .footer-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+  }
+  .footer-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 12px;
+    transition: opacity 0.2s;
+  }
+  .footer-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
+  .footer-separator {
+    color: var(--muted);
+    font-size: 12px;
+  }
   .footer-title {
     margin: 0;
-    font-size: 13px;
-    letter-spacing: 2.5px;
-    word-spacing: 5px;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    word-spacing: 3px;
     font-weight: 700;
     color: var(--muted);
   }
@@ -602,13 +662,11 @@ hr{
   </div>
   <div class="header-container">
     <a href="https://nathanlobo.github.io/" class="logo-link">
-      <img src="icon.png" alt="CodeStore Logo" class="logo-icon">
-      <h1 class="logo-text">CodeStore</h1>
-    </a>
-    <hr>
-    <div class="status-box">
-      <p class="status-text"><b><i>New!</i> DSC++</b> Code Outputs Now Available</p>
-    </div>
+      <img src="assets/icon.webp" alt="CodeStore Logo" class="logo-icon">
+      <div class="logo-text-container">
+        <h1 class="logo-text">CodeStore <span class="rebrand-text">is rebranding to Codinx</span></h1>
+      </div>
+    </a>    
   </div>
   <div class="topbar">
     <div class="tabs-nav">
@@ -1565,7 +1623,12 @@ hr{
           </svg>
         </a>
       </div>
-      <p class="footer-text" id="footer-text">© 2025 Nathan Lobo. All rights reserved. | <a href="about.html" style="color: var(--accent); text-decoration: none;">About</a> | <a href="privacy-policy.html" style="color: var(--accent); text-decoration: none;">Privacy Policy</a></p>
+      <p class="footer-text" id="footer-text">© 2025 Nathan Lobo. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="about.html" class="footer-link">About</a>
+        <span class="footer-separator">|</span>
+        <a href="privacy-policy.html" class="footer-link">Privacy Policy</a>
+      </div>
     </div>
   </footer>
   <div style="text-align: center; margin: 20px 0;">

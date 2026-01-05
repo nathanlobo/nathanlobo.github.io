@@ -10,10 +10,10 @@
   <meta name="description" content="CodeStore privacy policy. Learn how we collect and use data, third-party services (Google AdSense), and your privacy rights." />
   <meta name="keywords" content="privacy policy, data protection, codestore privacy, google adsense policy" />
   <link rel="canonical" href="https://nathanlobo.github.io/privacy-policy.html" />
-  <link rel="icon" type="image/x-icon" href="./icon.png">
+  <link rel="icon" type="image/x-icon" href="./assets/icon.webp">
   <meta property="og:title" content="Privacy Policy - CodeStore by Lobo" />
   <meta property="og:description" content="Privacy Policy for CodeStore" />
-  <meta property="og:image" content="https://nathanlobo.github.io/icon.png" />
+  <meta property="og:image" content="https://nathanlobo.github.io/assets/icon.png" />
   <meta property="og:url" content="https://nathanlobo.github.io/privacy-policy.html" />
   <meta property="og:type" content="website" />
   <style>
@@ -95,6 +95,21 @@
       font-weight: 700;
       margin: 0;
     }
+    .logo-text-container {
+      margin-left: 12px;
+    }
+    .rebrand-text {
+      font-size: 0.7em;
+      font-weight: normal;
+    }
+
+    @media (max-width: 900px) {
+      .rebrand-text {
+        display: block;
+        margin-top: 4px;
+      }
+    }
+
     h1 {
       color: var(--text);
       font-size: 32px;
@@ -219,6 +234,10 @@
         align-items: flex-start;
         gap: 15px;
       }
+      .rebrand-text {
+        display: block;
+        margin-top: 4px;
+      }
     }
   </style>
 </head>
@@ -226,8 +245,10 @@
   <div class="container">
     <div class="header-container">
       <a href="https://nathanlobo.github.io/" class="logo-link">
-        <img src="icon.png" alt="CodeStore Logo" class="logo-icon">
-        <h1 class="logo-text">CodeStore</h1>
+        <img src="assets/icon.webp" alt="CodeStore Logo" class="logo-icon">
+        <div class="logo-text-container">
+          <h1 class="logo-text">CodeStore <span class="rebrand-text">is rebranding to Codinx</span></h1>
+        </div>
       </a>
       <nav class="nav-menu">
         <a href="index.html" class="nav-link">Home</a>
