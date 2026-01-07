@@ -154,6 +154,33 @@
     background: #5a9eeb;
     transform: translateY(-1px);
   }
+  
+  /* Donate Modal specific styles */
+  .close-donate {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--text);
+    opacity: 0.4;
+    transition: opacity 0.2s;
+  }
+  .close-donate:hover {
+    opacity: 1;
+  }
+  #donateBtn {
+    background: #FFD700; /* Gold color for donate button */
+    color: #000;
+    width: 100%;
+    margin-top: 10px;
+  }
+  #donateBtn:hover {
+    background: #FFC800;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
   .btnGrp input[type="button"] {
     background: transparent;
     color: var(--muted);
@@ -699,6 +726,19 @@ hr{
       </form>
     </div>
   </div>
+
+  <!-- Donate Modal -->
+  <div id="donateModal" class="modal">
+    <div class="modal-content" style="padding: 24px;">
+      <span class="close-donate" id="closeDonate">&times;</span>
+      <h2 style="margin-top: 0; color: var(--accent); font-size: 22px;">Support Us ❤️</h2>
+      <p style="font-size: 16px; margin: 15px 0;">We hope you're found <b>CodeStore</b> aka Codinx helpful!</p>
+      <p style="font-size: 14px; color: var(--muted); line-height: 1.4;">If this project has saved you time or effort,<br>Fund us Even ₹1 counts. Every bit helps us keep the servers running and the experiments updated!</p>
+      <div class="btnGrp">
+        <button id="donateBtn">☕ Support Me</button>
+      </div>
+    </div>
+  </div>
   <div id="linkContainer" class="link-container">Loading...</div>
   <script>
     // Load data from JSON file
@@ -817,6 +857,9 @@ hr{
         } else {
           // Roll number exists and is valid
           sendAnalyticsData(null, 'Return Visit', currentTab);
+          
+          // Show donate modal for returning users after a short delay
+          setTimeout(showDonateModal, 2000);
         }
       } else if (storedUserName) {
         // Username exists but no roll number - validate it
@@ -997,6 +1040,9 @@ hr{
           // Clean up event listeners
           input.removeEventListener('input', inputHandler);
           form.removeEventListener('submit', submitHandler);
+
+          // Show donate modal after some delay
+          setTimeout(showDonateModal, 500);
         } else {
           error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
           error.style.display = 'block';
@@ -1076,6 +1122,9 @@ hr{
           // Clean up event listeners
           input.removeEventListener('input', inputHandler);
           form.removeEventListener('submit', submitHandler);
+
+          // Show donate modal after some delay for better experience
+          setTimeout(showDonateModal, 500);
         } else {
           error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
           error.style.display = 'block';
@@ -1085,9 +1134,31 @@ hr{
       input.addEventListener('input', inputHandler);
       form.addEventListener('submit', submitHandler);
     }
-    // JS to handle pop up ends here
 
-    // Define global variables first
+    // Function to show the beautiful donate modal
+    function showDonateModal() {
+      const donateModal = document.getElementById('donateModal');
+      const closeDonate = document.getElementById('closeDonate');
+      const donateBtn = document.getElementById('donateBtn');
+      
+      if (!donateModal) return;
+
+      donateModal.style.display = 'block';
+
+      const closeHandler = () => {
+        donateModal.style.display = 'none';
+        closeDonate.removeEventListener('click', closeHandler);
+        donateBtn.removeEventListener('click', donateHandler);
+      };
+
+      const donateHandler = () => {
+        window.open('https://www.codinx.app/fund-me', '_blank');
+        closeHandler();
+      };
+
+      closeDonate.addEventListener('click', closeHandler);
+      donateBtn.addEventListener('click', donateHandler);
+    }
     const owner = "nathanlobo";
     const repo = "CodeStore";
     const branch = "main";
@@ -1240,6 +1311,9 @@ hr{
             
             // Resolve with the roll number
             resolve(user.roll_no);
+
+            // Show donate modal after some delay
+            setTimeout(showDonateModal, 500);
           } else {
             error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
             error.style.display = 'block';
@@ -1623,7 +1697,7 @@ hr{
           </svg>
         </a>
       </div>
-      <p class="footer-text" id="footer-text">© 2025 Nathan Lobo. All rights reserved.</p>
+      <p class="footer-text" id="footer-text">© 2026 Nathan Lobo. All rights reserved.</p>
       <div class="footer-links">
         <a href="about.html" class="footer-link">About</a>
         <span class="footer-separator">|</span>
