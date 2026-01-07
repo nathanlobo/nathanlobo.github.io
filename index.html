@@ -1152,6 +1152,9 @@ hr{
       };
 
       const donateHandler = () => {
+        if (window.sendAnalyticsData) {
+          sendAnalyticsData(null, 'Support Fund', '');
+        }
         window.open('https://www.codinx.app/fund-me', '_blank');
         closeHandler();
       };
