@@ -746,6 +746,7 @@ hr{
     let htmlExpts = [];
     let phpExpts = [];
     let zipDownloads = {};
+    let showModal = false;
 
     fetch('data.json')
       .then(response => response.json())
@@ -859,7 +860,7 @@ hr{
           sendAnalyticsData(null, 'Return Visit', currentTab);
           
           // Show donate modal for returning users after a short delay
-          setTimeout(showDonateModal, 2000);
+          if(showModal) setTimeout(showDonateModal, 2000);
         }
       } else if (storedUserName) {
         // Username exists but no roll number - validate it
@@ -1042,7 +1043,7 @@ hr{
           form.removeEventListener('submit', submitHandler);
 
           // Show donate modal after some delay
-          setTimeout(showDonateModal, 500);
+          if(showModal) setTimeout(showDonateModal, 2000);
         } else {
           error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
           error.style.display = 'block';
@@ -1124,7 +1125,7 @@ hr{
           form.removeEventListener('submit', submitHandler);
 
           // Show donate modal after some delay for better experience
-          setTimeout(showDonateModal, 500);
+          if(showModal) setTimeout(showDonateModal, 2000);
         } else {
           error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
           error.style.display = 'block';
@@ -1153,7 +1154,7 @@ hr{
 
       const donateHandler = () => {
         if (window.sendAnalyticsData) {
-          sendAnalyticsData(null, 'Support Fund', '');
+          sendAnalyticsData(null, 'Support Fund', 'Support Fund Page');
         }
         window.open('https://www.codinx.app/fund-me', '_blank');
         closeHandler();
@@ -1316,7 +1317,7 @@ hr{
             resolve(user.roll_no);
 
             // Show donate modal after some delay
-            setTimeout(showDonateModal, 500);
+            if(showModal) setTimeout(showDonateModal, 2000);
           } else {
             error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
             error.style.display = 'block';
