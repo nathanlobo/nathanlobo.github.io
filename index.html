@@ -155,6 +155,80 @@
     transform: translateY(-1px);
   }
   
+  /* Deprecation Modal specific styles */
+  #legacyModal {
+    display: none;
+  }
+  .legacy-modal-content {
+    background-color: var(--bg);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 24px 20px;
+    border: 1px solid var(--accent);
+    width: 88%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    text-align: center;
+  }
+  .legacy-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: var(--text);
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .legacy-close-btn:hover {
+    opacity: 1;
+  }
+  .legacy-modal-content h2 {
+    margin-top: 0;
+    font-size: 20px;
+    color: var(--accent);
+  }
+  .legacy-modal-content p {
+    font-size: 15px;
+    line-height: 1.5;
+    margin: 12px 0;
+    color: var(--text);
+  }
+  .legacy-modal-content .redirect-timer {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 16px;
+    font-style: italic;
+  }
+  .legacy-modal-content .legacy-cta {
+    background: var(--accent);
+    color: white;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .legacy-modal-content .legacy-cta:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+  
   /* Donate Modal specific styles */
   .close-donate {
     position: absolute;
@@ -685,13 +759,13 @@ hr{
   <!-- Loading Overlay -->
   <div id="loadingOverlay">
       <div class="spinner"></div>
-      <div class="loading-text">Loading CodeStore...</div>
+      <div class="loading-text">Loading...</div>
   </div>
   <div class="header-container">
     <a href="https://nathanlobo.github.io/" class="logo-link">
       <img src="assets/icon.webp" alt="CodeStore Logo" class="logo-icon">
       <div class="logo-text-container">
-        <h1 class="logo-text">CodeStore <span class="rebrand-text">is rebranding to Codinx</span></h1>
+        <h1 class="logo-text">CodeStore <span class="rebrand-text">is now Codinx</span></h1>
       </div>
     </a>    
   </div>
@@ -713,19 +787,6 @@ hr{
       </label>
     </div>
   </div>
-  <div id="rollNoModal" class="modal">
-    <div class="modal-content">
-      <p id="rollno-modal-text">Roll Number Required</p>
-      <i id="rollno-modal-warning">Already Existing & Upcoming New features need your roll number</i>
-      <form id="rollNoForm">
-        <input type="text" id="rollNoInput" name="rollNoInput" placeholder="Enter your Roll No. (e.g. 25LEC07)" required>
-        <div id="rollNoError" style="color: red; font-size: 14px; margin-top: 4px; display: none;"></div>
-        <div class="btnGrp">
-          <button type="submit">Submit</button>
-        </div>
-      </form>
-    </div>
-  </div>
 
   <!-- Donate Modal -->
   <div id="donateModal" class="modal">
@@ -739,6 +800,16 @@ hr{
       </div>
     </div>
   </div>
+  <!-- Legacy/Deprecation Modal -->
+  <div id="legacyModal" class="modal">
+    <div class="legacy-modal-content">
+      <button class="legacy-close-btn" id="legacyCloseBtn">×</button>
+      <h2>Website Update</h2>
+      <p>We've moved to <strong>Codinx</strong>. This legacy site is no longer updated.</p>
+      <p class="redirect-timer">Redirecting to codinx.app in <span id="redirectTimer">5</span> seconds...</p>
+      <button class="legacy-cta" id="legacyCTA">Go to Codinx</button>
+    </div>
+  </div>
   <div id="linkContainer" class="link-container">Loading...</div>
   <script>
     // Load data from JSON file
@@ -747,6 +818,117 @@ hr{
     let phpExpts = [];
     let zipDownloads = {};
     let showModal = false;
+    
+    // Legacy site deprecation modal logic
+    let legacyRedirectTimer = null;
+    const CODINX_URL = 'https://codinx.app';
+    const LEGACY_CLOSE_KEY = 'legacyCloseCount';
+    const LEGACY_DATE_KEY = 'legacyCloseDate';
+    const MAX_CLOSES_PER_DAY = 3;
+    
+    function getLegacyCloseState() {
+      const today = new Date().toISOString().split('T')[0];
+      const storedDate = localStorage.getItem(LEGACY_DATE_KEY);
+      const storedCount = parseInt(localStorage.getItem(LEGACY_CLOSE_KEY)) || 0;
+      
+      if (storedDate !== today) {
+        // New day, reset counter
+        localStorage.setItem(LEGACY_DATE_KEY, today);
+        localStorage.setItem(LEGACY_CLOSE_KEY, '0');
+        return 0;
+      }
+      return storedCount;
+    }
+    
+    function incrementLegacyCloseCount() {
+      const today = new Date().toISOString().split('T')[0];
+      let count = parseInt(localStorage.getItem(LEGACY_CLOSE_KEY)) || 0;
+      count++;
+      localStorage.setItem(LEGACY_CLOSE_KEY, count.toString());
+      localStorage.setItem(LEGACY_DATE_KEY, today);
+      return count;
+    }
+    
+    function startLegacyRedirectTimer() {
+      let secondsLeft = 5;
+      const timerEl = document.getElementById('redirectTimer');
+      
+      if (legacyRedirectTimer) clearInterval(legacyRedirectTimer);
+      
+      legacyRedirectTimer = setInterval(() => {
+        secondsLeft--;
+        if (timerEl) timerEl.textContent = secondsLeft;
+        
+        if (secondsLeft <= 0) {
+          clearInterval(legacyRedirectTimer);
+          window.location.href = CODINX_URL;
+        }
+      }, 1000);
+    }
+    
+    function showLegacyModal() {
+      const closeCount = getLegacyCloseState();
+      if (closeCount >= MAX_CLOSES_PER_DAY) {
+        console.log('Legacy modal suppressed for today (max closes reached)');
+        return;
+      }
+      
+      const legacyModal = document.getElementById('legacyModal');
+      const legacyCloseBtn = document.getElementById('legacyCloseBtn');
+      const legacyCTA = document.getElementById('legacyCTA');
+      
+      if (legacyModal && legacyCloseBtn && legacyCTA) {
+        legacyModal.style.display = 'block';
+        startLegacyRedirectTimer();
+        
+        legacyCloseBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const newCount = incrementLegacyCloseCount();
+          if (legacyRedirectTimer) clearInterval(legacyRedirectTimer);
+          legacyModal.style.display = 'none';
+          console.log(`Legacy modal closed (${newCount}/${MAX_CLOSES_PER_DAY} closes today)`);
+        });
+        
+        legacyCTA.addEventListener('click', () => {
+          if (legacyRedirectTimer) clearInterval(legacyRedirectTimer);
+          sendAnalyticsData(null, 'Legacy CTA Click', 'Codinx Redirect');
+          window.location.href = CODINX_URL;
+        });
+        
+        sendAnalyticsData(null, 'Legacy Modal Shown', 'Auto-Redirect');
+      }
+    }
+    
+    let hasLeftPage = false;
+    
+    // Track when user leaves the page
+    window.addEventListener('blur', () => {
+      hasLeftPage = true;
+    });
+    
+    window.addEventListener('pagehide', () => {
+      hasLeftPage = true;
+      if (legacyRedirectTimer) clearInterval(legacyRedirectTimer);
+    });
+
+    // Call show legacy modal on page load
+    window.addEventListener('load', function() {
+      setTimeout(() => showLegacyModal(), 500);
+    });
+
+    // Detect when window gets focus again (back button or tab return)
+    window.addEventListener('focus', () => {
+      if (hasLeftPage) {
+        const closeCount = getLegacyCloseState();
+        if (closeCount < MAX_CLOSES_PER_DAY) {
+          // Replicate exact CTA button behavior
+          if (legacyRedirectTimer) clearInterval(legacyRedirectTimer);
+          sendAnalyticsData(null, 'Back Button Redirect', 'Codinx Redirect');
+          window.location.href = CODINX_URL;
+        }
+      }
+    });
 
     fetch('data.json')
       .then(response => response.json())
@@ -817,19 +999,22 @@ hr{
     
     // Define sendAnalyticsData function first so it's available globally
     window.sendAnalyticsData = function(name, visitType, visitPage) {
+        // Get deviceId first (always required)
+        const deviceId = getDeviceId();
+        
         // If no name provided, try to get from storage
         if (!name) {
             name = getStoredUserName();
         }
         
-        // Don't send if no user identifier is available
+        // If still no name, use deviceId as identifier for new visitors
         if (!name) {
-            console.log('Analytics not sent: No user identifier available');
-            return;
+            name = deviceId;
+            console.log('Using deviceId as identifier for new visitor');
         }
-      // Always include deviceId as final column/param
-      const deviceId = getDeviceId();
-      const url = `${GOOGLE_SCRIPT_URL}?userName=${encodeURIComponent(name)}&visitType=${encodeURIComponent(visitType)}&visitPage=${encodeURIComponent(visitPage)}&deviceId=${encodeURIComponent(deviceId)}`;
+        
+        // Build analytics URL with all parameters
+        const url = `${GOOGLE_SCRIPT_URL}?userName=${encodeURIComponent(name)}&visitType=${encodeURIComponent(visitType)}&visitPage=${encodeURIComponent(visitPage)}&deviceId=${encodeURIComponent(deviceId)}`;
         fetch(url, {
             method: 'POST',
             mode: 'no-cors' // Required for Google Apps Script
@@ -849,292 +1034,22 @@ hr{
       const storedUserName = localStorage.getItem('userName');
       const currentTab = localStorage.getItem('selectedTab') || 'HTML';
       
-      if (storedRollNo) {
-        // Check if the stored roll number is the blocked one
-        const normalizedStored = storedRollNo.trim().toUpperCase().replace(/\s+/g, '');
-        if (normalizedStored === '25LEC07') {
-          // Don't clear localStorage, but show modal to force them to enter correct roll number
-          showBlockedRollNoModal(storedRollNo);
-        } else {
-          // Roll number exists and is valid
-          sendAnalyticsData(null, 'Return Visit', currentTab);
-          
-          // Show donate modal for returning users after a short delay
-          if(showModal) setTimeout(showDonateModal, 2000);
-        }
-      } else if (storedUserName) {
-        // Username exists but no roll number - validate it
-        const users = await loadPrefedUserData();
-        const normalizedUserName = storedUserName.trim().toUpperCase().replace(/\s+/g, '');
+      // Send analytics for returning users
+      if (storedRollNo || storedUserName) {
+        sendAnalyticsData(null, 'Return Visit', currentTab);
         
-        // Check if userName matches fname in prefedUser.json
-        const matchedUser = users.find(user => {
-          const fname = user.fname.trim().toUpperCase().replace(/\s+/g, '');
-          return normalizedUserName === fname || normalizedUserName.includes(fname);
-        });
-        
-        if (matchedUser) {
-          // Valid username found - migrate to roll number
-          localStorage.setItem('rollNo', matchedUser.roll_no);
-          localStorage.removeItem('userName');
-          // Send analytics for username to roll number migration
-          sendAnalyticsData(matchedUser.roll_no, 'Username -> RN', storedUserName.trim());
-        } else {
-          // Invalid username - show modal with error
-          showInvalidUserNameModal(storedUserName);
-        }
+        // Show donate modal for returning users after a short delay
+        if(showModal) setTimeout(showDonateModal, 2000);
       } else {
-        // No username or roll number - show modal for first time users
-        showRollNoModalForFirstTime();
+        // First time user - just send first visit analytics
+        sendAnalyticsData(null, 'First Visit', currentTab);
+        
+        // Show donate modal after some delay for better experience
+        if(showModal) setTimeout(showDonateModal, 2000);
       }
     };
     
-    // Show modal for users with blocked roll number (25LEC07)
-    function showBlockedRollNoModal(blockedRollNo) {
-      const modal = document.getElementById('rollNoModal');
-      const modalText = document.getElementById('rollno-modal-text');
-      const modalWarning = document.getElementById('rollno-modal-warning');
-      const input = document.getElementById('rollNoInput');
-      const error = document.getElementById('rollNoError');
-      const form = document.getElementById('rollNoForm');
-      
-      // Update modal text to show blocked message
-      modalText.textContent = 'Invalid Roll Number';
-      modalWarning.textContent = 'IP detected, you are not 25lec07, please enter your correct roll number.';
-      modalWarning.style.color = 'var(--warning)';
-      
-      // Reset input and show modal
-      input.value = '';
-      error.style.display = 'none';
-      modal.style.display = 'block';
-      input.focus();
-      
-      // Real-time validation
-      const inputHandler = async (e) => {
-        const rollNo = e.target.value.trim();
-        if (rollNo.length >= 5) {
-          const user = await validateRollNo(rollNo);
-          if (!user) {
-            error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
-            error.style.display = 'block';
-          } else if (user.blocked) {
-            error.textContent = user.message;
-            error.style.display = 'block';
-          } else {
-            error.style.display = 'none';
-          }
-        } else {
-          error.style.display = 'none';
-        }
-      };
-      
-      // Handle submission
-      const submitHandler = async (e) => {
-        e.preventDefault();
-        const rollNo = input.value.trim();
-        
-        if (!rollNo) {
-          error.textContent = 'Please enter your roll number';
-          error.style.display = 'block';
-          return;
-        }
-        
-        const user = await validateRollNo(rollNo);
-        
-        if (user && user.blocked) {
-          // Still trying to use blocked roll number
-          error.textContent = user.message;
-          error.style.display = 'block';
-        } else if (user) {
-          // Valid roll number - update localStorage and send analytics
-          localStorage.setItem('rollNo', user.roll_no);
-          
-          // Send analytics: 25LEC07 user entered a new roll number
-          sendAnalyticsData(user.roll_no, '25LEC07 Blocked -> New RN', blockedRollNo);
-          
-          // Close modal and clean up event listeners
-          modal.style.display = 'none';
-          input.removeEventListener('input', inputHandler);
-          form.removeEventListener('submit', submitHandler);
-          
-          // Reload page after a short delay to ensure analytics is sent
-          setTimeout(() => {
-            location.reload();
-          }, 500);
-        } else {
-          error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
-          error.style.display = 'block';
-        }
-      };
-      
-      input.addEventListener('input', inputHandler);
-      form.addEventListener('submit', submitHandler);
-    }
-    
-    // Show modal for users with invalid usernames
-    function showInvalidUserNameModal(invalidUserName) {
-      const modal = document.getElementById('rollNoModal');
-      const modalText = document.getElementById('rollno-modal-text');
-      const modalWarning = document.getElementById('rollno-modal-warning');
-      const input = document.getElementById('rollNoInput');
-      const error = document.getElementById('rollNoError');
-      const form = document.getElementById('rollNoForm');
-      
-      // Update modal text to show error
-      modalText.textContent = 'Invalid Name Detected';
-      modalWarning.textContent = `The name "${invalidUserName}" entered earlier is not valid. Please enter your roll number.`;
-      modalWarning.style.color = 'var(--warning)';
-      
-      // Reset input and show modal
-      input.value = '';
-      error.style.display = 'none';
-      modal.style.display = 'block';
-      input.focus();
-      
-      // Real-time validation
-      const inputHandler = async (e) => {
-        const rollNo = e.target.value.trim();
-        if (rollNo.length >= 5) {
-          const user = await validateRollNo(rollNo);
-          if (!user) {
-            error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
-            error.style.display = 'block';
-          } else if (user.blocked) {
-            error.textContent = user.message;
-            error.style.display = 'block';
-          } else {
-            error.style.display = 'none';
-          }
-        } else {
-          error.style.display = 'none';
-        }
-      };
-      
-      // Handle submission
-      const submitHandler = async (e) => {
-        e.preventDefault();
-        const rollNo = input.value.trim();
-        
-        if (!rollNo) {
-          error.textContent = 'Please enter your roll number';
-          error.style.display = 'block';
-          return;
-        }
-        
-        const user = await validateRollNo(rollNo);
-        
-        if (user && user.blocked) {
-          // Blocked roll number (25LEC07)
-          error.textContent = user.message;
-          error.style.display = 'block';
-          // Track analytics: someone using 25LEC07 tried to enter it
-          sendAnalyticsData('25LEC07-BLOCKED', 'RN Impersonator', rollNo);
-        } else if (user) {
-          // Valid roll number - update localStorage
-          localStorage.setItem('rollNo', user.roll_no);
-          localStorage.removeItem('userName');
-          modal.style.display = 'none';
-          
-          // Send analytics with old invalid name
-          sendAnalyticsData(user.roll_no, 'Valid RN Assigned', invalidUserName);
-          
-          // Clean up event listeners
-          input.removeEventListener('input', inputHandler);
-          form.removeEventListener('submit', submitHandler);
 
-          // Show donate modal after some delay
-          if(showModal) setTimeout(showDonateModal, 2000);
-        } else {
-          error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
-          error.style.display = 'block';
-        }
-      };
-      
-      input.addEventListener('input', inputHandler);
-      form.addEventListener('submit', submitHandler);
-    }
-    
-    // Show modal for first-time users (no localStorage data)
-    function showRollNoModalForFirstTime() {
-      const modal = document.getElementById('rollNoModal');
-      const modalText = document.getElementById('rollno-modal-text');
-      const modalWarning = document.getElementById('rollno-modal-warning');
-      const input = document.getElementById('rollNoInput');
-      const error = document.getElementById('rollNoError');
-      const form = document.getElementById('rollNoForm');
-      
-      // Set default modal text
-      modalText.textContent = 'Roll Number Required';
-      modalWarning.textContent = 'Already Existing & Upcoming New features need your roll number';
-      modalWarning.style.color = 'var(--warning)';
-      
-      // Reset and show modal
-      input.value = '';
-      error.style.display = 'none';
-      modal.style.display = 'block';
-      input.focus();
-      
-      // Real-time validation
-      const inputHandler = async (e) => {
-        const rollNo = e.target.value.trim();
-        if (rollNo.length >= 5) {
-          const user = await validateRollNo(rollNo);
-          if (!user) {
-            error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
-            error.style.display = 'block';
-          } else if (user.blocked) {
-            error.textContent = user.message;
-            error.style.display = 'block';
-          } else {
-            error.style.display = 'none';
-          }
-        } else {
-          error.style.display = 'none';
-        }
-      };
-      
-      // Handle submission
-      const submitHandler = async (e) => {
-        e.preventDefault();
-        const rollNo = input.value.trim();
-        
-        if (!rollNo) {
-          error.textContent = 'Please enter your roll number';
-          error.style.display = 'block';
-          return;
-        }
-        
-        const user = await validateRollNo(rollNo);
-        
-        if (user && user.blocked) {
-          // Blocked roll number (25LEC07)
-          error.textContent = user.message;
-          error.style.display = 'block';
-          // Track analytics: first-time user tried to use 25LEC07
-          sendAnalyticsData('25LEC07-BLOCKED', 'RN Impersonator', rollNo);
-        } else if (user) {
-          // Valid roll number
-          localStorage.setItem('rollNo', user.roll_no);
-          modal.style.display = 'none';
-          
-          // Send analytics for first visit
-          sendAnalyticsData(user.roll_no, 'First Visit', localStorage.getItem('selectedTab') || 'HTML');
-          
-          // Clean up event listeners
-          input.removeEventListener('input', inputHandler);
-          form.removeEventListener('submit', submitHandler);
-
-          // Show donate modal after some delay for better experience
-          if(showModal) setTimeout(showDonateModal, 2000);
-        } else {
-          error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
-          error.style.display = 'block';
-        }
-      };
-      
-      input.addEventListener('input', inputHandler);
-      form.addEventListener('submit', submitHandler);
-    }
 
     // Function to show the beautiful donate modal
     function showDonateModal() {
@@ -1187,160 +1102,7 @@ hr{
       }
     }
 
-    // Fetch prefedUser.json data
-    let prefedUserData = null;
-    async function loadPrefedUserData() {
-      if (!prefedUserData) {
-        try {
-          const response = await fetch('prefedUser.json');
-          const data = await response.json();
-          prefedUserData = data['ecomp24-28'];
-        } catch (error) {
-          console.error('Error loading prefedUser.json:', error);
-          prefedUserData = [];
-        }
-      }
-      return prefedUserData;
-    }
 
-    // Validate roll number against prefedUser.json
-    async function validateRollNo(rollNo) {
-      const users = await loadPrefedUserData();
-      const normalizedRollNo = rollNo.trim().toUpperCase().replace(/\s+/g, '');
-      
-      // Special check: Block 25LEC07 without NL suffix
-      if (normalizedRollNo === '25LEC07') {
-        return { blocked: true, message: 'IP detected, you are not 25LEC07, please enter correct roll no' };
-      }
-      
-      return users.find(user => user.roll_no.trim().toUpperCase().replace(/\s+/g, '') === normalizedRollNo);
-    }
-
-    // Check and migrate userName to rollNo
-    async function checkAndMigrateUserName() {
-      const userName = localStorage.getItem('userName');
-      if (!userName) return null;
-      
-      const users = await loadPrefedUserData();
-      const normalizedUserName = userName.trim().toUpperCase().replace(/\s+/g, '');
-      
-      // Check if userName matches roll_no or fname (possibly with roll_no)
-      const matchedUser = users.find(user => {
-        const rollNo = user.roll_no.trim().toUpperCase().replace(/\s+/g, '');
-        const fname = user.fname.trim().toUpperCase();
-        
-        // Check if userName is exactly roll_no
-        if (normalizedUserName === rollNo) return true;
-        
-        // Check if userName contains roll_no or fname
-        if (normalizedUserName.includes(rollNo) || normalizedUserName.includes(fname)) return true;
-        
-        return false;
-      });
-      
-      if (matchedUser) {
-        // Migrate to rollNo
-        localStorage.removeItem('userName');
-        localStorage.setItem('rollNo', matchedUser.roll_no);
-        return matchedUser.roll_no;
-      }
-      
-      return null;
-    }
-
-    // Show roll number modal and handle validation
-    function showRollNoModal(outputUrl, filePath, exp, desc) {
-      return new Promise((resolve, reject) => {
-        const modal = document.getElementById('rollNoModal');
-        const input = document.getElementById('rollNoInput');
-        const error = document.getElementById('rollNoError');
-        const form = document.getElementById('rollNoForm');
-        
-        // Reset state
-        input.value = '';
-        error.style.display = 'none';
-        error.textContent = '';
-        
-        // Show modal
-        modal.style.display = 'block';
-        input.focus();
-        
-        // Real-time validation on input
-        const inputHandler = async (e) => {
-          const rollNo = e.target.value.trim();
-          if (rollNo.length >= 5) { // Start validating after 5 characters
-            const user = await validateRollNo(rollNo);
-            if (!user) {
-              error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
-              error.style.display = 'block';
-            } else if (user.blocked) {
-              error.textContent = user.message;
-              error.style.display = 'block';
-            } else {
-              error.style.display = 'none';
-            }
-          } else {
-            error.style.display = 'none';
-          }
-        };
-        
-        // Handle form submission (Enter key or Submit button)
-        const submitHandler = async (e) => {
-          e.preventDefault();
-          const rollNo = input.value.trim();
-          
-          if (!rollNo) {
-            error.textContent = 'Please enter your roll number';
-            error.style.display = 'block';
-            return;
-          }
-          
-          const user = await validateRollNo(rollNo);
-          
-          if (user && user.blocked) {
-            // Blocked roll number (25LEC07)
-            error.textContent = user.message;
-            error.style.display = 'block';
-            // Track analytics: someone tried to use 25LEC07 for DSC++ output
-            sendAnalyticsData('25LEC07-BLOCKED', 'RN Impersonator', rollNo);
-          } else if (user) {
-            // Valid roll number
-            localStorage.setItem('rollNo', user.roll_no);
-            modal.style.display = 'none';
-            
-            // Clean up event listeners
-            input.removeEventListener('input', inputHandler);
-            form.removeEventListener('submit', submitHandler);
-            modal.removeEventListener('click', closeHandler);
-            
-            // Resolve with the roll number
-            resolve(user.roll_no);
-
-            // Show donate modal after some delay
-            if(showModal) setTimeout(showDonateModal, 2000);
-          } else {
-            error.textContent = 'Invalid roll number! Roll number not found in database. Contact Developer';
-            error.style.display = 'block';
-          }
-        };
-        
-        input.addEventListener('input', inputHandler);
-        form.addEventListener('submit', submitHandler);
-        
-        // Handle modal close (if user clicks outside or closes)
-        const closeHandler = (e) => {
-          if (e.target === modal) {
-            modal.style.display = 'none';
-            input.removeEventListener('input', inputHandler);
-            form.removeEventListener('submit', submitHandler);
-            modal.removeEventListener('click', closeHandler);
-            reject('Modal closed');
-          }
-        };
-        
-        modal.addEventListener('click', closeHandler);
-      });
-    }
 
     // Version Selector Function for Expt 7
     function showVersionSelector(button, action, filePath, exp, desc, idx, fileIdx) {
@@ -1415,7 +1177,7 @@ hr{
       } else if (action === 'output') {
         const outputUrl = `https://nathanlobo.github.io/CodeStore/${filePath}`;
         sendAnalyticsData(null, 'Output', outputUrl);
-        window.location.href = 'output.html';
+        window.open(outputUrl, '_blank');
       } else if (action === 'download') {
         const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURIComponent(filePath).replace(/%2F/g, '/')}`;
         sendAnalyticsData(null, 'Download', filePath);
@@ -1502,42 +1264,16 @@ hr{
                 outputBtn.className = 'btn btn-output';
                 outputBtn.textContent = 'Output';
                 if (localStorage.getItem('selectedTab') === 'DSC++') {
-                  // DSC++ output button with validation logic
+                  // DSC++ output button
                   if (Array.isArray(exp.outputLinks) && exp.outputLinks[fileIdx]) {
-                    outputBtn.addEventListener('click', async () => {
-                      try {
-                        localStorage.setItem('filePath', filePath);
-                        localStorage.setItem('experimentName', exp.name || `Experiment ${idx+1}`);
-                        localStorage.setItem('fileDescription', desc);
-                        
-                        // Step 1: Check for roll number
-                        let rollNo = localStorage.getItem('rollNo');
-                        
-                        if (!rollNo) {
-                          // Try to migrate userName to rollNo
-                          rollNo = await checkAndMigrateUserName();
-                        }
-                        
-                        if (!rollNo) {
-                          // Show modal to get roll number
-                          try {
-                            rollNo = await showRollNoModal(exp.outputLinks[fileIdx], filePath, exp, desc);
-                          } catch (error) {
-                            console.log('User cancelled roll number input');
-                            return;
-                          }
-                        }
-                        
-                        // Step 2: Redirect with roll number appended
-                        const baseUrl = exp.outputLinks[fileIdx];
-                        const finalUrl = `${baseUrl}/${rollNo}`;
-                        
-                        sendAnalyticsData(null, 'Output', finalUrl);
-                        window.open(finalUrl, '_self');
-                      } catch (error) {
-                        console.error('Error processing output:', error);
-                        alert('An error occurred. Please try again.');
-                      }
+                    outputBtn.addEventListener('click', () => {
+                      localStorage.setItem('filePath', filePath);
+                      localStorage.setItem('experimentName', exp.name || `Experiment ${idx+1}`);
+                      localStorage.setItem('fileDescription', desc);
+                      
+                      const outputUrl = exp.outputLinks[fileIdx];
+                      sendAnalyticsData(null, 'Output', outputUrl);
+                      window.open(outputUrl, '_blank');
                     });
                   } else {
                     // No output link defined, disable button
@@ -1558,7 +1294,6 @@ hr{
                     localStorage.setItem('fileDescription', desc); // Store file description
                     sendAnalyticsData(null, 'Output', outputUrl);
                     window.open(outputUrl, '_blank');
-                    // window.location.href = 'output.html';
                   });
                 } else {
                   outputBtn.addEventListener('click', () => {
@@ -1567,8 +1302,7 @@ hr{
                     localStorage.setItem('experimentName', exp.name || `Experiment ${idx+1}`);
                     localStorage.setItem('fileDescription', desc); // Store file description
                     sendAnalyticsData(null, 'Output', outputUrl);
-                    window.location.href = 'output.html';
-                    // window.open(outputUrl, '_blank');
+                    window.open(outputUrl, '_blank');
                   });
                 }
                 btnContainer.appendChild(codeBtn);

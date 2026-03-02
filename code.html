@@ -115,6 +115,80 @@
   }
   /********* Pop up CSS Ends Here *********/
 
+  /* Deprecation Modal specific styles */
+  #legacyModal {
+    display: none;
+  }
+  .legacy-modal-content {
+    background-color: var(--bg);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 24px 20px;
+    border: 1px solid var(--accent);
+    width: 88%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    text-align: center;
+  }
+  .legacy-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: var(--text);
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .legacy-close-btn:hover {
+    opacity: 1;
+  }
+  .legacy-modal-content h2 {
+    margin-top: 0;
+    font-size: 20px;
+    color: var(--accent);
+  }
+  .legacy-modal-content p {
+    font-size: 15px;
+    line-height: 1.5;
+    margin: 12px 0;
+    color: var(--text);
+  }
+  .legacy-modal-content .redirect-timer {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 16px;
+    font-style: italic;
+  }
+  .legacy-modal-content .legacy-cta {
+    background: var(--accent);
+    color: white;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .legacy-modal-content .legacy-cta:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
     /* Code toolbar aligned with viewer */
     .code-toolbar {
       display:flex;
@@ -436,12 +510,24 @@
     <div class="spinner"></div>
     <div class="loading-text">Loading Code...</div>
   </div>
+
+  <!-- Legacy Deprecation Modal -->
+  <div id="legacyModal" class="modal">
+    <div class="legacy-modal-content">
+      <button class="legacy-close-btn" title="Dismiss">&times;</button>
+      <h2>Website Update</h2>
+      <p>We've moved to Codinx. This legacy site is no longer updated.</p>
+      <div class="redirect-timer">Redirecting in <span id="redirectCountdown">5</span> seconds...</div>
+      <button class="legacy-cta">Go to Codinx</button>
+    </div>
+  </div>
+
   <!-- Header -->
   <div class="header-container">
     <a href="https://nathanlobo.github.io/" class="logo-link">
       <img src="assets/icon.webp" alt="CodeStore Logo" class="logo-icon">
       <div class="logo-text-container">
-        <h1 class="logo-text">CodeStore <span class="rebrand-text">is rebranding to Codinx</span></h1>
+        <h1 class="logo-text">CodeStore <span class="rebrand-text">is now Codinx</span></h1>
       </div>
     </a>
     <nav class="nav-menu">
@@ -494,6 +580,31 @@
   <script>
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw4BuUioqKHAZAV2SWzZUosyhmaARl_12PH_iDe1Y5l1-NCVoo2aitJkuajInx3--nj/exec';
 
+    // Generate or retrieve a persistent deviceId (cookie + localStorage)
+    function getDeviceId() {
+      // Try localStorage first
+      let id = localStorage.getItem('deviceId');
+      if (id) return id;
+
+      // Try cookie
+      const match = document.cookie.match(/(?:^|;\s*)deviceId=([^;]+)/);
+      if (match && match[1]) {
+        id = match[1];
+        localStorage.setItem('deviceId', id);
+        return id;
+      }
+
+      // Create new cryptographically random ID
+      const bytes = new Uint8Array(16);
+      (window.crypto || window.msCrypto).getRandomValues(bytes);
+      id = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+
+      // Persist to cookie (5 years) and localStorage
+      document.cookie = `deviceId=${id}; path=/; max-age=${60*60*24*365*5}`;
+      localStorage.setItem('deviceId', id);
+      return id;
+    }
+
     // Helper to read identifier from storage
     window.getStoredUserName = function() {
       return localStorage.getItem('rollNo') || localStorage.getItem('userName');
@@ -501,12 +612,22 @@
 
     // Global analytics sender with fallback to stored id
     window.sendAnalyticsData = function(name, visitType, visitPage) {
-      if (!name) name = getStoredUserName();
+      // Get deviceId first (always required)
+      const deviceId = getDeviceId();
+      
+      // If no name provided, try to get from storage
       if (!name) {
-        console.log('Analytics not sent: No user identifier available');
-        return;
+        name = getStoredUserName();
       }
-      const url = `${GOOGLE_SCRIPT_URL}?userName=${encodeURIComponent(name)}&visitType=${encodeURIComponent(visitType)}&visitPage=${encodeURIComponent(visitPage)}`;
+      
+      // If still no name, use deviceId as identifier for new visitors
+      if (!name) {
+        name = deviceId;
+        console.log('Using deviceId as identifier for new visitor');
+      }
+      
+      // Build analytics URL with all parameters
+      const url = `${GOOGLE_SCRIPT_URL}?userName=${encodeURIComponent(name)}&visitType=${encodeURIComponent(visitType)}&visitPage=${encodeURIComponent(visitPage)}&deviceId=${encodeURIComponent(deviceId)}`;
       fetch(url, { method: 'POST', mode: 'no-cors' })
         .then(() => console.log(`Analytics data sent: ${name} - ${visitType}`))
         .catch(error => {
@@ -515,12 +636,131 @@
         });
     };
 
+    // ===== Legacy Site Deprecation Modal Logic =====
+    const CODINX_URL = 'https://codinx.app';
+    const LEGACY_CLOSE_KEY = 'legacyCloseCount';
+    const LEGACY_DATE_KEY = 'legacyCloseDate';
+    const MAX_CLOSES_PER_DAY = 3;
+    let legacyTimerInterval = null;
+
+    function getLegacyCloseState() {
+      const today = new Date().toISOString().split('T')[0];
+      const storedDate = localStorage.getItem(LEGACY_DATE_KEY);
+      const storedCount = parseInt(localStorage.getItem(LEGACY_CLOSE_KEY)) || 0;
+      if (storedDate !== today) {
+        localStorage.setItem(LEGACY_DATE_KEY, today);
+        localStorage.setItem(LEGACY_CLOSE_KEY, '0');
+        return 0;
+      }
+      return storedCount;
+    }
+
+    function incrementLegacyCloseCount() {
+      const count = getLegacyCloseState();
+      const newCount = count + 1;
+      localStorage.setItem(LEGACY_CLOSE_KEY, String(newCount));
+      console.log(`Legacy modal closed (${newCount}/${MAX_CLOSES_PER_DAY} closes today)`);
+      return newCount;
+    }
+
+    function startLegacyRedirectTimer() {
+      let secondsLeft = 5;
+      const countdownEl = document.getElementById('redirectCountdown');
+      if (countdownEl) countdownEl.textContent = '5';
+      
+      legacyTimerInterval = setInterval(() => {
+        secondsLeft--;
+        if (countdownEl) countdownEl.textContent = String(secondsLeft);
+        
+        if (secondsLeft <= 0) {
+          clearInterval(legacyTimerInterval);
+          window.location.href = CODINX_URL;
+        }
+      }, 1000);
+    }
+
+    function showLegacyModal() {
+      const closeCount = getLegacyCloseState();
+      if (closeCount >= MAX_CLOSES_PER_DAY) {
+        console.log('Legacy modal suppressed (3 closes today)');
+        return;
+      }
+
+      const modal = document.getElementById('legacyModal');
+      const closeBtn = modal.querySelector('.legacy-close-btn');
+      const ctaBtn = modal.querySelector('.legacy-cta');
+
+      if (modal) {
+        modal.style.display = 'block';
+        startLegacyRedirectTimer();
+        sendAnalyticsData(null, 'Deprecation Modal Shown', '');
+
+        closeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          incrementLegacyCloseCount();
+          if (legacyTimerInterval) {
+            clearInterval(legacyTimerInterval);
+          }
+          modal.style.display = 'none';
+        });
+
+        ctaBtn.addEventListener('click', () => {
+          sendAnalyticsData(null, 'Deprecation CTA Clicked', '');
+          window.location.href = CODINX_URL;
+        });
+
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            incrementLegacyCloseCount();
+            if (legacyTimerInterval) {
+              clearInterval(legacyTimerInterval);
+            }
+            modal.style.display = 'none';
+          }
+        });
+      }
+    }
+
+    let hasLeftPage = false;
+    
+    // Track when user leaves the page
+    window.addEventListener('blur', () => {
+      hasLeftPage = true;
+    });
+    
+    window.addEventListener('pagehide', () => {
+      hasLeftPage = true;
+      if (legacyTimerInterval) clearInterval(legacyTimerInterval);
+    });
+
+    // Show legacy modal after 500ms delay
+    setTimeout(() => {
+      showLegacyModal();
+    }, 500);
+
+    // Detect when window gets focus again (back button or tab return)
+    window.addEventListener('focus', () => {
+      if (hasLeftPage) {
+        const closeCount = getLegacyCloseState();
+        if (closeCount < MAX_CLOSES_PER_DAY) {
+          // Replicate exact CTA button behavior
+          if (legacyTimerInterval) clearInterval(legacyTimerInterval);
+          sendAnalyticsData(null, 'Back Button Redirect', 'Codinx Redirect');
+          window.location.href = CODINX_URL;
+        }
+      }
+    });
+
     window.onload = function() {
       const storedName = getStoredUserName();
       if (storedName) {
         console.log("Welcome back, " + storedName + "! Logging your visit.");
         // Use global fallback inside analytics sender
         sendAnalyticsData(null, 'Return Visit', localStorage.getItem('filePath'));
+      } else {
+        // First time visitor
+        console.log("Welcome! Logging your first visit.");
+        sendAnalyticsData(null, 'First Visit', localStorage.getItem('filePath'));
       }
     };
 
